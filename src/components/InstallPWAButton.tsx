@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { Download } from 'lucide-react';
+import { Download, Share } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: Array<string>;
@@ -16,6 +18,7 @@ interface BeforeInstallPromptEvent extends Event {
 export function InstallPWAButton() {
   const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [isIos, setIsIos] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -27,6 +30,10 @@ export function InstallPWAButton() {
     if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone) {
       setIsStandalone(true);
     }
+    
+    // Check if user is on an iOS device
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    setIsIos(/iphone|ipad|ipod/.test(userAgent));
     
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
@@ -49,14 +56,35 @@ export function InstallPWAButton() {
     });
   };
 
-  if (!prompt || isStandalone) {
+  // If already installed, don't show anything
+  if (isStandalone) {
     return null;
   }
 
-  return (
-    <Button onClick={handleInstallClick} variant="accent" size="sm">
-      <Download className="mr-2 h-4 w-4" />
-      Install App
-    </Button>
-  );
+  // Show Chrome-style install button if prompt is available
+  if (prompt) {
+    return (
+      <Button onClick={handleInstallClick} variant="accent" size="sm">
+        <Download className="mr-2 h-4 w-4" />
+        Install App
+      </Button>
+    );
+  }
+  
+  // Show instructions for iOS Safari users
+  if (isIos && !isStandalone) {
+     return (
+        <Alert className="flex items-center gap-4">
+            <Share className="h-6 w-6 text-primary"/>
+            <div>
+                <AlertTitle>Install on your iPhone</AlertTitle>
+                <AlertDescription>
+                   Tap the Share button and then &quot;Add to Home Screen&quot; to install this app.
+                </AlertDescription>
+            </div>
+        </Alert>
+     )
+  }
+
+  return null;
 }
