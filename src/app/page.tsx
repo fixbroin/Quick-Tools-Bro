@@ -5,12 +5,12 @@ import { tools } from '@/lib/tools';
 const toolCategories = [
   {
     name: 'QR Code Tools',
-    tools: tools.filter(t => ['QR Code Generator', 'QR Code Scanner'].includes(t.name)),
+    tools: tools.filter(t => ['QR Code Generator', 'QR Code Scanner', 'WiFi QR Code Generator'].includes(t.name)),
     color: 'bg-green-500/10 text-green-500'
   },
     {
     name: 'PDF Tools',
-    tools: tools.filter(t => ['JPG to PDF Converter', 'PDF to JPG Converter'].includes(t.name)),
+    tools: tools.filter(t => ['JPG to PDF Converter', 'PDF to JPG Converter', 'Merge PDF'].includes(t.name)),
     color: 'bg-red-500/10 text-red-500'
   },
   {

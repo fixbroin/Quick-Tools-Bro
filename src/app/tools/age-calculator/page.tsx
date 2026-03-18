@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   day: z.string().min(1, "Day is required.").max(2, "Invalid day."),
@@ -118,9 +119,11 @@ export default function AgeCalculatorPage() {
       totalMinutes: differenceInMinutes(today, dob),
       totalSeconds: differenceInSeconds(today, dob),
     });
+    scrollToDownload();
   };
 
   return (
+    <>
     <Card>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(calculateAge)}>
@@ -217,7 +220,7 @@ export default function AgeCalculatorPage() {
       </Form>
       {result && (
         <CardFooter className="flex-col items-start gap-4">
-          <Alert>
+          <Alert id="download-section">
             <AlertTitle className="text-2xl font-bold font-headline">Your Age Is</AlertTitle>
             <AlertDescription className="text-3xl text-primary font-bold mt-2">
               {result.years} years, {result.months} months, {result.days} days
@@ -238,5 +241,55 @@ export default function AgeCalculatorPage() {
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Age Calculator?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Precision & Accuracy:</strong> Our tool uses the latest date-handling libraries to ensure that your age is calculated down to the minute. It accounts for leap years and varying month lengths, giving you a result you can trust.
+                    </p>
+                    <p>
+                        Whether you need to know your exact age for a legal document, a job application, or just for fun, our calculator provides a comprehensive breakdown that most simple subtraction can't match.
+                    </p>
+                </div>
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Detailed Breakdown:</strong> We don't just stop at years. Get your age in:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                        <li>Total Months and Weeks</li>
+                        <li>Total Days and Hours</li>
+                        <li>Total Minutes and Seconds</li>
+                        <li>Detailed Years, Months, and Days</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">How accurate is this age calculator?</h4>
+                    <p className="text-muted-foreground text-sm">It is highly accurate, accounting for leap years and the specific number of days in each month of your life journey.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Can I calculate my age at a specific time?</h4>
+                    <p className="text-muted-foreground text-sm">Yes, you can optionally include your birth hour and minute for an even more precise calculation of your age.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is my birth date data saved?</h4>
+                    <p className="text-muted-foreground text-sm">No, all calculations are performed locally in your browser. Your personal data never leaves your device.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Why does the result change slightly?</h4>
+                    <p className="text-muted-foreground text-sm">The "Total Seconds" and other metrics update based on the current time of your device when you click calculate.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

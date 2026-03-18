@@ -1,5 +1,5 @@
 
-import { QrCode, ScanLine, Minimize, Replace, Expand, Smile, Image as ImageIcon, FileText, FileImage, Scale, Landmark, HeartPulse, PersonStanding, Banknote, Heart, Gem, Link as LinkIcon, Soup, Shield, FileType, LucideIcon, Video, RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake } from 'lucide-react';
+import { QrCode, ScanLine, Minimize, Replace, Expand, Smile, Image as ImageIcon, FileText, FileImage, Scale, Landmark, HeartPulse, PersonStanding, Banknote, Heart, Gem, Link as LinkIcon, Soup, Shield, FileType, LucideIcon, Video, RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine } from 'lucide-react';
 
 export interface Tool {
     title: string;
@@ -68,6 +68,13 @@ export const tools: Tool[] = [
     href: '/tools/pdf-to-jpg',
     Icon: FileText,
   },
+  {
+    title: 'Merge PDF',
+    name: 'Merge PDF',
+    description: 'Combine multiple PDF files into one.',
+    href: '/tools/merge-pdf',
+    Icon: Combine,
+  },
    // Video Tools
   {
     title: 'Video Compressor',
@@ -90,6 +97,13 @@ export const tools: Tool[] = [
     description: 'Scan QR codes using your device camera.',
     href: '/tools/qr-scanner',
     Icon: ScanLine,
+  },
+  {
+    title: 'WiFi QR Code Generator',
+    name: 'WiFi QR Code Generator',
+    description: 'Create a QR code to share your WiFi network easily.',
+    href: '/tools/wifi-qr-generator',
+    Icon: Wifi,
   },
   // Web & Utility Tools
   {

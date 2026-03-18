@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { Upload, Download, Loader2 } from 'lucide-react';
+import { Upload, Download, Loader2, Sparkles } from 'lucide-react';
+import { scrollToDownload } from '@/lib/utils';
 
 type Format = 'png' | 'jpeg' | 'webp' | 'gif' | 'bmp';
 
@@ -63,6 +64,7 @@ export default function ImageConverterPage() {
         ctx.drawImage(img, 0, 0);
         const dataUrl = canvas.toDataURL(`image/${targetFormat}`);
         setConvertedUrl(dataUrl);
+        scrollToDownload();
       }
       setIsLoading(false);
     };
@@ -75,6 +77,7 @@ export default function ImageConverterPage() {
   const downloadExtension = targetFormat;
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">Image Format Converter</CardTitle>
@@ -119,7 +122,7 @@ export default function ImageConverterPage() {
         )}
       </CardContent>
       {convertedUrl && !isLoading && originalFile && (
-        <CardFooter>
+        <CardFooter id="download-section">
           <Button asChild>
             <a href={convertedUrl} download={`${originalFile.name.split('.').slice(0, -1).join('.')}.${downloadExtension}`}>
               <Download className="mr-2 h-4 w-4" />
@@ -129,5 +132,55 @@ export default function ImageConverterPage() {
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Effortless Online Image Conversion</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Fast & Free:</strong> Convert your images between all major formats in seconds. Whether you need to turn a high-res PNG into a web-friendly WebP or a JPG into a lossless BMP, our tool handles it with precision and speed.
+                    </p>
+                    <p>
+                        We support the most popular formats used across the web and design industries, including JPG, PNG, WEBP, GIF, and BMP. This versatility makes our converter the perfect choice for developers, designers, and social media managers alike.
+                    </p>
+                </div>
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Why Convert with Us?</strong>
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                        <li><strong>100% Client-Side:</strong> Your images are never uploaded to our servers.</li>
+                        <li><strong>Lossless Quality:</strong> We ensure the best possible visual output.</li>
+                        <li><strong>No Limits:</strong> Convert as many images as you need for free.</li>
+                        <li><strong>Instant Downloads:</strong> Get your files as soon as they're ready.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is there a file size limit?</h4>
+                    <p className="text-muted-foreground text-sm">Since the conversion happens on your device, the limit is based on your browser's memory. Most standard images work flawlessly.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Will I lose image quality?</h4>
+                    <p className="text-muted-foreground text-sm">We use advanced canvas rendering to maintain high visual fidelity. However, converting to JPEG or GIF may involve some compression by nature.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">What happened to my transparency?</h4>
+                    <p className="text-muted-foreground text-sm">Formats like JPEG and BMP do not support transparency. If you convert a transparent PNG to JPEG, we automatically add a clean white background.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is my privacy protected?</h4>
+                    <p className="text-muted-foreground text-sm">Absolutely. All processing is done locally in your browser. Your private images never touch our servers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

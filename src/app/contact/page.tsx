@@ -1,16 +1,14 @@
+
 import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { SITE_CONFIG, getMetadata } from '@/lib/config';
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
-
-export const metadata: Metadata = {
-    title: `Contact Us - Get in Touch with ${siteName}`,
-    description: `Have a question, feedback, or suggestion? Contact the ${siteName} team. We are here to help you with our free online tools.`,
-    keywords: ['contact', 'support', 'feedback', 'help', 'inquiry', 'Quick Tools Bro'],
-    alternates: {
-        canonical: '/contact',
-    }
-}
+export const metadata: Metadata = getMetadata({
+    title: `Contact Us`,
+    description: `Have a question, feedback, or suggestion? Contact the ${SITE_CONFIG.name} team. We are here to help you with our free online tools.`,
+    keywords: ['contact', 'support', 'feedback', 'help', 'inquiry', SITE_CONFIG.name],
+    path: '/contact',
+});
 
 export default function ContactPage() {
     return (
@@ -30,3 +28,4 @@ export default function ContactPage() {
         </div>
     )
 }
+

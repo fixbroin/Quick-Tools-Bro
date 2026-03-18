@@ -13,6 +13,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { scrollToDownload } from '@/lib/utils';
 
 // Set worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -93,6 +94,7 @@ export default function PdfToJpgPage() {
       }
       setPageImages(images);
       toast({ title: 'Conversion Successful', description: `${numPages} pages converted to JPG.` });
+      scrollToDownload();
     } catch (error: any) {
        if (error.name === 'PasswordException') {
         setIsPasswordRequired(true);
@@ -139,79 +141,127 @@ export default function PdfToJpgPage() {
 
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="font-headline">PDF to JPG Converter</CardTitle>
-        <CardDescription>Upload a PDF and convert each page into a high-quality JPG image.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="pdf-upload">Upload PDF</Label>
-          <div className="flex items-center gap-4 rounded-lg border p-4">
-            <FileIcon className="h-8 w-8 text-muted-foreground" />
-            <div className="flex-1">
-                <Input id="pdf-upload" type="file" accept="application/pdf" onChange={handleFileChange} />
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline">PDF to JPG Converter</CardTitle>
+          <CardDescription>Upload a PDF and convert each page into a high-quality JPG image.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="pdf-upload">Upload PDF</Label>
+            <div className="flex items-center gap-4 rounded-lg border p-4">
+              <FileIcon className="h-8 w-8 text-muted-foreground" />
+              <div className="flex-1">
+                  <Input id="pdf-upload" type="file" accept="application/pdf" onChange={handleFileChange} />
+              </div>
+            </div>
+          </div>
+
+          {pdfFile && (
+              <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor='quality-slider'>Quality ({quality}%)</Label>
+                    <Slider id="quality-slider" value={[quality]} onValueChange={([v]) => setQuality(v)} min={10} max={100} step={1} />
+                  </div>
+
+                  {isPasswordRequired && (
+                    <div className="space-y-2">
+                       <Alert variant="destructive">
+                        <Lock className="h-4 w-4" />
+                        <AlertTitle>Password Protected</AlertTitle>
+                        <AlertDescription>
+                            This PDF is encrypted. Please enter the password below.
+                        </AlertDescription>
+                      </Alert>
+                      <div className="pt-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter PDF password"/>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <Button onClick={handleConvert} disabled={isLoading}>
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Convert to JPG
+                  </Button>
+              </div>
+          )}
+
+          {pageImages.length > 0 && !isLoading && (
+              <div className="space-y-4">
+                  <Label>Generated Images ({pageImages.length} pages)</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {pageImages.map((image, index) => (
+                          <div key={index} className="space-y-2">
+                              <div className="border rounded-lg p-2">
+                                  <Image src={image.url} alt={`Page ${index + 1}`} width={200} height={280} className="w-full h-auto rounded-md object-contain aspect-[2/3]" />
+                              </div>
+                              <Button size="sm" variant="outline" className="w-full" onClick={() => downloadImage(image.url, image.name)}>
+                                  <Download className="mr-2 h-4 w-4" /> Page {index + 1}
+                              </Button>
+                          </div>
+                      ))}
+                  </div>
+              </div>
+          )}
+
+        </CardContent>
+        {pageImages.length > 0 && !isLoading && (
+          <CardFooter>
+              <Button id="download-section" onClick={downloadAllAsZip}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download All (.zip)
+              </Button>
+          </CardFooter>
+        )}
+      </Card>
+
+      <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+          <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our PDF to JPG Converter?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">High-Quality Output</h3>
+              <p>Convert your PDF pages into crisp, high-resolution JPG images. Our tool ensures that the details and clarity of your original document are preserved during the conversion process.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Fast & Efficient</h3>
+              <p>Experience rapid conversion speeds. Whether it's a single-page document or a multi-page report, our converter processes your files in seconds, saving you valuable time.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Private & Secure</h3>
+              <p>Security is our priority. All processing happens directly in your browser. Your sensitive PDF documents are never uploaded to any server, ensuring complete confidentiality.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">No Installation Needed</h3>
+              <p>Our tool is entirely web-based. There's no need to download or install any software or browser plugins. Access it from any device with an internet connection.</p>
             </div>
           </div>
         </div>
 
-        {pdfFile && (
-            <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor='quality-slider'>Quality ({quality}%)</Label>
-                  <Slider id="quality-slider" value={[quality]} onValueChange={([v]) => setQuality(v)} min={10} max={100} step={1} />
-                </div>
-
-                {isPasswordRequired && (
-                  <div className="space-y-2">
-                     <Alert variant="destructive">
-                      <Lock className="h-4 w-4" />
-                      <AlertTitle>Password Protected</AlertTitle>
-                      <AlertDescription>
-                          This PDF is encrypted. Please enter the password below.
-                      </AlertDescription>
-                    </Alert>
-                    <div className="pt-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter PDF password"/>
-                    </div>
-                  </div>
-                )}
-                
-                <Button onClick={handleConvert} disabled={isLoading}>
-                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                  Convert to JPG
-                </Button>
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">How do I convert a PDF to JPG?</h3>
+              <p>Simply upload your PDF file using the "Upload PDF" button, adjust the quality slider to your preference, and click "Convert to JPG". You can then download individual images or all of them in a ZIP file.</p>
             </div>
-        )}
-
-        {pageImages.length > 0 && !isLoading && (
-            <div className="space-y-4">
-                <Label>Generated Images ({pageImages.length} pages)</Label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {pageImages.map((image, index) => (
-                        <div key={index} className="space-y-2">
-                            <div className="border rounded-lg p-2">
-                                <Image src={image.url} alt={`Page ${index + 1}`} width={200} height={280} className="w-full h-auto rounded-md object-contain aspect-[2/3]" />
-                            </div>
-                            <Button size="sm" variant="outline" className="w-full" onClick={() => downloadImage(image.url, image.name)}>
-                                <Download className="mr-2 h-4 w-4" /> Page {index + 1}
-                            </Button>
-                        </div>
-                    ))}
-                </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Is there a file size limit?</h3>
+              <p>Since the conversion is performed on your device, the limit depends on your browser's memory capacity. Most standard-sized PDFs will convert smoothly without any issues.</p>
             </div>
-        )}
-
-      </CardContent>
-      {pageImages.length > 0 && !isLoading && (
-        <CardFooter>
-            <Button onClick={downloadAllAsZip}>
-                <Download className="mr-2 h-4 w-4" />
-                Download All (.zip)
-            </Button>
-        </CardFooter>
-      )}
-    </Card>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Can I convert password-protected PDFs?</h3>
+              <p>Yes, our tool can handle encrypted PDFs. If a password is required, you'll be prompted to enter it so the document can be unlocked and converted securely.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Is this service free?</h3>
+              <p>Absolutely. Our PDF to JPG converter is 100% free to use, with no hidden costs, registrations, or limitations on the number of files you can convert.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

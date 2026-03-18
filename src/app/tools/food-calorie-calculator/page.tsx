@@ -76,6 +76,7 @@ export default function FoodCalorieCalculatorPage() {
   };
   
   return (
+    <>
     <Card>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(calculateNutrition)}>
@@ -176,5 +177,47 @@ export default function FoodCalorieCalculatorPage() {
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Food Calorie Calculator?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Accurate Nutrition Data</h3>
+                    <p>Get precise estimates for calories, protein, carbs, and fats. Our tool uses a comprehensive database to ensure you get the most accurate nutritional information for your meals.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Custom Portions</h3>
+                    <p>Whether you're eating a small snack or a full meal, you can easily adjust the quantity and units to match your serving size perfectly.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Completely Free</h3>
+                    <p>Track your nutrition without any subscription fees or limits. Our tool is free for everyone looking to maintain a healthy lifestyle.</p>
+                </div>
+            </div>
+        </div>
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">How accurate is the calorie count?</h4>
+                    <p className="text-muted-foreground text-sm">While we use high-quality nutritional data, counts are estimates. Actual values may vary based on specific brands, ripeness, or preparation methods.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I calculate custom recipes?</h4>
+                    <p className="text-muted-foreground text-sm">You can calculate each ingredient separately and sum them up to get a total nutritional profile for your custom recipes.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Are the units adjustable?</h4>
+                    <p className="text-muted-foreground text-sm">Yes, we support various units like grams, cups, pieces, and more, depending on the specific food item selected.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Is my data saved?</h4>
+                    <p className="text-muted-foreground text-sm">No, we do not store your food logs. Your calculations are private and happen entirely within your current session.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

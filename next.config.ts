@@ -29,7 +29,7 @@ const pwaConfig = withPWA({
     },
     // Your pages
     {
-      urlPattern: ({request, url}) => {
+      urlPattern: ({request, url}: {request: any, url: URL}) => {
         if (request.destination === 'document') {
           return true;
         }
@@ -72,12 +72,6 @@ const pwaConfig = withPWA({
 const nextConfig: NextConfig = {
   
   /* config options here */
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -87,24 +81,6 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  // Add headers to ensure SharedArrayBuffer is available for FFmpeg
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless',
-          },
-        ],
-      },
-    ];
   },
   webpack: (config, { isServer }) => {
     // Exclude FFmpeg from server-side bundle

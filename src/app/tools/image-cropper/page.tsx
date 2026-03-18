@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Download, Loader2, Upload, Crop as CropIcon } from 'lucide-react';
 import Image from 'next/image';
+import { scrollToDownload } from '@/lib/utils';
 
 interface Crop {
   x: number;
@@ -195,6 +196,7 @@ export default function ImageCropperPage() {
     setCroppedUrl(cropCanvas.toDataURL(originalFile?.type));
     setIsLoading(false);
     toast({title: "Image Cropped", description: "You can now download the result."});
+    scrollToDownload();
   };
 
   const handleDownload = () => {
@@ -207,6 +209,7 @@ export default function ImageCropperPage() {
   }
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">Image Cropper</CardTitle>
@@ -255,14 +258,57 @@ export default function ImageCropperPage() {
           </div>
         )}
       </CardContent>
-      {croppedUrl && !isLoading && (
-        <CardFooter>
+        {croppedUrl && !isLoading && (
+        <CardFooter id="download-section">
           <Button onClick={handleDownload}>
+
               <Download className="mr-2 h-4 w-4" />
               Download Cropped Image
           </Button>
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Image Cropper?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">100% Privacy</h3>
+                    <p>Your photos never leave your device. All cropping operations are performed entirely within your web browser, ensuring your private data remains yours alone.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Instant Performance</h3>
+                    <p>No waiting for uploads or server processing. Our browser-based tool uses your computer's local power to crop images instantly, regardless of your internet speed.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Simple & Intuitive</h3>
+                    <p>Just click and drag to select exactly what you want to keep. No complicated menus or professional software knowledge required—anyone can crop like a pro.</p>
+                </div>
+            </div>
+        </div>
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Does cropping reduce image quality?</h4>
+                    <p className="text-muted-foreground text-sm">Cropping simply removes the outer parts of an image. The pixels within your selected area remain exactly as they were, maintaining their original clarity.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Which image formats are supported?</h4>
+                    <p className="text-muted-foreground text-sm">We support all standard web formats, including JPEG, PNG, WebP, and GIF. The output will match the format of your original file.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I crop on my mobile phone?</h4>
+                    <p className="text-muted-foreground text-sm">Yes! Our tool is fully responsive and supports touch gestures, allowing you to easily crop photos on your smartphone or tablet.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Is there a file size limit?</h4>
+                    <p className="text-muted-foreground text-sm">Since the tool runs locally in your browser, it can handle most high-resolution photos. The only limit is your device's available memory.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

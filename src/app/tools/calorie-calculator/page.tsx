@@ -14,6 +14,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { HealthyWeightChart } from '@/components/HealthyWeightChart';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   age: z.string().min(1, { message: "Age is required." }),
@@ -131,6 +132,7 @@ export default function CalorieCalculatorPage() {
         minLbs: minWeightLbs,
         maxLbs: maxWeightLbs,
     });
+    scrollToDownload();
   };
 
   return (
@@ -294,7 +296,7 @@ export default function CalorieCalculatorPage() {
         </Form>
         {calories && (
           <CardFooter className="flex-col gap-4 items-start">
-              <Alert>
+              <Alert id="download-section">
                   <AlertTitle>Your Estimated Daily Calorie Needs</AlertTitle>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 text-center">
                       <div className="p-4 rounded-lg bg-red-100/60 dark:bg-red-900/30">
@@ -330,6 +332,55 @@ export default function CalorieCalculatorPage() {
       <div className="mt-8">
         <HealthyWeightChart />
       </div>
+
+      <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Master Your Nutrition with Our Calorie Calculator</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Personalized Results:</strong> Our calorie calculator uses the Mifflin-St Jeor equation, widely considered one of the most accurate methods for estimating Basal Metabolic Rate (BMR). By factoring in your age, gender, height, weight, and activity level, we provide a tailored estimate of your Total Daily Energy Expenditure (TDEE).
+                    </p>
+                    <p>
+                        Understanding your TDEE is the first step toward achieving your fitness goals. Whether you're looking to shed a few pounds, maintain your current weight, or build muscle, knowing your "maintenance calories" is essential for creating a sustainable plan.
+                    </p>
+                </div>
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Comprehensive Goal Tracking:</strong> We don't just give you one number. Our tool provides:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                        <li>Maintenance Calories (TDEE)</li>
+                        <li>Weight Loss Targets (-500 cal/day)</li>
+                        <li>Weight Gain Targets (+500 cal/day)</li>
+                        <li>Ideal Weight Range based on BMI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">What is BMR vs. TDEE?</h4>
+                    <p className="text-muted-foreground text-sm">BMR (Basal Metabolic Rate) is the calories your body burns at rest. TDEE (Total Daily Energy Expenditure) includes those calories plus the energy used for physical activity.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">How many calories should I cut for weight loss?</h4>
+                    <p className="text-muted-foreground text-sm">A common recommendation is a 500-calorie daily deficit, which typically leads to about 1 pound of weight loss per week.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is this calculator accurate for athletes?</h4>
+                    <p className="text-muted-foreground text-sm">While very accurate for most, people with exceptionally high muscle mass may find their actual needs are slightly higher than the estimate.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Should I eat below my BMR?</h4>
+                    <p className="text-muted-foreground text-sm">It is generally not recommended to eat below your BMR without medical supervision, as your body needs those calories for basic organ function.</p>
+                </div>
+            </div>
+        </div>
+      </section>
     </>
   );
 }

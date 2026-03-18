@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Copy } from 'lucide-react';
+import { scrollToDownload } from '@/lib/utils';
 
 export default function ShortLinkMakerPage() {
   const [longUrl, setLongUrl] = useState('');
@@ -54,6 +55,7 @@ export default function ShortLinkMakerPage() {
         const data = await response.json();
         if (data.shortUrl) {
           setShortUrl(data.shortUrl);
+          scrollToDownload();
         } else {
           throw new Error('API did not return a short URL.');
         }
@@ -109,7 +111,7 @@ export default function ShortLinkMakerPage() {
         </Button>
       </CardContent>
       {shortUrl && !isLoading && (
-        <CardFooter className="flex flex-col items-start gap-4">
+        <CardFooter id="download-section" className="flex flex-col items-start gap-4">
             <div className="w-full space-y-2">
                 <Label htmlFor="short-url">Shortened URL</Label>
                 <div className="flex gap-2">

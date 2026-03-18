@@ -9,6 +9,8 @@ import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { Loader2, Download, Upload, ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import { scrollToDownload } from '@/lib/utils';
+import { SITE_CONFIG } from '@/lib/config';
 
 interface ImageFile {
   file: File;
@@ -59,7 +61,9 @@ export default function JpgToPdfPage() {
 
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      saveAs(blob, 'converted.pdf');
+      const fileName = `${SITE_CONFIG.name.replace(/\s+/g, '-').toLowerCase()}-${Math.floor(1000 + Math.random() * 9000)}.pdf`;
+      saveAs(blob, fileName);
+      scrollToDownload();
     } catch (error) {
       console.error(error);
       toast({ title: 'Conversion Failed', description: 'Could not convert images to PDF. Please try again.', variant: 'destructive' });
@@ -82,6 +86,7 @@ export default function JpgToPdfPage() {
 
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">JPG to PDF Converter</CardTitle>
@@ -119,11 +124,53 @@ export default function JpgToPdfPage() {
         )}
       </CardContent>
       <CardFooter>
-        <Button onClick={handleConvertToPdf} disabled={isLoading || images.length === 0}>
+        <Button id="download-section" onClick={handleConvertToPdf} disabled={isLoading || images.length === 0}>
           {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
           Convert to PDF
         </Button>
       </CardFooter>
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our JPG to PDF Converter?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">100% Client-Side Processing</h3>
+                    <p>Your photos are converted entirely within your web browser. They are never uploaded to our servers, ensuring your documents and private photos remain completely secure and private.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Instant Ordering</h3>
+                    <p>Easily drag or use our simple controls to reorder your images before conversion. Create a professional PDF document in exactly the sequence you need, without needing complex PDF editing software.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Fast and Free</h3>
+                    <p>No registration, no daily limits, and no watermarks. Our tool uses your local processing power to generate PDFs instantly, making it one of the fastest conversion tools available online.</p>
+                </div>
+            </div>
+        </div>
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I combine different image formats?</h4>
+                    <p className="text-muted-foreground text-sm">Currently, this tool is specifically optimized for JPG and JPEG files. For other formats like PNG or WebP, we recommend using our Image Converter first.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Is there a limit to how many images I can add?</h4>
+                    <p className="text-muted-foreground text-sm">There is no hard limit from our side. However, very large numbers of high-resolution images might depend on your device's available memory.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Will the PDF have watermarks?</h4>
+                    <p className="text-muted-foreground text-sm">No, we never add watermarks to your files. You get a clean, professional PDF file exactly as you intended.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I use this on my mobile phone?</h4>
+                    <p className="text-muted-foreground text-sm">Yes! This tool is fully mobile-friendly. You can upload photos directly from your phone's gallery and convert them to PDF on the go.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

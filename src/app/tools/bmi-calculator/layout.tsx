@@ -1,16 +1,32 @@
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
+import Script from 'next/script';
+import { SITE_CONFIG, getMetadata, getToolJsonLd } from '@/lib/config';
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
+export const metadata: Metadata = getMetadata({
+  title: 'Accurate Online BMI Calculator - Check Your Body Mass Index',
+  description: 'Calculate your Body Mass Index (BMI) easily with our free online calculator. Get instant results and clear health advice based on your weight and height.',
+  keywords: ['bmi calculator', 'body mass index', 'calculate bmi online', 'weight status', 'health calculator', 'body fat calculator', 'healthy weight'],
+  path: '/tools/bmi-calculator',
+});
 
-export const metadata: Metadata = {
-    title: `Free BMI Calculator - Check Your Body Mass Index Online`,
-    description: 'Use our free BMI calculator to instantly check your Body Mass Index. Enter your height and weight to find out if you are in a healthy weight range. Simple, fast, and accurate.',
-    keywords: ['BMI calculator', 'body mass index', 'health calculator', 'weight calculator', 'check BMI', 'free BMI tool', 'online calculator'],
-    alternates: {
-        canonical: '/tools/bmi-calculator',
-    }
-}
-
-export default function BmiCalculatorLayout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function BmiCalculatorLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const jsonLd = getToolJsonLd({
+    name: 'Accurate Online BMI Calculator - Check Your Body Mass Index',
+    description: 'Calculate your Body Mass Index (BMI) easily with our free online calculator. Get instant results and clear health advice based on your weight and height.',
+    url: `${SITE_CONFIG.url}/tools/bmi-calculator`,
+  });
+  return (
+    <>
+      <Script
+        id="tool-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {children}
+    </>
+  );
 }

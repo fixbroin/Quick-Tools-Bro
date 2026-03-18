@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Copy, Download } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   companyName: z.string().min(1, 'Company name is required.'),
@@ -103,6 +104,7 @@ export default function ReturnPolicyGeneratorPage() {
       const result = generateClientSideReturnPolicy(values);
       setGeneratedPolicy(result);
       toast({ title: 'Success!', description: 'Your return policy has been generated.' });
+      scrollToDownload();
     } catch (error) {
       console.error(error);
       toast({ title: 'Error', description: 'Failed to generate return policy.', variant: 'destructive' });
@@ -157,10 +159,11 @@ export default function ReturnPolicyGeneratorPage() {
             </Button>
           </CardContent>
         </form>
-      </Form>
-      {generatedPolicy && (
-        <CardFooter className="flex-col items-start gap-4">
+        </Form>
+        {generatedPolicy && (
+        <CardFooter id="download-section" className="flex-col items-start gap-4">
           <h3 className="font-semibold text-lg">Your Generated Return Policy</h3>
+
            <div className="w-full space-y-2">
                 <Textarea value={generatedPolicy} readOnly rows={20} className="bg-muted" />
                 <div className="flex gap-2">

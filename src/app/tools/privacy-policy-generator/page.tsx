@@ -15,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Copy, Download } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   companyName: z.string().min(1, 'Company name is required.'),
@@ -156,6 +157,7 @@ export default function PrivacyPolicyGeneratorPage() {
       const result = generateClientSidePrivacyPolicy(values);
       setGeneratedPolicy(result);
       toast({ title: 'Success!', description: 'Your privacy policy has been generated.' });
+      scrollToDownload();
     } catch (error) {
       console.error(error);
       toast({ title: 'Error', description: 'Failed to generate privacy policy.', variant: 'destructive' });
@@ -175,70 +177,118 @@ export default function PrivacyPolicyGeneratorPage() {
   };
 
   return (
-    <Card>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <CardHeader>
-            <CardTitle className="font-headline">Privacy Policy Generator</CardTitle>
-            <CardDescription>Answer the questions below to generate your policy.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <h3 className="font-semibold text-lg border-b pb-2">Common Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField control={form.control} name="companyName" render={({ field }) => (<FormItem><FormLabel>Company / Business Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="websiteUrl" render={({ field }) => (<FormItem><FormLabel>Website URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="country" render={({ field }) => (<FormItem><FormLabel>Country of Operation</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="state" render={({ field }) => (<FormItem><FormLabel>State/Province of Operation</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>)} />
-            </div>
-
-            <FormField control={form.control} name="collectData" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you collect personal data?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
-            
-            {watchCollectData === 'Yes' && (
-              <div className="space-y-4 p-4 border rounded-md">
-                 <FormField control={form.control} name="dataTypes" render={() => ( <FormItem><div className="mb-4"><FormLabel>What type of personal data do you collect?</FormLabel></div>{dataTypesOptions.map((item) => (<FormField key={item} control={form.control} name="dataTypes" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
-                 <FormField control={form.control} name="collectionMethods" render={() => ( <FormItem><div className="mb-4"><FormLabel>How do you collect personal data?</FormLabel></div>{collectionMethodsOptions.map((item) => (<FormField key={item} control={form.control} name="collectionMethods" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
-                 <FormField control={form.control} name="dataUsage" render={() => ( <FormItem><div className="mb-4"><FormLabel>How do you use the collected data?</FormLabel></div>{dataUsageOptions.map((item) => (<FormField key={item} control={form.control} name="dataUsage" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
+    <>
+      <Card>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <CardHeader>
+              <CardTitle className="font-headline">Privacy Policy Generator</CardTitle>
+              <CardDescription>Answer the questions below to generate your policy.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <h3 className="font-semibold text-lg border-b pb-2">Common Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField control={form.control} name="companyName" render={({ field }) => (<FormItem><FormLabel>Company / Business Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="websiteUrl" render={({ field }) => (<FormItem><FormLabel>Website URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="country" render={({ field }) => (<FormItem><FormLabel>Country of Operation</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="state" render={({ field }) => (<FormItem><FormLabel>State/Province of Operation</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                <FormField control={form.control} name="email" render={({ field }) => (<FormItem><FormLabel>Contact Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>)} />
               </div>
-            )}
 
-            <FormField control={form.control} name="useCookies" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you use cookies or tracking technologies?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
-            <FormField control={form.control} name="useThirdParty" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you use third-party tools (e.g., Google Analytics)?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
-            
-            {watchUseThirdParty === 'Yes' && (
-                 <div className="space-y-4 p-4 border rounded-md">
-                     <FormField control={form.control} name="shareData" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you share user data with any third parties?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
-                     {watchShareData === 'Yes' && (
-                        <FormField control={form.control} name="thirdParties" render={({ field }) => (<FormItem><FormLabel>If yes, name them (comma-separated)</FormLabel><FormControl><Input {...field} placeholder="e.g., Google Analytics, Stripe" /></FormControl><FormMessage /></FormItem>)} />
-                     )}
-                 </div>
-            )}
-            
-            <FormField control={form.control} name="targetAudience" render={({ field }) => (<FormItem><FormLabel>What is your target audience?</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-            <FormField control={form.control} name="compliance" render={() => ( <FormItem><FormLabel>Do you comply with specific data laws?</FormLabel>{complianceOptions.map((item) => (<FormField key={item} control={form.control} name="compliance" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
-
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Generate Policy
-            </Button>
-          </CardContent>
-        </form>
-      </Form>
-      {generatedPolicy && (
-        <CardFooter className="flex-col items-start gap-4">
-          <h3 className="font-semibold text-lg">Your Generated Privacy Policy</h3>
-           <div className="w-full space-y-2">
-                <Textarea value={generatedPolicy} readOnly rows={20} className="bg-muted" />
-                <div className="flex gap-2">
-                    <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4" /> Copy</Button>
-                    <Button variant="outline" onClick={handleDownloadTxt}><Download className="mr-2 h-4 w-4" /> Download .txt</Button>
+              <FormField control={form.control} name="collectData" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you collect personal data?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
+              
+              {watchCollectData === 'Yes' && (
+                <div className="space-y-4 p-4 border rounded-md">
+                   <FormField control={form.control} name="dataTypes" render={() => ( <FormItem><div className="mb-4"><FormLabel>What type of personal data do you collect?</FormLabel></div>{dataTypesOptions.map((item) => (<FormField key={item} control={form.control} name="dataTypes" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
+                   <FormField control={form.control} name="collectionMethods" render={() => ( <FormItem><div className="mb-4"><FormLabel>How do you collect personal data?</FormLabel></div>{collectionMethodsOptions.map((item) => (<FormField key={item} control={form.control} name="collectionMethods" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
+                   <FormField control={form.control} name="dataUsage" render={() => ( <FormItem><div className="mb-4"><FormLabel>How do you use the collected data?</FormLabel></div>{dataUsageOptions.map((item) => (<FormField key={item} control={form.control} name="dataUsage" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
                 </div>
+              )}
+
+              <FormField control={form.control} name="useCookies" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you use cookies or tracking technologies?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="useThirdParty" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you use third-party tools (e.g., Google Analytics)?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
+              
+              {watchUseThirdParty === 'Yes' && (
+                   <div className="space-y-4 p-4 border rounded-md">
+                       <FormField control={form.control} name="shareData" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Do you share user data with any third parties?</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4"><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="Yes" /></FormControl><FormLabel className="font-normal">Yes</FormLabel></FormItem><FormItem className="flex items-center space-x-3"><FormControl><RadioGroupItem value="No" /></FormControl><FormLabel className="font-normal">No</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
+                       {watchShareData === 'Yes' && (
+                          <FormField control={form.control} name="thirdParties" render={({ field }) => (<FormItem><FormLabel>If yes, name them (comma-separated)</FormLabel><FormControl><Input {...field} placeholder="e.g., Google Analytics, Stripe" /></FormControl><FormMessage /></FormItem>)} />
+                       )}
+                   </div>
+              )}
+              
+              <FormField control={form.control} name="targetAudience" render={({ field }) => (<FormItem><FormLabel>What is your target audience?</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="compliance" render={() => ( <FormItem><FormLabel>Do you comply with specific data laws?</FormLabel>{complianceOptions.map((item) => (<FormField key={item} control={form.control} name="compliance" render={({ field }) => {return (<FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0"><FormControl><Checkbox checked={field.value?.includes(item)} onCheckedChange={(checked) => {return checked ? field.onChange([...(field.value || []), item]) : field.onChange(field.value?.filter((value) => value !== item))}}/></FormControl><FormLabel className="font-normal">{item}</FormLabel></FormItem>);}} />))}<FormMessage /></FormItem>)} />
+
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Generate Policy
+              </Button>
+            </CardContent>
+          </form>
+        </Form>
+        {generatedPolicy && (
+          <CardFooter id="download-section" className="flex-col items-start gap-4">
+            <h3 className="font-semibold text-lg">Your Generated Privacy Policy</h3>
+             <div className="w-full space-y-2">
+                  <Textarea value={generatedPolicy} readOnly rows={20} className="bg-muted" />
+                  <div className="flex gap-2">
+                      <Button variant="outline" onClick={handleCopy}><Copy className="mr-2 h-4 w-4" /> Copy</Button>
+                      <Button variant="outline" onClick={handleDownloadTxt}><Download className="mr-2 h-4 w-4" /> Download .txt</Button>
+                  </div>
+              </div>
+              <p className="text-xs text-destructive mt-4">
+                  Disclaimer: This is a generic auto-generated legal document. Please consult with a legal professional for full compliance based on your jurisdiction.
+              </p>
+          </CardFooter>
+        )}
+      </Card>
+
+      <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+          <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Privacy Policy Generator?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Legally Compliant</h3>
+              <p>Our generator helps you create a privacy policy that addresses major data protection regulations like GDPR, CCPA, and PIPEDA, ensuring your business stays compliant with global standards.</p>
             </div>
-            <p className="text-xs text-destructive mt-4">
-                Disclaimer: This is a generic auto-generated legal document. Please consult with a legal professional for full compliance based on your jurisdiction.
-            </p>
-        </CardFooter>
-      )}
-    </Card>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Quick & Easy</h3>
+              <p>Forget about complex legal jargon. Simply answer a few straightforward questions about your data collection practices, and our tool will generate a comprehensive policy for you in minutes.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Free of Charge</h3>
+              <p>Save on expensive legal fees. Our tool provides a professional-grade privacy policy at no cost, making it ideal for startups, small businesses, and personal projects.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Tailored for You</h3>
+              <p>Whether you run a blog, a mobile app, or an e-commerce site, our generator allows you to customize the policy to reflect your specific data handling and sharing practices.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Why do I need a privacy policy?</h3>
+              <p>Most jurisdictions require websites and apps that collect any form of personal data to have a clear privacy policy. It also helps build trust with your users by being transparent about your data practices.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Is this privacy policy legally binding?</h3>
+              <p>Our generator provides a solid template based on general requirements. However, laws vary by region and industry. We recommend having a legal professional review the generated document for your specific needs.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Can I use this for my mobile app?</h3>
+              <p>Yes, the generator includes options to cover common data collection and usage patterns for both web applications and mobile apps, including third-party service integration.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">How often should I update my policy?</h3>
+              <p>You should review and update your privacy policy whenever you change how you collect or use data, or when new data protection laws are enacted in the regions where you operate.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   weight: z.string().min(1, 'Weight is required.').refine(val => !isNaN(parseFloat(val)) && parseFloat(val) > 0, 'Must be a positive number.'),
@@ -54,6 +55,7 @@ export default function GoldLoanCalculatorPage() {
     const totalGoldValue = weightVal * currentGoldPrice;
     const maxLoanAmount = totalGoldValue * (ltvVal / 100);
     setEligibleLoan(maxLoanAmount);
+    scrollToDownload();
   };
 
   useEffect(() => {
@@ -62,6 +64,7 @@ export default function GoldLoanCalculatorPage() {
   }, []);
 
   return (
+    <>
     <Card>
         <Form {...form}>
             <form onSubmit={form.handleSubmit(calculateLoan)}>
@@ -132,7 +135,7 @@ export default function GoldLoanCalculatorPage() {
         </Form>
       {eligibleLoan !== null && (
         <CardFooter>
-            <Alert>
+            <Alert id="download-section">
                 <AlertTitle className="text-2xl font-bold font-headline">Eligible Loan Amount</AlertTitle>
                 <AlertDescription className="text-3xl text-primary font-bold mt-2">
                     ₹ {eligibleLoan.toLocaleString(undefined, { maximumFractionDigits: 2 })}
@@ -144,5 +147,47 @@ export default function GoldLoanCalculatorPage() {
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Gold Loan Calculator?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Real-Time Estimates</h3>
+                    <p>Calculate your loan eligibility based on current market gold prices and the specific purity of your gold. Our tool provides instant feedback so you can plan your finances better.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Customizable LTV</h3>
+                    <p>Different lenders offer different Loan-to-Value (LTV) ratios. Our calculator allows you to adjust this percentage to see how it affects your maximum loan amount.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Purity Support</h3>
+                    <p>Whether you have 22K or 24K gold, our tool correctly adjusts the valuation to give you a realistic estimate of the loan you can receive.</p>
+                </div>
+            </div>
+        </div>
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">What is LTV in a gold loan?</h4>
+                    <p className="text-muted-foreground text-sm">LTV stands for Loan-to-Value. It is the percentage of the gold's total value that a lender is willing to give as a loan. In India, RBI usually caps this at 75%.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">How is the loan amount calculated?</h4>
+                    <p className="text-muted-foreground text-sm">It's calculated as: (Gold Weight × Current Gold Price for that Purity) × LTV Percentage. Our tool automates this for you.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Does the gold price include GST?</h4>
+                    <p className="text-muted-foreground text-sm">Usually, gold loan valuations are based on the market price of gold excluding GST. You should enter the price accordingly.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Are stones or gems included in weight?</h4>
+                    <p className="text-muted-foreground text-sm">No, lenders only consider the weight of the actual gold. You should subtract the estimated weight of any stones before using the calculator.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

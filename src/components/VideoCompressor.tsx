@@ -11,6 +11,8 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile } from '@ffmpeg/util';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
+import { SITE_CONFIG } from '@/lib/config';
+import { scrollToDownload } from '@/lib/utils';
 
 interface CompressionResult {
   compressedUrl: string;
@@ -98,7 +100,7 @@ export default function VideoCompressor() {
       
       let command: string[];
       if (mode === 'quality') {
-        setProgressMessage('Compressing by quality...');
+        setProgressMessage('Compressing...');
         const crfValue = 51 - quality;
         command = ['-i', inputFileName, '-vcodec', 'libx264', '-crf', crfValue.toString(), '-preset', 'fast', '-c:a', 'aac', outputFileName];
         await ffmpeg.exec(command);
@@ -116,16 +118,16 @@ export default function VideoCompressor() {
             throw new Error("Target size is too small for this video duration. Please choose a larger size or use quality mode.");
         }
         
-        setProgressMessage('Pass 1 of 2: Analyzing video...');
+        setProgressMessage('Pass 1 of 2: Analyzing...');
         await ffmpeg.exec(['-i', inputFileName, '-c:v', 'libx264', '-b:v', `${targetVideoBitrate}k`, '-pass', '1', '-an', '-f', 'null', '/dev/null']);
         
-        setProgressMessage('Pass 2 of 2: Compressing video...');
+        setProgressMessage('Pass 2 of 2: Compressing...');
         command = ['-i', inputFileName, '-c:v', 'libx264', '-b:v', `${targetVideoBitrate}k`, '-pass', '2', '-c:a', 'aac', '-b:a', `${audioBitrate}k`, outputFileName];
         await ffmpeg.exec(command);
       }
       
       const data = await ffmpeg.readFile(outputFileName);
-      const compressedBlob = new Blob([(data as Uint8Array).buffer], { type: 'video/mp4' });
+      const compressedBlob = new Blob([(data as Uint8Array).buffer as ArrayBuffer], { type: 'video/mp4' });
       const compressedUrl = URL.createObjectURL(compressedBlob);
 
       setResult({
@@ -136,6 +138,7 @@ export default function VideoCompressor() {
       });
 
       toast({ title: "Compression Complete!", description: "Video has been successfully compressed." });
+      scrollToDownload();
 
     } catch (error: any) {
       console.error(error);
@@ -175,6 +178,7 @@ export default function VideoCompressor() {
 
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">Video Compressor</CardTitle>
@@ -269,5 +273,55 @@ export default function VideoCompressor() {
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use {SITE_CONFIG.name} Video Compressor?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">100% Private & Secure:</strong> Our video compressor runs entirely in your browser. Your videos never leave your device, ensuring maximum privacy and security. No servers ever see your content.
+                    </p>
+                    <p>
+                        Whether you need to reduce video size for email, WhatsApp, or faster web uploads, our tool provides professional-grade compression without compromising your data security.
+                    </p>
+                </div>
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Advanced Compression Technology:</strong> We use industry-standard encoding to provide the best balance between file size and visual quality.
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                        <li>Two-pass encoding for precise target file sizes.</li>
+                        <li>Supports MP4, WebM, and MOV formats.</li>
+                        <li>Works completely in your browser.</li>
+                        <li>No registration or software installation required.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Video Compression FAQs</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">How does browser-based video compression work?</h4>
+                    <p className="text-muted-foreground text-sm">We use advanced web technologies to run a powerful compression engine directly inside your browser. This allows for high-quality re-encoding without needing to upload your files to a remote server.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is there a limit on video length or size?</h4>
+                    <p className="text-muted-foreground text-sm">To ensure a smooth experience, we limit uploads to 500MB. The time it takes to compress depends on your computer's processing power and the video duration.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Which mode should I choose: Quality or Target Size?</h4>
+                    <p className="text-muted-foreground text-sm">Use <strong>Quality mode</strong> if you want a reliable result with good clarity. Use <strong>Target Size mode</strong> if you need the video to be under a specific limit (like 25MB for email).</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Does it support 4K or 1080p videos?</h4>
+                    <p className="text-muted-foreground text-sm">Yes, but keep in mind that high-resolution videos require more processing power and memory from your device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

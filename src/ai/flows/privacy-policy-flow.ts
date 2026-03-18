@@ -21,12 +21,12 @@ const PrivacyPolicyInputSchema = z.object({
   useCookies: z.string(),
   useThirdParty: z.string(),
   targetAudience: z.string(),
-  dataTypes: z.array(z.string()),
-  collectionMethods: z.array(z.string()),
-  dataUsage: z.array(z.string()),
+  dataTypes: z.array(z.string()).optional(),
+  collectionMethods: z.array(z.string()).optional(),
+  dataUsage: z.array(z.string()).optional(),
   shareData: z.string().optional(),
   thirdParties: z.string().optional(),
-  compliance: z.array(z.string()),
+  compliance: z.array(z.string()).optional(),
 });
 
 const PrivacyPolicyOutputSchema = z.object({
@@ -107,6 +107,10 @@ const generatePrivacyPolicyFlow = ai.defineFlow(
   async (input) => {
     const processedInput = {
       ...input,
+      dataTypes: input.dataTypes || [],
+      collectionMethods: input.collectionMethods || [],
+      dataUsage: input.dataUsage || [],
+      compliance: input.compliance || [],
       isDataCollected: input.collectData === 'Yes',
       isThirdPartyUsed: input.useThirdParty === 'Yes',
       isDataShared: input.shareData === 'Yes',

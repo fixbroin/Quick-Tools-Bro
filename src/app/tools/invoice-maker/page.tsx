@@ -10,7 +10,7 @@ import { Plus, Trash, Download, Save, XCircle } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { cn, scrollToDownload } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Item {
@@ -142,7 +142,8 @@ export default function InvoiceMakerPage() {
     const requiredFields: (keyof FormState)[] = ['yourCompanyName', 'yourCompanyAddress', 'clientName', 'clientAddress', 'docNumber', 'docDate'];
     
     requiredFields.forEach(field => {
-        if (!formState[field]?.trim()) newErrors[field] = true;
+        const value = formState[field];
+        if (typeof value === 'string' && !value.trim()) newErrors[field] = true;
     });
 
     formState.items.forEach((item, index) => {
@@ -197,7 +198,7 @@ export default function InvoiceMakerPage() {
         doc.text(formState.yourCompanyName, 14, y);
         y += 5;
         doc.setFont('helvetica', 'normal');
-        doc.splitTextToSize(formState.yourCompanyAddress, 80).forEach(line => {
+        doc.splitTextToSize(formState.yourCompanyAddress, 80).forEach((line: string) => {
             doc.text(line, 14, y);
             y += 5;
         });
@@ -210,7 +211,7 @@ export default function InvoiceMakerPage() {
         doc.setFont('helvetica', 'normal');
         doc.text(formState.clientName, pageWidth / 2, clientY);
         clientY += 5;
-        doc.splitTextToSize(formState.clientAddress, 80).forEach(line => {
+        doc.splitTextToSize(formState.clientAddress, 80).forEach((line: string) => {
             doc.text(line, pageWidth / 2, clientY);
             clientY += 5;
         });
@@ -261,6 +262,7 @@ export default function InvoiceMakerPage() {
         
         doc.save(`invoice-${formState.docNumber}.pdf`);
         toast({ title: 'Success', description: `Invoice has been generated and downloaded.` });
+        scrollToDownload();
 
     } catch (e) {
         console.error(e);
@@ -281,6 +283,7 @@ export default function InvoiceMakerPage() {
   };
 
   return (
+    <>
     <Card>
       <form onSubmit={(e) => { e.preventDefault(); generatePdf(); }}>
         <CardHeader>
@@ -371,7 +374,7 @@ export default function InvoiceMakerPage() {
 
             <div><Label>Notes / Terms</Label><Textarea value={formState.notes || ''} onChange={e => handleInputChange('notes', e.target.value)} /></div>
         </CardContent>
-        <CardFooter className="flex-col items-start gap-4 md:flex-row md:justify-between">
+        <CardFooter id="download-section" className="flex-col items-start gap-4 md:flex-row md:justify-between">
             <div className="flex flex-col sm:flex-row gap-2">
                 <Button type="submit"><Download className="mr-2 h-4 w-4" /> Download Invoice</Button>
                 <Button type="button" variant="secondary" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save Draft</Button>
@@ -380,5 +383,47 @@ export default function InvoiceMakerPage() {
         </CardFooter>
       </form>
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Professional Invoice Maker?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Custom Branding</h3>
+                    <p>Easily upload your company logo and adjust the invoice colors to match your brand identity. A professional-looking invoice builds trust with your clients and ensures faster payments.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">GST & Tax Ready</h3>
+                    <p>Our tool is designed to handle various tax systems, including GST and VAT. You can customize tax names, rates, and HSN/SAC codes to comply with your local regulations effortlessly.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Save & Resume</h3>
+                    <p>Don't lose your work. Our tool automatically saves your invoice data locally in your browser, allowing you to come back later and finish or reuse previous details for new clients.</p>
+                </div>
+            </div>
+        </div>
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Is there a limit on the number of invoices?</h4>
+                    <p className="text-muted-foreground text-sm">No! You can generate as many invoices as you need for free. We don't limit the number of PDFs you can download or the number of items per invoice.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I use this for international clients?</h4>
+                    <p className="text-muted-foreground text-sm">Yes, we support multiple currencies including USD, EUR, GBP, and more. You can also change the date format and tax labels to suit international standards.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Is my business data secure?</h4>
+                    <p className="text-muted-foreground text-sm">Yes. Your data never touches our servers; it stays entirely in your browser. Even the PDF generation happens locally on your computer.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I add my own terms and conditions?</h4>
+                    <p className="text-muted-foreground text-sm">Absolutely. There is a dedicated "Notes / Terms" section where you can add payment instructions, bank details, or specific project terms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

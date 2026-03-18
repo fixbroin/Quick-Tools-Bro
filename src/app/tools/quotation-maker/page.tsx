@@ -10,7 +10,7 @@ import { Plus, Trash, Download, Save, XCircle } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { cn, scrollToDownload } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Item {
@@ -126,7 +126,8 @@ export default function QuotationMakerPage() {
     const requiredFields: (keyof FormState)[] = ['yourCompanyName', 'yourCompanyAddress', 'clientName', 'clientAddress', 'docNumber', 'docDate'];
     
     requiredFields.forEach(field => {
-        if (!formState[field]?.trim()) newErrors[field] = true;
+        const value = formState[field];
+        if (typeof value === 'string' && !value.trim()) newErrors[field] = true;
     });
 
     formState.items.forEach((item, index) => {
@@ -180,7 +181,7 @@ export default function QuotationMakerPage() {
         doc.text(formState.yourCompanyName, 14, y);
         y += 5;
         doc.setFont('helvetica', 'normal');
-        doc.splitTextToSize(formState.yourCompanyAddress, 80).forEach(line => {
+        doc.splitTextToSize(formState.yourCompanyAddress, 80).forEach((line: string) => {
             doc.text(line, 14, y);
             y += 5;
         });
@@ -192,7 +193,7 @@ export default function QuotationMakerPage() {
         doc.setFont('helvetica', 'normal');
         doc.text(formState.clientName, pageWidth / 2, clientY);
         clientY += 5;
-        doc.splitTextToSize(formState.clientAddress, 80).forEach(line => {
+        doc.splitTextToSize(formState.clientAddress, 80).forEach((line: string) => {
             doc.text(line, pageWidth / 2, clientY);
             clientY += 5;
         });
@@ -239,6 +240,7 @@ export default function QuotationMakerPage() {
 
         doc.save(`quotation-${formState.docNumber}.pdf`);
         toast({ title: 'Success', description: `Quotation has been generated and downloaded.` });
+        scrollToDownload();
 
     } catch (e) {
         console.error(e);
@@ -259,93 +261,141 @@ export default function QuotationMakerPage() {
   };
 
   return (
-    <Card>
-      <form onSubmit={(e) => { e.preventDefault(); generatePdf(); }}>
-        <CardHeader>
-            <CardTitle className="font-headline">Quotation Maker</CardTitle>
-            <CardDescription>Create and send professional quotations.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4 p-4 border rounded-lg">
-                    <h3 className="font-semibold text-lg">Your Details</h3>
-                    <div><Label>Company Name</Label><Input value={formState.yourCompanyName} onChange={e => handleInputChange('yourCompanyName', e.target.value)} className={cn(errors.yourCompanyName && 'border-destructive')} /></div>
-                    <div><Label>Address</Label><Textarea value={formState.yourCompanyAddress} onChange={e => handleInputChange('yourCompanyAddress', e.target.value)} className={cn(errors.yourCompanyAddress && 'border-destructive')} /></div>
-                    <div><Label>Logo</Label><Input type="file" accept="image/png, image/jpeg" onChange={handleLogoChange}/></div>
-                    {formState.yourLogo && <img src={formState.yourLogo} alt="Logo preview" className="w-24 h-24 object-contain rounded-md border p-1" />}
-                </div>
+    <>
+      <Card>
+        <form onSubmit={(e) => { e.preventDefault(); generatePdf(); }}>
+          <CardHeader>
+              <CardTitle className="font-headline">Quotation Maker</CardTitle>
+              <CardDescription>Create and send professional quotations.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4 p-4 border rounded-lg">
+                      <h3 className="font-semibold text-lg">Your Details</h3>
+                      <div><Label>Company Name</Label><Input value={formState.yourCompanyName} onChange={e => handleInputChange('yourCompanyName', e.target.value)} className={cn(errors.yourCompanyName && 'border-destructive')} /></div>
+                      <div><Label>Address</Label><Textarea value={formState.yourCompanyAddress} onChange={e => handleInputChange('yourCompanyAddress', e.target.value)} className={cn(errors.yourCompanyAddress && 'border-destructive')} /></div>
+                      <div><Label>Logo</Label><Input type="file" accept="image/png, image/jpeg" onChange={handleLogoChange}/></div>
+                      {formState.yourLogo && <img src={formState.yourLogo} alt="Logo preview" className="w-24 h-24 object-contain rounded-md border p-1" />}
+                  </div>
 
-                <div className="space-y-4 p-4 border rounded-lg">
-                    <h3 className="font-semibold text-lg">Client Details</h3>
-                    <div><Label>Client Name</Label><Input value={formState.clientName} onChange={e => handleInputChange('clientName', e.target.value)} className={cn(errors.clientName && 'border-destructive')} /></div>
-                    <div><Label>Client Address</Label><Textarea value={formState.clientAddress} onChange={e => handleInputChange('clientAddress', e.target.value)} className={cn(errors.clientAddress && 'border-destructive')} /></div>
-                </div>
-            </div>
+                  <div className="space-y-4 p-4 border rounded-lg">
+                      <h3 className="font-semibold text-lg">Client Details</h3>
+                      <div><Label>Client Name</Label><Input value={formState.clientName} onChange={e => handleInputChange('clientName', e.target.value)} className={cn(errors.clientName && 'border-destructive')} /></div>
+                      <div><Label>Client Address</Label><Textarea value={formState.clientAddress} onChange={e => handleInputChange('clientAddress', e.target.value)} className={cn(errors.clientAddress && 'border-destructive')} /></div>
+                  </div>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 <div><Label>Quotation #</Label><Input value={formState.docNumber} onChange={e => handleInputChange('docNumber', e.target.value)} className={cn(errors.docNumber && 'border-destructive')}/></div>
-                 <div><Label>Date</Label><Input type="date" value={formState.docDate} onChange={e => handleInputChange('docDate', e.target.value)} className={cn(errors.docDate && 'border-destructive')}/></div>
-                 <div>
-                    <Label>Currency</Label>
-                    <Select value={formState.currency} onValueChange={v => handleInputChange('currency', v)}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                            {currencies.map(c => <SelectItem key={c.code} value={c.symbol}>{c.code} ({c.symbol})</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                 </div>
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div><Label>Quotation #</Label><Input value={formState.docNumber} onChange={e => handleInputChange('docNumber', e.target.value)} className={cn(errors.docNumber && 'border-destructive')}/></div>
+                  <div><Label>Date</Label><Input type="date" value={formState.docDate} onChange={e => handleInputChange('docDate', e.target.value)} className={cn(errors.docDate && 'border-destructive')}/></div>
+                  <div>
+                      <Label>Currency</Label>
+                      <Select value={formState.currency} onValueChange={v => handleInputChange('currency', v)}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                              {currencies.map(c => <SelectItem key={c.code} value={c.symbol}>{c.code} ({c.symbol})</SelectItem>)}
+                          </SelectContent>
+                      </Select>
+                  </div>
+              </div>
 
-            <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Items</h3>
-                <div className="space-y-2">
-                     <div className="hidden md:grid md:grid-cols-12 gap-2 items-start p-2">
-                        <Label className="md:col-span-7">Description</Label>
-                        <Label className="md:col-span-1">Qty</Label>
-                        <Label className="md:col-span-2">Rate</Label>
-                        <Label className="md:col-span-1">Amount</Label>
-                    </div>
-                    {formState.items.map((item, index) => (
-                        <div key={index} className="grid grid-cols-12 gap-2 items-start p-2 md:p-0 border md:border-0 rounded-md md:rounded-none">
-                            <div className="col-span-12 md:col-span-7"><Label className="md:hidden">Description</Label><Input value={item.description} onChange={e => handleItemChange(index, 'description', e.target.value)} placeholder="Item Description" className={cn(errors[`item-${index}-description`] && 'border-destructive')}/></div>
-                            <div className="col-span-6 md:col-span-1"><Label className="md:hidden">Qty</Label><Input type="number" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} className={cn(errors[`item-${index}-quantity`] && 'border-destructive')}/></div>
-                            <div className="col-span-6 md:col-span-2"><Label className="md:hidden">Rate</Label><Input type="number" value={item.rate} onChange={e => handleItemChange(index, 'rate', e.target.value)} className={cn(errors[`item-${index}-rate`] && 'border-destructive')}/></div>
-                            <div className="col-span-6 md:col-span-1"><Label className="md:hidden">Amount</Label><p className="flex h-10 items-center">{formState.currency}{( (Number(item.quantity) || 0) * (Number(item.rate) || 0) ).toFixed(2)}</p></div>
-                            <div className="col-span-12 md:col-span-1 self-center"><Button type="button" variant="destructive" size="icon" onClick={() => removeItem(index)}><Trash className="h-4 w-4" /></Button></div>
-                        </div>
-                    ))}
-                </div>
-                 <Button type="button" variant="outline" onClick={addItem}><Plus className="mr-2 h-4 w-4" /> Add Item</Button>
-            </div>
-            
-            <div className="flex justify-end">
-                <div className="w-full md:w-1/3 space-y-2">
-                    <div className="flex justify-between"><Label>Subtotal</Label><span>{formState.currency}{subtotal.toFixed(2)}</span></div>
-                    <div>
-                        <p className="text-xs text-muted-foreground mb-1">(You can edit the tax name)</p>
-                        <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                                <Input value={formState.taxName} onChange={e => handleInputChange('taxName', e.target.value)} className="w-20 h-8" />
-                                <Label>(%)</Label>
-                            </div>
-                            <Input type="number" value={formState.taxRate} onChange={e => handleInputChange('taxRate', e.target.value)} className="w-24 h-8" />
-                        </div>
-                    </div>
-                    <div className="flex justify-between"><Label>Tax Amount</Label><span>{formState.currency}{taxAmount.toFixed(2)}</span></div>
-                    <div className="flex justify-between font-bold text-lg"><Label>Total</Label><span>{formState.currency}{total.toFixed(2)}</span></div>
-                </div>
-            </div>
+              <div className="space-y-4">
+                  <h3 className="font-semibold text-lg">Items</h3>
+                  <div className="space-y-2">
+                      <div className="hidden md:grid md:grid-cols-12 gap-2 items-start p-2">
+                          <Label className="md:col-span-7">Description</Label>
+                          <Label className="md:col-span-1">Qty</Label>
+                          <Label className="md:col-span-2">Rate</Label>
+                          <Label className="md:col-span-1">Amount</Label>
+                      </div>
+                      {formState.items.map((item, index) => (
+                          <div key={index} className="grid grid-cols-12 gap-2 items-start p-2 md:p-0 border md:border-0 rounded-md md:rounded-none">
+                              <div className="col-span-12 md:col-span-7"><Label className="md:hidden">Description</Label><Input value={item.description} onChange={e => handleItemChange(index, 'description', e.target.value)} placeholder="Item Description" className={cn(errors[`item-${index}-description`] && 'border-destructive')}/></div>
+                              <div className="col-span-6 md:col-span-1"><Label className="md:hidden">Qty</Label><Input type="number" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} className={cn(errors[`item-${index}-quantity`] && 'border-destructive')}/></div>
+                              <div className="col-span-6 md:col-span-2"><Label className="md:hidden">Rate</Label><Input type="number" value={item.rate} onChange={e => handleItemChange(index, 'rate', e.target.value)} className={cn(errors[`item-${index}-rate`] && 'border-destructive')}/></div>
+                              <div className="col-span-6 md:col-span-1"><Label className="md:hidden">Amount</Label><p className="flex h-10 items-center">{formState.currency}{( (Number(item.quantity) || 0) * (Number(item.rate) || 0) ).toFixed(2)}</p></div>
+                              <div className="col-span-12 md:col-span-1 self-center"><Button type="button" variant="destructive" size="icon" onClick={() => removeItem(index)}><Trash className="h-4 w-4" /></Button></div>
+                          </div>
+                      ))}
+                  </div>
+                  <Button type="button" variant="outline" onClick={addItem}><Plus className="mr-2 h-4 w-4" /> Add Item</Button>
+              </div>
+              
+              <div className="flex justify-end">
+                  <div className="w-full md:w-1/3 space-y-2">
+                      <div className="flex justify-between"><Label>Subtotal</Label><span>{formState.currency}{subtotal.toFixed(2)}</span></div>
+                      <div>
+                          <p className="text-xs text-muted-foreground mb-1">(You can edit the tax name)</p>
+                          <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                  <Input value={formState.taxName} onChange={e => handleInputChange('taxName', e.target.value)} className="w-20 h-8" />
+                                  <Label>(%)</Label>
+                              </div>
+                              <Input type="number" value={formState.taxRate} onChange={e => handleInputChange('taxRate', e.target.value)} className="w-24 h-8" />
+                          </div>
+                      </div>
+                      <div className="flex justify-between"><Label>Tax Amount</Label><span>{formState.currency}{taxAmount.toFixed(2)}</span></div>
+                      <div className="flex justify-between font-bold text-lg"><Label>Total</Label><span>{formState.currency}{total.toFixed(2)}</span></div>
+                  </div>
+              </div>
 
-            <div><Label>Notes / Terms</Label><Textarea value={formState.notes} onChange={e => handleInputChange('notes', e.target.value)} /></div>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-4 md:flex-row md:justify-between">
-            <div className="flex flex-col sm:flex-row gap-2">
-                <Button type="submit"><Download className="mr-2 h-4 w-4" /> Download Quotation</Button>
-                <Button type="button" variant="secondary" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save Draft</Button>
+              <div><Label>Notes / Terms</Label><Textarea value={formState.notes} onChange={e => handleInputChange('notes', e.target.value)} /></div>
+          </CardContent>
+          <CardFooter id="download-section" className="flex-col items-start gap-4 md:flex-row md:justify-between">
+              <div className="flex flex-col sm:flex-row gap-2">
+                  <Button type="submit"><Download className="mr-2 h-4 w-4" /> Download Quotation</Button>
+                  <Button type="button" variant="secondary" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save Draft</Button>
+              </div>
+              <Button type="button" variant="ghost" onClick={handleClear}><XCircle className="mr-2 h-4 w-4" /> Clear Form</Button>
+          </CardFooter>
+        </form>
+      </Card>
+
+      <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+          <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Quotation Maker?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Professional Templates</h3>
+              <p>Generate clean, professional quotations that impress your clients and help you close deals faster. Our templates are designed for clarity and impact.</p>
             </div>
-            <Button type="button" variant="ghost" onClick={handleClear}><XCircle className="mr-2 h-4 w-4" /> Clear Form</Button>
-        </CardFooter>
-      </form>
-    </Card>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Instant PDF Generation</h3>
+              <p>Convert your quotation data into a high-quality PDF document in one click. It's ready to be sent to your clients via email or WhatsApp immediately.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Local Storage</h3>
+              <p>Your drafts are automatically saved to your browser's local storage. You don't lose your work if you refresh the page or return later to complete it.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Customizable Details</h3>
+              <p>Easily add your company logo, set specific tax rates, and include custom terms and conditions to tailor the quotation perfectly to your business needs.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">How do I add my company logo?</h3>
+              <p>Simply click on the "Logo" upload button in the Your Details section and select an image file from your device. It will be automatically added to the PDF.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Can I save my quotations for later?</h3>
+              <p>Yes, by clicking the "Save Draft" button, your current progress is saved locally in your browser and will be reloaded automatically the next time you visit.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">What currencies are supported?</h3>
+              <p>We support multiple currencies including INR, USD, EUR, GBP, JPY, and AUD. You can easily switch your preferred currency from the dropdown menu.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Is my business data safe?</h3>
+              <p>Yes, all processing occurs directly in your browser. We do not store any of your business, client, or pricing information on our servers, ensuring complete privacy.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

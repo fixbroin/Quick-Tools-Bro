@@ -10,80 +10,55 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { InstallPWAButton } from '@/components/InstallPWAButton';
-
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
-const siteTitle = process.env.NEXT_PUBLIC_SITE_TITLE || `${siteName} - All-in-One File & Tool Hub`;
-const siteDescription = process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'A collection of free, browser-based tools.';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-const siteImage = process.env.NEXT_PUBLIC_SITE_IMAGE || '/android-chrome-512x512.png';
-const twitterHandle = process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@Quick Tools Bro';
+import { SITE_CONFIG, getMetadata } from '@/lib/config';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: siteTitle,
-    template: `%s | ${siteName}`,
-  },
-  description: siteDescription,
-  keywords: process.env.NEXT_PUBLIC_SITE_KEYWORDS?.split(','),
-  applicationName: siteName,
+  ...getMetadata(),
+  applicationName: SITE_CONFIG.name,
   manifest: "/manifest.json",
-  alternates: {
-    canonical: '/',
-  },
+  authors: [{ name: 'FixBro', url: 'https://fixbro.in' }],
+  creator: 'FixBro',
+  publisher: 'FixBro',
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: siteName,
+    title: SITE_CONFIG.name,
   },
   formatDetection: {
     telephone: false,
   },
-  openGraph: {
-    type: "website",
-    siteName: siteName,
-    title: {
-      default: siteTitle,
-      template: `%s | ${siteName}`,
-    },
-    description: siteDescription,
-    images: [
-      {
-        url: siteImage,
-        width: 512,
-        height: 512,
-        alt: siteName,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: twitterHandle,
-    creator: twitterHandle,
-    title: {
-      default: siteTitle,
-      template: `%s | ${siteName}`,
-    },
-    description: siteDescription,
-     images: [siteImage],
-  },
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
+    shortcut: '/favicon-32x32.png',
     apple: '/apple-touch-icon.png',
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: process.env.NEXT_PUBLIC_THEME_COLOR || "#29ABE2",
+  themeColor: SITE_CONFIG.themeColor,
 };
-
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": SITE_CONFIG.name,
+    "url": SITE_CONFIG.url,
+    "description": SITE_CONFIG.description,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${SITE_CONFIG.url}/?s={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -94,18 +69,41 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <Script
-          id="clarity-script"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "tb2fkr70df");
-            `,
-          }}
+          id="json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
+        {process.env.NEXT_PUBLIC_CLARITY_ID && (
+          <Script
+            id="clarity-script"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_ID}");
+              `,
+            }}
+          />
+        )}
       </head>
       <body className={cn('font-body antialiased')}>
         <ThemeProvider

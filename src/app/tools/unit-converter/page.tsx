@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowRightLeft } from 'lucide-react';
+import { scrollToDownload } from '@/lib/utils';
 
 const unitConfig = {
   length: {
@@ -180,8 +181,9 @@ export default function UnitConverterPage() {
     }
     
     const categoryData = unitConfig[category];
-    const fromData = categoryData.units[fromUnit as keyof typeof categoryData.units];
-    const toData = categoryData.units[toUnit as keyof typeof categoryData.units];
+    const units = categoryData.units as Record<string, { label: string; toBase: (v: number) => number; fromBase?: (v: number) => number }>;
+    const fromData = units[fromUnit];
+    const toData = units[toUnit];
 
     if (!fromData || !toData) {
         setOutputValue('');
@@ -199,6 +201,7 @@ export default function UnitConverterPage() {
     }
     
     setOutputValue(finalValue.toLocaleString(undefined, { maximumFractionDigits: 5 }));
+    if (finalValue !== 0) scrollToDownload();
 
   }, [inputValue, fromUnit, toUnit, category]);
   
@@ -264,7 +267,7 @@ export default function UnitConverterPage() {
 
         <div className="space-y-2">
             <Label>Converted Value</Label>
-            <div className="flex items-center h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm">
+            <div id="download-section" className="flex items-center h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm">
                 {outputValue}
             </div>
         </div>

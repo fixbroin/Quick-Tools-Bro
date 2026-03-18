@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { BmiCategoryChart } from '@/components/BmiCategoryChart';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   heightUnit: z.enum(['cm', 'ft']),
@@ -153,6 +154,7 @@ export default function BmiCalculatorPage() {
     setBmiCategory(category);
     setAdvice(adviceMsg);
     setFunnyAdvice(funnyMsg);
+    scrollToDownload();
   };
 
   const getBmiColor = () => {
@@ -267,7 +269,7 @@ export default function BmiCalculatorPage() {
             <Button type="submit">Calculate BMI</Button>
 
             {bmi !== null && (
-              <Alert className={getBmiColor().replace('text-', 'border-').replace('-500', '/50')}>
+              <Alert id="download-section" className={getBmiColor().replace('text-', 'border-').replace('-500', '/50')}>
                  <AlertTitle className="text-2xl font-bold">Your BMI is {bmi.toFixed(1)}</AlertTitle>
                  <AlertDescription className={`text-lg ${getBmiColor()}`}>{bmiCategory}</AlertDescription>
                  {advice && <AlertDescription className="mt-2 text-foreground/80">{advice}</AlertDescription>}
@@ -281,6 +283,55 @@ export default function BmiCalculatorPage() {
     <div className="mt-8">
         <BmiCategoryChart />
     </div>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Understanding Your BMI Results</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">What is BMI?</strong> Body Mass Index (BMI) is a simple numerical measure of your body fat based on your height and weight. It is widely used as a screening tool to identify whether a person is underweight, normal weight, overweight, or obese.
+                    </p>
+                    <p>
+                        While BMI doesn't directly measure body fat, it correlates moderately with more direct measures of body fat. Furthermore, BMI is a low-cost and easy-to-perform method of screening for weight categories that may lead to health problems.
+                    </p>
+                </div>
+                <div className="space-y-4">
+                    <p>
+                        <strong className="text-primary font-bold">Why it matters:</strong> Knowing your BMI can be a helpful starting point for conversations with your healthcare provider about your weight and overall health. Maintaining a healthy BMI can significantly reduce the risk of various chronic conditions, including:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                        <li>Type 2 Diabetes</li>
+                        <li>High Blood Pressure (Hypertension)</li>
+                        <li>Cardiovascular Disease</li>
+                        <li>Certain types of Cancers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is BMI accurate for everyone?</h4>
+                    <p className="text-muted-foreground text-sm">BMI is a general screening tool and may not be accurate for athletes with high muscle mass, pregnant women, or the elderly, as it doesn't distinguish between muscle and fat.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">What is a 'healthy' BMI range?</h4>
+                    <p className="text-muted-foreground text-sm">For most adults, a healthy BMI is considered to be between 18.5 and 24.9. Ranges below 18.5 are underweight, and above 25 are overweight.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">How often should I check my BMI?</h4>
+                    <p className="text-muted-foreground text-sm">It's a good idea to check your BMI periodically as part of your overall health monitoring, especially if you're making changes to your diet or exercise routine.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2 text-base">Is this calculator secure?</h4>
+                    <p className="text-muted-foreground text-sm">Yes, your data is processed entirely in your browser and is never stored or sent to any server, ensuring complete privacy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
     </>
   );
 }

@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { Download, Loader2 } from 'lucide-react';
+import { scrollToDownload } from '@/lib/utils';
 
 export default function ImageResizerPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -97,6 +98,7 @@ export default function ImageResizerPage() {
         };
     }).then(dataUrl => {
         setResizedUrl(dataUrl);
+        scrollToDownload();
     }).catch(error => {
         toast({ title: error.message, variant: 'destructive' });
     }).finally(() => {
@@ -105,6 +107,7 @@ export default function ImageResizerPage() {
   }, [originalFile, originalUrl, width, height, toast]);
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">Image Resizer</CardTitle>
@@ -166,7 +169,7 @@ export default function ImageResizerPage() {
         </div>
       </CardContent>
       {resizedUrl && !isLoading && originalFile && (
-        <CardFooter>
+        <CardFooter id="download-section">
           <Button asChild>
             <a href={resizedUrl} download={`resized-${originalFile.name}`}>
               <Download className="mr-2 h-4 w-4" />
@@ -176,5 +179,47 @@ export default function ImageResizerPage() {
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none border-t pt-12">
+        <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Image Resizer?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Maintain Quality</h3>
+                    <p>Our tool uses advanced browser-side canvas rendering to ensure that your images remain as sharp as possible after resizing. Whether you're scaling down for the web or adjusting for social media, quality is our priority.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Aspect Ratio Lock</h3>
+                    <p>Never worry about stretching or squishing your photos. With the "Lock Aspect Ratio" feature, your image's proportions are automatically preserved, so scaling the width will perfectly adjust the height.</p>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-3">Local Processing</h3>
+                    <p>Privacy is key. Your images are processed entirely in your browser, meaning they never touch our servers. This also makes the process incredibly fast, regardless of your internet connection speed.</p>
+                </div>
+            </div>
+        </div>
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Is this tool free to use?</h4>
+                    <p className="text-muted-foreground text-sm">Absolutely! Our image resizer is completely free with no registration or subscription required. Resize as many images as you need.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">What image formats are supported?</h4>
+                    <p className="text-muted-foreground text-sm">We support all standard web formats, including JPG, PNG, WebP, and BMP. The resized image will be exported in the same format as your original.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Can I resize to a specific file size?</h4>
+                    <p className="text-muted-foreground text-sm">This tool focuses on pixel dimensions. If you need to reduce the file size (MB/KB), we recommend using our Image Compressor tool after resizing.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border bg-card">
+                    <h4 className="font-bold mb-2">Will my original image be changed?</h4>
+                    <p className="text-muted-foreground text-sm">No, the resizing happens in memory and a new file is created for you to download. Your original file remains untouched on your device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

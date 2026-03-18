@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { Download, Loader2 } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
+import { scrollToDownload } from '@/lib/utils';
 
 interface CompressionResult {
   originalUrl: string;
@@ -77,6 +78,7 @@ export default function ImageCompressorPage() {
         compressedSize: compressedFile.size,
         compressedFile: compressedFile,
       });
+      scrollToDownload();
 
     } catch (error: any) {
       console.error(error);
@@ -125,6 +127,7 @@ export default function ImageCompressorPage() {
 
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">Image Compressor</CardTitle>
@@ -195,12 +198,70 @@ export default function ImageCompressorPage() {
           <div className="text-sm font-medium">
             Size Reduction: {Math.max(0, (((result.originalSize - result.compressedSize) / result.originalSize) * 100)).toFixed(2)}%
           </div>
-          <Button onClick={handleDownload}>
+          <Button id="download-section" onClick={handleDownload}>
               <Download className="mr-2 h-4 w-4" />
               Download Compressed Image
           </Button>
         </CardFooter>
       )}
     </Card>
+
+    <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none">
+        <div className="bg-muted/50 rounded-2xl p-6 md:p-10 border border-border/50">
+            <h2 className="text-3xl font-bold font-headline mb-6">Why Use Our Online Image Compressor?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="space-y-3">
+                    <h3 className="text-xl font-bold flex items-center gap-2 text-primary">
+                        <span className="p-2 rounded-lg bg-primary/10">🔒</span>
+                        Privacy First
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                        Your images never leave your device. All compression happens entirely in your browser, ensuring 100% security and privacy.
+                    </p>
+                </div>
+                <div className="space-y-3">
+                    <h3 className="text-xl font-bold flex items-center gap-2 text-primary">
+                        <span className="p-2 rounded-lg bg-primary/10">⚡</span>
+                        Blazing Fast
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                        No uploading to a server means no waiting. Compress even large images instantly using your local processing power.
+                    </p>
+                </div>
+                <div className="space-y-3">
+                    <h3 className="text-xl font-bold flex items-center gap-2 text-primary">
+                        <span className="p-2 rounded-lg bg-primary/10">📉</span>
+                        High Efficiency
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                        Our advanced algorithms significantly reduce file sizes while maintaining professional-grade visual quality.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-headline">Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2">Is this image compressor free?</h4>
+                    <p className="text-muted-foreground text-sm">Yes! Our tool is completely free to use with no hidden costs, limits, or registration required.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2">Which formats are supported?</h4>
+                    <p className="text-muted-foreground text-sm">We support all popular web formats, including JPEG, PNG, and WebP, for maximum compatibility.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2">Does compression affect quality?</h4>
+                    <p className="text-muted-foreground text-sm">You can choose between Target Size or Quality mode to perfectly balance file size reduction and visual clarity.</p>
+                </div>
+                <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
+                    <h4 className="font-bold mb-2">Is there a file size limit?</h4>
+                    <p className="text-muted-foreground text-sm">Since the tool runs in your browser, the limit depends on your device memory. Most high-res photos work flawlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </>
   );
 }

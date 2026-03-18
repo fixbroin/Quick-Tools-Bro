@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Copy, Download } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import { scrollToDownload } from '@/lib/utils';
 
 const formSchema = z.object({
   companyName: z.string().min(1, 'Company name is required.'),
@@ -128,6 +129,7 @@ export default function TermsAndConditionsGeneratorPage() {
       const result = generateClientSideTerms(values);
       setGeneratedTerms(result);
       toast({ title: 'Success!', description: 'Your Terms & Conditions have been generated.' });
+      scrollToDownload();
     } catch (error) {
       console.error(error);
       toast({ title: 'Error', description: 'Failed to generate document.', variant: 'destructive' });
@@ -194,10 +196,11 @@ export default function TermsAndConditionsGeneratorPage() {
             </Button>
           </CardContent>
         </form>
-      </Form>
-      {generatedTerms && (
-        <CardFooter className="flex-col items-start gap-4">
+        </Form>
+        {generatedTerms && (
+        <CardFooter id="download-section" className="flex-col items-start gap-4">
           <h3 className="font-semibold text-lg">Your Generated Terms & Conditions</h3>
+
           <div className="w-full space-y-2">
             <Textarea value={generatedTerms} readOnly rows={20} className="bg-muted" />
              <div className="flex gap-2">
