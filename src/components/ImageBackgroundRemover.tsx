@@ -60,7 +60,7 @@ export default function ImageBackgroundRemover() {
         else setStatus(`Working... ${percent}%`);
       },
       output: {
-          type: 'image/png',
+          format: 'image/png',
           quality: 0.8
       }
     };
