@@ -35,45 +35,7 @@ const ImageBackgroundRemover = dynamic(
 );
 
 export default function BackgroundRemoverPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Image Background Remover",
-    "operatingSystem": "Web",
-    "applicationCategory": "MultimediaApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "description": "Remove image backgrounds automatically in the browser using AI. 100% private and secure.",
-    "howTo": {
-      "@type": "HowTo",
-      "name": "How to remove background from an image",
-      "step": [
-        {
-          "@type": "HowToStep",
-          "text": "Upload your JPG, PNG, or WebP image."
-        },
-        {
-          "@type": "HowToStep",
-          "text": "Click 'Remove Background' and wait for the AI to process the image locally."
-        },
-        {
-          "@type": "HowToStep",
-          "text": "Download your new transparent PNG image."
-        }
-      ]
-    }
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <ImageBackgroundRemover />
-    </>
+    <ImageBackgroundRemover />
   );
 }
