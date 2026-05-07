@@ -61,7 +61,7 @@ export default function ImageBackgroundRemover() {
       },
       output: {
           format: 'image/png',
-          quality: 0.8
+          quality: 1.0
       }
     };
 
@@ -158,11 +158,18 @@ export default function ImageBackgroundRemover() {
                         src={resultUrl} 
                         alt="Background Removed" 
                         fill 
-                        className="object-contain"
+                        className="object-contain animate-in fade-in zoom-in duration-300"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-muted-foreground text-sm italic bg-muted/10">
-                        {isLoading ? 'Processing...' : 'Result will appear here'}
+                      <div className="flex flex-col items-center justify-center h-full text-muted-foreground text-sm italic bg-muted/10">
+                        {isLoading ? (
+                          <div className="flex flex-col items-center gap-3">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                            <span className="animate-pulse font-medium">AI is working...</span>
+                          </div>
+                        ) : (
+                          'Result will appear here'
+                        )}
                       </div>
                     )}
                   </div>
@@ -170,20 +177,32 @@ export default function ImageBackgroundRemover() {
               </div>
 
               {isLoading && (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>{status}</span>
+                <div className="space-y-3 p-4 bg-primary/5 rounded-lg border border-primary/10 animate-pulse">
+                  <div className="flex justify-between text-sm font-medium">
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      {status}
+                    </span>
                     <span>{progress}%</span>
                   </div>
-                  <Progress value={progress} className="h-2" />
+                  <Progress value={progress} className="h-3 shadow-inner" />
+                  <p className="text-[10px] text-center text-muted-foreground italic">
+                    Please do not close the tab. Processing happens locally on your device.
+                  </p>
                 </div>
               )}
 
               <div className="flex flex-wrap gap-4">
                 {!resultUrl && !isLoading && (
-                  <Button onClick={handleRemoveBackground} className="flex-1">
-                    <RefreshCw className="mr-2 h-4 w-4" />
+                  <Button onClick={handleRemoveBackground} className="flex-1 h-12 text-lg">
+                    <RefreshCw className="mr-2 h-5 w-5" />
                     Remove Background
+                  </Button>
+                )}
+                {isLoading && (
+                  <Button disabled className="flex-1 h-12 text-lg">
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Removing Background...
                   </Button>
                 )}
                 {resultUrl && !isLoading && (
