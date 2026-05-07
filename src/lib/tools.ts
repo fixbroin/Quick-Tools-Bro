@@ -33,6 +33,13 @@ export const tools: Tool[] = [
     Icon: Expand,
   },
   {
+    title: 'Background Remover',
+    name: 'Background Remover',
+    description: 'Remove the background from any image automatically.',
+    href: '/tools/image-background-remover',
+    Icon: ImageIcon,
+  },
+  {
     title: 'Image Cropper',
     name: 'Image Cropper',
     description: 'Crop images to your desired dimensions.',

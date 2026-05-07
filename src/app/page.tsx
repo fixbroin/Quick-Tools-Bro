@@ -15,7 +15,7 @@ const toolCategories = [
   },
   {
     name: 'Image Tools',
-    tools: tools.filter(t => ['Image Compressor', 'Image Converter', 'Image Resizer', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator'].includes(t.name)),
+    tools: tools.filter(t => ['Image Compressor', 'Image Converter', 'Image Resizer', 'Background Remover', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator'].includes(t.name)),
     color: 'bg-blue-500/10 text-blue-500'
   },
   {
