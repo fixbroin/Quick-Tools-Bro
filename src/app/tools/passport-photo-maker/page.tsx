@@ -16,8 +16,8 @@ interface SizePreset {
 }
 
 const SIZE_PRESETS: SizePreset[] = [
-  { name: 'US Visa / Passport (2" x 2" / 51x51mm)', widthMm: 51, heightMm: 51 },
   { name: 'India / UK / EU Passport (35x45mm)', widthMm: 35, heightMm: 45 },
+  { name: 'US Visa / Passport (2" x 2" / 51x51mm)', widthMm: 51, heightMm: 51 },
   { name: 'Pan Card / OCI (35x35mm)', widthMm: 35, heightMm: 35 },
   { name: 'Stamp Size (20x25mm)', widthMm: 20, heightMm: 25 },
 ];
@@ -34,6 +34,9 @@ export default function PassportPhotoMakerPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [sheetUrl, setSheetUrl] = useState<string | null>(null);
+  const [a4SheetUrl, setA4SheetUrl] = useState<string | null>(null);
+  const [sheetPhotosCount, setSheetPhotosCount] = useState<number>(8);
+  const [a4PhotosCount, setA4PhotosCount] = useState<number>(30);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { toast } = useToast();
@@ -48,6 +51,7 @@ export default function PassportPhotoMakerPage() {
       setImage(file);
       setResultUrl(null);
       setSheetUrl(null);
+      setA4SheetUrl(null);
       setZoom(1);
       setPosX(0);
       setPosY(0);
@@ -72,8 +76,8 @@ export default function PassportPhotoMakerPage() {
     const preset = SIZE_PRESETS[parseInt(selectedSize, 10)];
     
     // Scale canvas pixels for high-quality printing (300 DPI)
-    // 1 mm = 11.81 pixels at 300 DPI (approx 3.78 for screen preview)
-    const scaleFactor = 6; 
+    // 1 mm = 11.81 pixels at 300 DPI (approx 11.81 for screen preview)
+    const scaleFactor = 12; 
     canvas.width = preset.widthMm * scaleFactor;
     canvas.height = preset.heightMm * scaleFactor;
 
@@ -105,13 +109,12 @@ export default function PassportPhotoMakerPage() {
       const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
       setResultUrl(dataUrl);
 
-      // Also generate a grid sheet (e.g. 4x6 inch paper = 152.4 x 101.6 mm)
-      // We fit multiple photos side-by-side
+      // 1. Generate 4x6 grid sheet (152.4 x 101.6 mm)
       const preset = SIZE_PRESETS[parseInt(selectedSize, 10)];
       const sheetCanvas = document.createElement('canvas');
       const sCtx = sheetCanvas.getContext('2d');
       if (sCtx) {
-        const scaleFactor = 6;
+        const scaleFactor = 12;
         sheetCanvas.width = 152.4 * scaleFactor;
         sheetCanvas.height = 101.6 * scaleFactor;
 
@@ -120,28 +123,71 @@ export default function PassportPhotoMakerPage() {
 
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
-        const gap = 15;
-        const marginX = 40;
-        const marginY = 40;
+        const gap = 10;
 
-        let curX = marginX;
-        let curY = marginY;
+        const cols = Math.floor((sheetCanvas.width + gap) / (imgWidth + gap)) || 1;
+        const rows = Math.floor((sheetCanvas.height + gap) / (imgHeight + gap)) || 1;
 
-        while (curY + imgHeight < sheetCanvas.height) {
-          while (curX + imgWidth < sheetCanvas.width) {
-            // Draw passport boundary/border outline
+        const gridWidth = cols * imgWidth + (cols - 1) * gap;
+        const gridHeight = rows * imgHeight + (rows - 1) * gap;
+        const marginX = (sheetCanvas.width - gridWidth) / 2;
+        const marginY = (sheetCanvas.height - gridHeight) / 2;
+
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const x = marginX + c * (imgWidth + gap);
+            const y = marginY + r * (imgHeight + gap);
+
             sCtx.strokeStyle = '#e2e8f0';
             sCtx.lineWidth = 2;
-            sCtx.strokeRect(curX, curY, imgWidth, imgHeight);
+            sCtx.strokeRect(x, y, imgWidth, imgHeight);
             
-            sCtx.drawImage(canvas, curX, curY, imgWidth, imgHeight);
-            curX += imgWidth + gap;
+            sCtx.drawImage(canvas, x, y, imgWidth, imgHeight);
           }
-          curX = marginX;
-          curY += imgHeight + gap;
         }
 
+        setSheetPhotosCount(cols * rows);
         setSheetUrl(sheetCanvas.toDataURL('image/jpeg', 0.95));
+      }
+
+      // 2. Generate A4 grid sheet (210 x 297 mm)
+      const a4Canvas = document.createElement('canvas');
+      const a4Ctx = a4Canvas.getContext('2d');
+      if (a4Ctx) {
+        const scaleFactor = 12;
+        a4Canvas.width = 210 * scaleFactor;
+        a4Canvas.height = 297 * scaleFactor;
+
+        a4Ctx.fillStyle = '#ffffff';
+        a4Ctx.fillRect(0, 0, a4Canvas.width, a4Canvas.height);
+
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const gap = 12;
+
+        const cols = Math.floor((a4Canvas.width + gap) / (imgWidth + gap)) || 1;
+        const rows = Math.floor((a4Canvas.height + gap) / (imgHeight + gap)) || 1;
+
+        const gridWidth = cols * imgWidth + (cols - 1) * gap;
+        const gridHeight = rows * imgHeight + (rows - 1) * gap;
+        const marginX = (a4Canvas.width - gridWidth) / 2;
+        const marginY = (a4Canvas.height - gridHeight) / 2;
+
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const x = marginX + c * (imgWidth + gap);
+            const y = marginY + r * (imgHeight + gap);
+
+            a4Ctx.strokeStyle = '#e2e8f0';
+            a4Ctx.lineWidth = 2;
+            a4Ctx.strokeRect(x, y, imgWidth, imgHeight);
+            
+            a4Ctx.drawImage(canvas, x, y, imgWidth, imgHeight);
+          }
+        }
+
+        setA4PhotosCount(cols * rows);
+        setA4SheetUrl(a4Canvas.toDataURL('image/jpeg', 0.95));
       }
 
       toast({ title: "Passport Photo Generated!" });
@@ -206,7 +252,7 @@ export default function PassportPhotoMakerPage() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between p-3 bg-muted/30 border rounded-2xl">
                     <span className="text-xs font-bold truncate max-w-xs">{image.name}</span>
-                    <Button size="icon" variant="ghost" onClick={() => { setImage(null); setImgObj(null); setResultUrl(null); }} className="h-7 w-7 text-destructive"><X className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onClick={() => { setImage(null); setImgObj(null); setResultUrl(null); setSheetUrl(null); setA4SheetUrl(null); }} className="h-7 w-7 text-destructive"><X className="h-4 w-4" /></Button>
                   </div>
 
                   <div className="flex flex-col md:flex-row gap-6 items-center">
@@ -270,20 +316,30 @@ export default function PassportPhotoMakerPage() {
                   </div>
                   <h3 className="text-xl font-black italic tracking-tight">PHOTOS CREATED</h3>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-3 w-full">
                     <a href={resultUrl} download="passport-photo-single.jpg" className="w-full">
-                      <Button className="w-full h-12 rounded-xl text-xs font-bold bg-primary text-white">
+                      <Button className="w-full h-12 rounded-xl text-xs font-bold bg-primary hover:bg-primary/95 text-white">
                         <Download className="mr-2 h-4 w-4" /> SINGLE PHOTO
                       </Button>
                     </a>
 
-                    {sheetUrl && (
-                      <a href={sheetUrl} download="passport-photo-sheet.jpg" className="w-full">
-                        <Button className="w-full h-12 rounded-xl text-xs font-bold bg-green-600 hover:bg-green-700 text-white">
-                          <Download className="mr-2 h-4 w-4" /> 4X6" PRINT SHEET
-                        </Button>
-                      </a>
-                    )}
+                    <div className="grid grid-cols-2 gap-3 w-full">
+                      {sheetUrl && (
+                        <a href={sheetUrl} download="passport-photo-sheet-4x6.jpg" className="w-full">
+                          <Button className="w-full h-12 rounded-xl text-xs font-bold bg-green-600 hover:bg-green-700 text-white">
+                            <Download className="mr-2 h-4 w-4" /> 4X6" SHEET ({sheetPhotosCount} PCS)
+                          </Button>
+                        </a>
+                      )}
+
+                      {a4SheetUrl && (
+                        <a href={a4SheetUrl} download="passport-photo-sheet-a4.jpg" className="w-full">
+                          <Button className="w-full h-12 rounded-xl text-xs font-bold bg-violet-600 hover:bg-violet-700 text-white">
+                            <Download className="mr-2 h-4 w-4" /> A4 SHEET ({a4PhotosCount} PCS)
+                          </Button>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
