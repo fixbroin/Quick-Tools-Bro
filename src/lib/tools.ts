@@ -1,5 +1,12 @@
-
-import { QrCode, ScanLine, Minimize, Replace, Expand, Smile, Image as ImageIcon, FileText, FileImage, Scale, Landmark, HeartPulse, PersonStanding, Banknote, Heart, Gem, Link as LinkIcon, Soup, Shield, FileType, LucideIcon, Video, RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine } from 'lucide-react';
+import {
+  QrCode, ScanLine, Minimize, Replace, Expand, Smile, Image as ImageIcon,
+  FileText, FileImage, Scale, Landmark, HeartPulse, PersonStanding, Banknote,
+  Heart, Gem, Link as LinkIcon, Soup, Shield, FileType, LucideIcon, Video,
+  RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine,
+  Split, EyeOff, Droplet, RotateCw, Percent, Braces, Timer, StopCircle,
+  FileEdit, Mail, Instagram, FileCode, Code, Palette, Calendar, GraduationCap,
+  CloudSun, UserCheck, Hash, Link, Play, Key
+} from 'lucide-react';
 
 export interface Tool {
     title: string;
@@ -46,7 +53,7 @@ export const tools: Tool[] = [
     href: '/tools/image-cropper',
     Icon: Crop,
   },
-   {
+  {
     title: 'Favicon Converter',
     name: 'Favicon Converter',
     description: 'Create a favicon from an image, text, or emoji.',
@@ -60,6 +67,35 @@ export const tools: Tool[] = [
     href: '/tools/feature-graphic-generator',
     Icon: ImageIcon,
   },
+  {
+    title: 'Passport Photo Maker',
+    name: 'Passport Photo Maker',
+    description: 'Crop and resize photos to official passport sizes.',
+    href: '/tools/passport-photo-maker',
+    Icon: UserCheck,
+  },
+  {
+    title: 'Blur Image',
+    name: 'Blur Image',
+    description: 'Blur sections or all of your images online.',
+    href: '/tools/blur-image',
+    Icon: EyeOff,
+  },
+  {
+    title: 'Watermark Maker',
+    name: 'Watermark Maker',
+    description: 'Protect your creative images with custom overlays.',
+    href: '/tools/watermark',
+    Icon: Droplet,
+  },
+  {
+    title: 'Rotate Image',
+    name: 'Rotate Image',
+    description: 'Rotate 90deg or flip your images horizontally.',
+    href: '/tools/rotate-image',
+    Icon: RotateCw,
+  },
+
   // PDF Tools
   {
     title: 'JPG to PDF Converter',
@@ -82,7 +118,64 @@ export const tools: Tool[] = [
     href: '/tools/merge-pdf',
     Icon: Combine,
   },
-   // Video Tools
+  {
+    title: 'Split PDF',
+    name: 'Split PDF',
+    description: 'Extract specific pages or split PDF into pages.',
+    href: '/tools/split-pdf',
+    Icon: Split,
+  },
+  {
+    title: 'Compress PDF',
+    name: 'Compress PDF',
+    description: 'Optimize and shrink the file size of PDFs.',
+    href: '/tools/compress-pdf',
+    Icon: Minimize,
+  },
+  {
+    title: 'PDF to Word Converter',
+    name: 'PDF to Word Converter',
+    description: 'Extract editable text from PDFs as a Word doc.',
+    href: '/tools/pdf-to-word',
+    Icon: FileText,
+  },
+  {
+    title: 'Word to PDF Converter',
+    name: 'Word to PDF Converter',
+    description: 'Convert text documents or docx into PDF files.',
+    href: '/tools/word-to-pdf',
+    Icon: FileText,
+  },
+  {
+    title: 'Excel to PDF Converter',
+    name: 'Excel to PDF Converter',
+    description: 'Convert spreadsheet grids or CSVs into PDF tables.',
+    href: '/tools/excel-to-pdf',
+    Icon: Table,
+  },
+  {
+    title: 'Presentation to PDF',
+    name: 'Presentation to PDF',
+    description: 'Compile slideshow images/docs into slide deck PDFs.',
+    href: '/tools/ppt-to-pdf',
+    Icon: FileImage,
+  },
+  {
+    title: 'OCR Text Extractor',
+    name: 'OCR Text Extractor',
+    description: 'Extract editable text from screenshots or images.',
+    href: '/tools/ocr',
+    Icon: FileText,
+  },
+  {
+    title: 'eSign PDF',
+    name: 'eSign PDF',
+    description: 'Draw signatures and stamp them onto PDF documents.',
+    href: '/tools/esign-pdf',
+    Icon: Edit3,
+  },
+
+  // Video Tools
   {
     title: 'Video Compressor',
     name: 'Video Compressor',
@@ -90,6 +183,7 @@ export const tools: Tool[] = [
     href: '/tools/video-compressor',
     Icon: Video,
   },
+
   // QR Code Tools
   {
     title: 'QR Code Generator',
@@ -112,6 +206,7 @@ export const tools: Tool[] = [
     href: '/tools/wifi-qr-generator',
     Icon: Wifi,
   },
+
   // Web & Utility Tools
   {
     title: 'Short Link Maker',
@@ -134,6 +229,7 @@ export const tools: Tool[] = [
     href: '/tools/currency-converter',
     Icon: Landmark,
   },
+
   // Health & Lifestyle Calculators
   {
     title: 'BMI Calculator',
@@ -170,6 +266,7 @@ export const tools: Tool[] = [
     href: '/tools/age-calculator',
     Icon: Cake,
   },
+
   // Financial Calculators
   {
     title: 'Loan EMI Calculator',
@@ -185,6 +282,35 @@ export const tools: Tool[] = [
     href: '/tools/gold-loan-calculator',
     Icon: Gem,
   },
+  {
+    title: 'SIP Calculator',
+    name: 'SIP Calculator',
+    description: 'Estimate future returns on mutual fund SIP investments.',
+    href: '/tools/sip-calculator',
+    Icon: Landmark,
+  },
+  {
+    title: 'GST Calculator',
+    name: 'GST Calculator',
+    description: 'Calculate inclusive/exclusive GST tax amounts.',
+    href: '/tools/gst-calculator',
+    Icon: Percent,
+  },
+  {
+    title: 'Salary Calculator',
+    name: 'Salary Calculator',
+    description: 'Estimate your gross salary, net income, and deductions.',
+    href: '/tools/salary-calculator',
+    Icon: Banknote,
+  },
+  {
+    title: 'Income Tax Calculator',
+    name: 'Income Tax Calculator',
+    description: 'Compare tax liabilities under Old vs New Regimes.',
+    href: '/tools/income-tax-calculator',
+    Icon: Percent,
+  },
+
   // Legal Document Generators
   {
     title: 'Privacy Policy Generator',
@@ -214,7 +340,8 @@ export const tools: Tool[] = [
     href: '/tools/return-policy-generator',
     Icon: Undo,
   },
-   // Business Tools
+
+  // Business & Billing
   {
     title: 'Quotation Maker',
     name: 'Quotation Maker',
@@ -230,6 +357,249 @@ export const tools: Tool[] = [
     Icon: Receipt,
   },
   {
+    title: 'Receipt Generator',
+    name: 'Receipt Generator',
+    description: 'Create sales and donation receipt PDFs client-side.',
+    href: '/tools/receipt-generator',
+    Icon: Receipt,
+  },
+  {
+    title: 'GST Invoice Maker',
+    name: 'GST Invoice Maker',
+    description: 'Generate CGST/SGST compliant tax invoices.',
+    href: '/tools/gst-invoice',
+    Icon: Receipt,
+  },
+
+  // Daily Tools
+  {
+    title: 'Barcode Generator',
+    name: 'Barcode Generator',
+    description: 'Create Code 39 barcodes and download PNGs.',
+    href: '/tools/barcode-generator',
+    Icon: ScanLine,
+  },
+  {
+    title: 'Password Generator',
+    name: 'Password Generator',
+    description: 'Generate secure, cryptographically random keys.',
+    href: '/tools/password-generator',
+    Icon: Key,
+  },
+  {
+    title: 'Username Generator',
+    name: 'Username Generator',
+    description: 'Mix adjectives and nouns for gaming/social tags.',
+    href: '/tools/username-generator',
+    Icon: Smile,
+  },
+  {
+    title: 'UUID Generator',
+    name: 'UUID Generator',
+    description: 'Generate secure version 4 UUID tokens in bulk.',
+    href: '/tools/uuid-generator',
+    Icon: Braces,
+  },
+  {
+    title: 'Random Number Generator',
+    name: 'Random Number Generator',
+    description: 'Generate list of unique random numbers in range.',
+    href: '/tools/random-number',
+    Icon: Hash,
+  },
+  {
+    title: 'Countdown Timer',
+    name: 'Countdown Timer',
+    description: 'Circular ticking countdown timer with alarm sound.',
+    href: '/tools/timer',
+    Icon: Timer,
+  },
+  {
+    title: 'Stopwatch',
+    name: 'Stopwatch',
+    description: 'Precision split lap timer with milliseconds.',
+    href: '/tools/stopwatch',
+    Icon: Timer,
+  },
+  {
+    title: 'Notes Notepad',
+    name: 'Notes Notepad',
+    description: 'Take private browser notes with local storage auto-saving.',
+    href: '/tools/notes',
+    Icon: FileEdit,
+  },
+
+  // Content Generators
+  {
+    title: 'Email Writer',
+    name: 'Email Writer',
+    description: 'Draft structured emails with custom tones.',
+    href: '/tools/email-writer',
+    Icon: Mail,
+  },
+  {
+    title: 'Social Caption Generator',
+    name: 'Social Caption Generator',
+    description: 'Create post captions for Instagram, X, or LinkedIn.',
+    href: '/tools/caption-generator',
+    Icon: Instagram,
+  },
+  {
+    title: 'Resume Builder',
+    name: 'Resume Builder',
+    description: 'Compile single-page styled PDF resumes.',
+    href: '/tools/resume-builder',
+    Icon: FileText,
+  },
+  {
+    title: 'Cover Letter Generator',
+    name: 'Cover Letter Generator',
+    description: 'Draft professional job application cover letters.',
+    href: '/tools/cover-letter',
+    Icon: FileText,
+  },
+  {
+    title: 'AI Prompt Generator',
+    name: 'AI Prompt Generator',
+    description: 'Refine concepts into structured LLM prompts.',
+    href: '/tools/prompt-generator',
+    Icon: FileCode,
+  },
+  {
+    title: 'Social Bio Generator',
+    name: 'Social Bio Generator',
+    description: 'Generate bio lines for social profiles.',
+    href: '/tools/bio-generator',
+    Icon: Smile,
+  },
+  {
+    title: 'Business Name Generator',
+    name: 'Business Name Generator',
+    description: 'Generate modern name ideas from seed keywords.',
+    href: '/tools/business-name-generator',
+    Icon: Landmark,
+  },
+  {
+    title: 'Video Title Generator',
+    name: 'Video Title Generator',
+    description: 'Generate click-worthy, viral topic titles.',
+    href: '/tools/video-title-generator',
+    Icon: Video,
+  },
+  {
+    title: 'Hashtag Generator',
+    name: 'Hashtag Generator',
+    description: 'Generate trending hashtags from keyword feeds.',
+    href: '/tools/hashtag-generator',
+    Icon: Hash,
+  },
+  {
+    title: 'YouTube Tag Generator',
+    name: 'YouTube Tag Generator',
+    description: 'Generate SEO meta tags for video descriptions.',
+    href: '/tools/youtube-tag-generator',
+    Icon: Youtube,
+  },
+  {
+    title: 'YouTube Thumbnail Downloader',
+    name: 'YouTube Thumbnail Downloader',
+    description: 'Retrieve YouTube video thumbnails in multiple sizes.',
+    href: '/tools/thumbnail-downloader',
+    Icon: Youtube,
+  },
+
+  // Student Tools
+  {
+    title: 'GPA Calculator',
+    name: 'GPA Calculator',
+    description: 'Calculate semester GPA based on grade inputs.',
+    href: '/tools/gpa-calculator',
+    Icon: GraduationCap,
+  },
+  {
+    title: 'Percentage Calculator',
+    name: 'Percentage Calculator',
+    description: 'Calculate percentage values, ratios, and differences.',
+    href: '/tools/percentage-calculator',
+    Icon: Percent,
+  },
+  {
+    title: 'Attendance Calculator',
+    name: 'Attendance Calculator',
+    description: 'Calculate class ratio updates to meet goals.',
+    href: '/tools/attendance-calculator',
+    Icon: Calendar,
+  },
+  {
+    title: 'Study Pomodoro Timer',
+    name: 'Study Pomodoro Timer',
+    description: 'Boost focus using structured study-rest Pomodoros.',
+    href: '/tools/study-timer',
+    Icon: Timer,
+  },
+
+  // Daily Updates
+  {
+    title: 'Daily Updates Dashboard',
+    name: 'Daily Updates Dashboard',
+    description: 'Check weather, metal prices, jobs, coupons, and offers.',
+    href: '/tools/daily-features',
+    Icon: CloudSun,
+  },
+
+  // Developer Tools
+  {
+    title: 'JSON Formatter',
+    name: 'JSON Formatter',
+    description: 'Format, validate, or minify JSON structures.',
+    href: '/tools/json-formatter',
+    Icon: Braces,
+  },
+  {
+    title: 'Base64 Converter',
+    name: 'Base64 Converter',
+    description: 'Encode/decode text and file data to/from Base64.',
+    href: '/tools/base64',
+    Icon: Code,
+  },
+  {
+    title: 'URL Encoder & Decoder',
+    name: 'URL Encoder & Decoder',
+    description: 'Encode or decode URL query strings safely.',
+    href: '/tools/url-encode',
+    Icon: Link,
+  },
+  {
+    title: 'Regex Tester',
+    name: 'Regex Tester',
+    description: 'Validate regular expressions and capture groups.',
+    href: '/tools/regex-tester',
+    Icon: Code,
+  },
+  {
+    title: 'Color Picker',
+    name: 'Color Picker',
+    description: 'Pick colors, convert values, and check WCAG contrast.',
+    href: '/tools/color-picker',
+    Icon: Palette,
+  },
+  {
+    title: 'CSS Generator',
+    name: 'CSS Generator',
+    description: 'Visually generate shadows, borders, and gradients.',
+    href: '/tools/css-generator',
+    Icon: Code,
+  },
+  {
+    title: 'HTML Formatter',
+    name: 'HTML Formatter',
+    description: 'Format, validate, or minify HTML markup.',
+    href: '/tools/html-formatter',
+    Icon: Code,
+  },
+
+  // WhatsApp Quotes
+  {
     title: 'WhatsApp Quotes',
     name: 'WhatsApp Quotes',
     description: 'Find and share quotes for WhatsApp.',
@@ -237,3 +607,4 @@ export const tools: Tool[] = [
     Icon: Quote,
   },
 ];
+import { Edit3, Table } from 'lucide-react';

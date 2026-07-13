@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { SeoSection } from '@/components/SeoSection';
 
 export default function ToolsLayout({
   children,
@@ -17,6 +18,7 @@ export default function ToolsLayout({
       </Button>
       <div className="space-y-6">
         {children}
+        <SeoSection />
       </div>
     </div>
   );

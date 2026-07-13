@@ -2,12 +2,12 @@
 import { Metadata } from 'next';
 
 export const SITE_CONFIG = {
-  name: process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro',
-  title: process.env.NEXT_PUBLIC_SITE_TITLE || 'Quick Tools Bro - All-in-One Free Online Web Tools',
+  name: process.env.NEXT_PUBLIC_SITE_NAME || 'UseBro',
+  title: process.env.NEXT_PUBLIC_SITE_TITLE || 'UseBro - All-in-One Free Online Web Tools',
   description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'A comprehensive collection of free, high-performance, browser-based tools for image compression, PDF conversion, calculators, and more. No registration required.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://q.fixbro.in',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://usebro.in',
   image: process.env.NEXT_PUBLIC_SITE_IMAGE || '/android-chrome-512x512.png',
-  twitterHandle: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@QuickToolsBro',
+  twitterHandle: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@UseBro',
   themeColor: process.env.NEXT_PUBLIC_THEME_COLOR || "#29ABE2",
   gscId: process.env.NEXT_PUBLIC_GSC_VERIFICATION_ID || "",
 };

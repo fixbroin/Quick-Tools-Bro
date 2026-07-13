@@ -2,194 +2,506 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
     <url>
-        <loc>https://q.fixbro.in</loc>
-        <lastmod>2026-03-17T17:49:32.861Z</lastmod>
+        <loc>https://usebro.in</loc>
+        <lastmod>2026-07-13T06:23:23.426Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/contact</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/contact</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/privacy</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/privacy</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/terms</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/terms</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/age-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/age-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/bmi-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/bmi-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/calorie-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/calorie-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/currency-converter</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/currency-converter</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/favicon-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/favicon-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/feature-graphic-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/feature-graphic-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/food-calorie-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/food-calorie-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/gold-loan-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/gold-loan-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/image-compressor</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/image-compressor</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/image-converter</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/image-converter</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/image-cropper</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/image-cropper</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/image-resizer</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/image-resizer</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/invoice-maker</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/invoice-maker</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/jpg-to-pdf</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/jpg-to-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/loan-emi-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/loan-emi-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/love-calculator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/love-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/pdf-to-jpg</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/pdf-to-jpg</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/privacy-policy-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/privacy-policy-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/qr-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/qr-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/qr-scanner</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/qr-scanner</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/quotation-maker</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/quotation-maker</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/refund-policy-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/refund-policy-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/return-policy-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/return-policy-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/short-link-maker</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/short-link-maker</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/terms-and-conditions-generator</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/terms-and-conditions-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/unit-converter</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/unit-converter</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/video-compressor</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/video-compressor</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://q.fixbro.in/tools/whatsapp-quotes</loc>
-        <lastmod>2026-03-17T17:49:32.862Z</lastmod>
+        <loc>https://usebro.in/tools/whatsapp-quotes</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/split-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/compress-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/pdf-to-word</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/word-to-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/excel-to-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/ppt-to-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/ocr</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/esign-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/passport-photo-maker</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/blur-image</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/watermark</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/rotate-image</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/sip-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/gst-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/salary-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/income-tax-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/barcode-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/password-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/username-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/uuid-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/random-number</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/timer</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/stopwatch</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/notes</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/email-writer</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/caption-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/cover-letter</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/prompt-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/bio-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/business-name-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/video-title-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/hashtag-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/youtube-tag-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/thumbnail-downloader</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/receipt-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/gst-invoice</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/gpa-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/percentage-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/attendance-calculator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/study-timer</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/daily-features</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/json-formatter</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/base64</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/url-encode</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/regex-tester</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/color-picker</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/css-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/html-formatter</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/image-background-remover</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/merge-pdf</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/resume-builder</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://usebro.in/tools/wifi-qr-generator</loc>
+        <lastmod>2026-07-13T06:23:23.427Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
