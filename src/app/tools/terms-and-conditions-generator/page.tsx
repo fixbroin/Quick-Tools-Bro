@@ -101,11 +101,11 @@ export default function TermsAndConditionsGeneratorPage() {
   const form = useForm<TermsAndConditionsInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companyName: '',
-      websiteUrl: '',
-      country: '',
-      state: '',
-      email: '',
+      companyName: 'UseBro',
+      websiteUrl: 'https://usebro.in',
+      country: 'India',
+      state: 'Maharashtra',
+      email: 'sup@usebro.in',
       collectData: 'No',
       useCookies: 'No',
       useThirdParty: 'No',

@@ -77,9 +77,10 @@ const generateClientSidePrivacyPolicy = (data: PrivacyPolicyInput): string => {
     policy += `We do not use cookies or other tracking technologies on our Site.\n\n`;
   }
 
-  policy += `5. Third-Party Services\n`;
+  policy += `5. Third-Party Services & Analytics\n`;
   if (data.useThirdParty === 'Yes') {
-    policy += `We may use third-party service providers, such as Google Analytics, to help us analyze and track users' use of the Site, determine the popularity of certain content, and better understand online activity.\n`;
+    policy += `We may use third-party service providers, such as Google Analytics and Microsoft Clarity, to help us analyze and track users' use of the Site, determine the popularity of certain content, and better understand online activity.\n`;
+    policy += `We partner with Microsoft Clarity and Microsoft Advertising to capture how you use and interact with our website through behavioral metrics, heatmaps, and session replay to improve and market our products/services. Website usage data is captured using first and third-party cookies and other tracking technologies to determine the popularity of products/services and online activity. Additionally, we use this information for site optimization, fraud/security purposes, and advertising. For more information about Microsoft Clarity, please review the Microsoft Privacy Statement.\n\n`;
     if (data.shareData === 'Yes' && data.thirdParties) {
       policy += `We may share your information with the following third parties: ${data.thirdParties}.\n\n`;
     } else {
@@ -128,11 +129,11 @@ export default function PrivacyPolicyGeneratorPage() {
   const form = useForm<PrivacyPolicyInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companyName: '',
-      websiteUrl: '',
-      country: '',
-      state: '',
-      email: '',
+      companyName: 'UseBro',
+      websiteUrl: 'https://usebro.in',
+      country: 'India',
+      state: 'Maharashtra',
+      email: 'sup@usebro.in',
       collectData: 'No',
       useCookies: 'No',
       useThirdParty: 'No',

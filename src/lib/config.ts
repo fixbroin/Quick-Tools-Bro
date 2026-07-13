@@ -117,8 +117,8 @@ export function getToolJsonLd({
     },
     "author": {
         "@type": "Organization",
-        "name": "FixBro",
-        "url": "https://fixbro.in"
+        "name": "UseBro",
+        "url": "https://usebro.in"
     }
   };
 }

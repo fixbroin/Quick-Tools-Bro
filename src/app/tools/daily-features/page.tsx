@@ -276,12 +276,12 @@ export default function DailyFeaturesPage() {
       </div>
 
       <Tabs defaultValue="weather" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 rounded-2xl h-12 mb-6">
-          <TabsTrigger value="weather" className="rounded-xl font-bold text-xs"><CloudSun className="h-4 w-4 mr-1.5 hidden md:inline" /> Weather</TabsTrigger>
-          <TabsTrigger value="gold" className="rounded-xl font-bold text-xs"><Gem className="h-4 w-4 mr-1.5 hidden md:inline" /> Gold / Silver</TabsTrigger>
-          <TabsTrigger value="fuel" className="rounded-xl font-bold text-xs"><Fuel className="h-4 w-4 mr-1.5 hidden md:inline" /> Fuel Rates</TabsTrigger>
-          <TabsTrigger value="jobs" className="rounded-xl font-bold text-xs"><Bell className="h-4 w-4 mr-1.5 hidden md:inline" /> Jobs & Exams</TabsTrigger>
-          <TabsTrigger value="coupons" className="rounded-xl font-bold text-xs"><Gift className="h-4 w-4 mr-1.5 hidden md:inline" /> Coupons & Courses</TabsTrigger>
+        <TabsList className="flex md:grid w-full md:grid-cols-5 flex-nowrap overflow-x-auto justify-start md:justify-center rounded-2xl h-12 mb-6 bg-muted p-1 gap-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <TabsTrigger value="weather" className="rounded-xl font-bold text-xs shrink-0"><CloudSun className="h-4 w-4 mr-1.5 hidden md:inline" /> Weather</TabsTrigger>
+          <TabsTrigger value="gold" className="rounded-xl font-bold text-xs shrink-0"><Gem className="h-4 w-4 mr-1.5 hidden md:inline" /> Gold / Silver</TabsTrigger>
+          <TabsTrigger value="fuel" className="rounded-xl font-bold text-xs shrink-0"><Fuel className="h-4 w-4 mr-1.5 hidden md:inline" /> Fuel Rates</TabsTrigger>
+          <TabsTrigger value="jobs" className="rounded-xl font-bold text-xs shrink-0"><Bell className="h-4 w-4 mr-1.5 hidden md:inline" /> Jobs & Exams</TabsTrigger>
+          <TabsTrigger value="coupons" className="rounded-xl font-bold text-xs shrink-0"><Gift className="h-4 w-4 mr-1.5 hidden md:inline" /> Coupons & Courses</TabsTrigger>
         </TabsList>
 
         {/* 1. Weather */}
