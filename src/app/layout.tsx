@@ -127,7 +127,7 @@ export default function RootLayout({
             <ProgressBar />
             <div className="flex min-h-screen flex-col pb-16 md:pb-0">
               <Header />
-              <div className="container mx-auto flex justify-center py-4">
+              <div className="container mx-auto flex justify-center py-1">
                   <InstallPWAButton />
               </div>
               <main className="flex-1">{children}</main>

@@ -124,7 +124,7 @@ export default function Home() {
     .filter(category => category.tools.length > 0);
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
+    <div className="container mx-auto px-4 py-4 md:py-12">
       <header className="mb-10 text-center">
         <h1 className="font-headline text-4xl font-bold tracking-tight md:text-5xl">
           {siteName}
@@ -135,13 +135,13 @@ export default function Home() {
       </header>
 
       {/* Filter chips */}
-      <div className="flex flex-wrap justify-center gap-2 mb-10 pb-4 border-b">
+      <div className="flex flex-row md:flex-wrap flex-nowrap justify-start md:justify-center gap-2 mb-10 pb-4 border-b overflow-x-auto md:overflow-x-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden w-full px-2">
         {FILTER_CHIPS.map(chip => (
           <Button
             key={chip.value}
             variant={filter === chip.value ? 'default' : 'outline'}
             onClick={() => setFilter(chip.value)}
-            className="rounded-full font-bold text-xs px-4 h-9"
+            className="rounded-full font-bold text-xs px-4 h-9 shrink-0"
           >
             {chip.label}
           </Button>
