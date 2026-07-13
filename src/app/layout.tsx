@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { InstallPWAButton } from '@/components/InstallPWAButton';
 import { SITE_CONFIG, getMetadata } from '@/lib/config';
+import { AD_CONFIG } from '@/lib/ad-config';
 
 export const metadata: Metadata = {
   ...getMetadata(),
@@ -88,6 +89,15 @@ export default function RootLayout({
               `}
             </Script>
           </>
+        )}
+        {AD_CONFIG.enabled && AD_CONFIG.provider === 'adsense' && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_CONFIG.adsensePubId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+            id="adsense-init"
+          />
         )}
         {process.env.NEXT_PUBLIC_CLARITY_ID && (
           <Script

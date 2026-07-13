@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SeoSection } from '@/components/SeoSection';
+import { AdPlacement } from '@/components/AdPlacement';
 
 export default function ToolsLayout({
   children,
@@ -17,7 +18,9 @@ export default function ToolsLayout({
         </Link>
       </Button>
       <div className="space-y-6">
+        <AdPlacement position="top" />
         {children}
+        <AdPlacement position="bottom" />
         <SeoSection />
       </div>
     </div>

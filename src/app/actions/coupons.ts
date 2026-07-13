@@ -59,7 +59,7 @@ export async function fetchLiveCouponsAndCourses() {
 
     // 2. Fetch discount coupons / shopping deals news
     const couponsRes = await fetch(
-      'https://news.google.com/rss/search?q=discount+coupon+promo+code+hostinger+udemy&hl=en-IN&gl=IN&ceid=IN:en',
+      'https://news.google.com/rss/search?q=swiggy+OR+zomato+OR+flipkart+OR+myntra+OR+ajio+OR+paytm+OR+hostinger+AND+coupon+OR+promo+code&hl=en-IN&gl=IN&ceid=IN:en',
       { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     const couponsXml = await couponsRes.text();

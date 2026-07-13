@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ToolCard } from '@/components/ToolCard';
 import { tools } from '@/lib/tools';
 import { Button } from '@/components/ui/button';
+import { AdPlacement } from '@/components/AdPlacement';
 
 const toolCategories = [
   {
@@ -146,6 +147,8 @@ export default function Home() {
         ))}
       </div>
 
+      <AdPlacement position="top" />
+
       <div className="space-y-12">
         {visibleCategories.map(category => (
           <section key={category.name} className="animate-in fade-in duration-500">
@@ -167,6 +170,8 @@ export default function Home() {
           </section>
         ))}
       </div>
+
+      <AdPlacement position="bottom" />
     </div>
   );
 }
