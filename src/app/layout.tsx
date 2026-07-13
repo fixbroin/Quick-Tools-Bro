@@ -12,6 +12,7 @@ import { BottomNavBar } from '@/components/BottomNavBar';
 import { InstallPWAButton } from '@/components/InstallPWAButton';
 import { SITE_CONFIG, getMetadata } from '@/lib/config';
 import { AD_CONFIG } from '@/lib/ad-config';
+import { DownloadGateProvider } from '@/context/DownloadGateContext';
 
 export const metadata: Metadata = {
   ...getMetadata(),
@@ -122,19 +123,21 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-          <ProgressBar />
-          <div className="flex min-h-screen flex-col pb-16 md:pb-0">
-            <Header />
-            <div className="container mx-auto flex justify-center py-4">
-                <InstallPWAButton />
+          <DownloadGateProvider>
+            <ProgressBar />
+            <div className="flex min-h-screen flex-col pb-16 md:pb-0">
+              <Header />
+              <div className="container mx-auto flex justify-center py-4">
+                  <InstallPWAButton />
+              </div>
+              <main className="flex-1">{children}</main>
+              <div className="hidden md:block">
+                <Footer />
+              </div>
             </div>
-            <main className="flex-1">{children}</main>
-            <div className="hidden md:block">
-              <Footer />
-            </div>
-          </div>
-          <BottomNavBar />
-          <Toaster />
+            <BottomNavBar />
+            <Toaster />
+          </DownloadGateProvider>
         </ThemeProvider>
       </body>
     </html>

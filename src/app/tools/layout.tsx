@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SeoSection } from '@/components/SeoSection';
 import { AdPlacement } from '@/components/AdPlacement';
+import { HostingPromo } from '@/components/HostingPromo';
 
 export default function ToolsLayout({
   children,
@@ -20,6 +21,7 @@ export default function ToolsLayout({
       <div className="space-y-6">
         <AdPlacement position="top" />
         {children}
+        <HostingPromo />
         <AdPlacement position="bottom" />
         <SeoSection />
       </div>

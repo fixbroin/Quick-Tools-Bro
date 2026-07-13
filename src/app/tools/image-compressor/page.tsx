@@ -12,6 +12,7 @@ import { Download, Loader2 } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { scrollToDownload } from '@/lib/utils';
+import { useDownloadGate } from '@/context/DownloadGateContext';
 
 interface CompressionResult {
   originalUrl: string;
@@ -31,6 +32,8 @@ export default function ImageCompressorPage() {
   const [result, setResult] = useState<CompressionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const { triggerDownload } = useDownloadGate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -116,12 +119,15 @@ export default function ImageCompressorPage() {
   
   const handleDownload = () => {
     if (result && result.compressedFile) {
-      const a = document.createElement('a');
-      a.href = result.compressedUrl;
-      a.download = `compressed-${originalFile?.name}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      const filename = `compressed-${originalFile?.name}`;
+      triggerDownload(() => {
+        const a = document.createElement('a');
+        a.href = result.compressedUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, filename);
     }
   }
 

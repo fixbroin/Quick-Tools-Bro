@@ -7,13 +7,15 @@ function LoadingSpinner() {
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-      <div className="flex items-center gap-4 rounded-lg bg-card p-8 shadow-2xl">
+      <div className="flex flex-col items-center justify-center rounded-2xl bg-card p-8 shadow-2xl border w-full max-w-[280px] text-center space-y-4">
+        <div>
+          <span className="font-headline text-2xl font-bold block">{siteName}</span>
+        </div>
         <div className="text-primary">
-          <Wrench className="h-10 w-10 animate-spin" />
+          <Wrench className="h-12 w-12 animate-spin" />
         </div>
         <div>
-            <span className="font-headline text-3xl font-bold">{siteName}</span>
-            <p className="mt-1 text-muted-foreground">Loading...</p>
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Loading...</p>
         </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { scrollToDownload } from '@/lib/utils';
+import { useDownloadGate } from '@/context/DownloadGateContext';
 
 // Set worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -31,6 +32,8 @@ export default function PdfToJpgPage() {
   const { toast } = useToast();
   const [password, setPassword] = useState('');
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+
+  const { triggerDownload } = useDownloadGate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -123,20 +126,22 @@ export default function PdfToJpgPage() {
   
   const downloadAllAsZip = async () => {
     if (pageImages.length === 0) return;
-    const zip = new JSZip();
+    const name = `${pdfFile?.name.replace('.pdf', '')}.zip`;
     
-    for(const image of pageImages) {
-        const response = await fetch(image.url);
-        const blob = await response.blob();
-        zip.file(image.name, blob);
-    }
-
-    const content = await zip.generateAsync({ type: 'blob' });
-    saveAs(content, `${pdfFile?.name.replace('.pdf', '')}.zip`);
+    triggerDownload(async () => {
+      const zip = new JSZip();
+      for(const image of pageImages) {
+          const response = await fetch(image.url);
+          const blob = await response.blob();
+          zip.file(image.name, blob);
+      }
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, name);
+    }, name);
   }
   
   const downloadImage = (url: string, name: string) => {
-    saveAs(url, name);
+    triggerDownload(() => saveAs(url, name), name);
   }
 
 

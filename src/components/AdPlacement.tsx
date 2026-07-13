@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { AD_CONFIG } from '@/lib/ad-config';
 
 interface AdPlacementProps {
-  position: 'top' | 'bottom';
+  position: 'top' | 'bottom' | 'inline';
 }
 
 declare global {
@@ -30,16 +30,18 @@ export function AdPlacement({ position }: AdPlacementProps) {
 
   // 1. Demo Mode Placeholder (Useful to visualize ad layout spots in development)
   if (showDemo) {
+    const dimensions = position === 'inline' ? '300px × 250px (Medium Rectangle)' : '728px × 90px (Leaderboard banner)';
+    const sizeClasses = position === 'inline' ? 'max-w-[300px] min-h-[250px]' : 'max-w-4xl min-h-[90px]';
     return (
-      <div className="w-full max-w-4xl mx-auto my-4 p-4 rounded-xl border border-dashed border-primary/40 bg-primary/5 flex flex-col items-center justify-center min-h-[90px] text-center">
-        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full mb-1">
-          Demo Ad Placement Box ({position.toUpperCase()})
+      <div className={`w-full mx-auto my-4 p-4 rounded-xl border border-dashed border-primary/40 bg-primary/5 flex flex-col items-center justify-center text-center ${sizeClasses}`}>
+        <span className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full mb-1">
+          Demo Ad Placement ({position.toUpperCase()})
         </span>
         <p className="text-[11px] font-bold text-foreground">
-          Ad Slot dimensions: 728px × 90px (Leaderboard banner)
+          Ad Slot dimensions: {dimensions}
         </p>
         <p className="text-[10px] text-muted-foreground">
-          Active Provider: <strong className="uppercase">{provider}</strong> (Visible only when NEXT_PUBLIC_ADS_SHOW_DEMO=true)
+          Active Provider: <strong className="uppercase">{provider}</strong>
         </p>
       </div>
     );
@@ -52,14 +54,18 @@ export function AdPlacement({ position }: AdPlacementProps) {
 
   // 2. Google AdSense Provider
   if (provider === 'adsense') {
+    const style = position === 'inline' 
+      ? { display: 'block', width: '100%', maxWidth: '300px', margin: '0 auto' } 
+      : { display: 'block', width: '100%' };
+    const format = position === 'inline' ? 'rectangle' : 'auto';
     return (
-      <div className="w-full max-w-4xl mx-auto my-4 overflow-hidden flex justify-center min-h-[90px]">
+      <div className={`w-full mx-auto my-4 overflow-hidden flex justify-center ${position === 'inline' ? 'min-h-[250px]' : 'min-h-[90px]'}`}>
         <ins
           className="adsbygoogle"
-          style={{ display: 'block', width: '100%' }}
+          style={style}
           data-ad-client={adsensePubId}
           data-ad-slot={placement.slot}
-          data-ad-format="auto"
+          data-ad-format={format}
           data-full-width-responsive="true"
         />
       </div>
@@ -68,12 +74,15 @@ export function AdPlacement({ position }: AdPlacementProps) {
 
   // 3. Facebook Audience Network (Meta Ads)
   if (provider === 'facebook') {
+    const width = position === 'inline' ? '300' : '728';
+    const height = position === 'inline' ? '250' : '90';
+    const adtype = position === 'inline' ? 'banner300x250' : 'banner728x90';
     return (
-      <div className="w-full max-w-4xl mx-auto my-4 overflow-hidden flex justify-center min-h-[90px]">
+      <div className={`w-full mx-auto my-4 overflow-hidden flex justify-center ${position === 'inline' ? 'min-h-[250px]' : 'min-h-[90px]'}`}>
         <iframe
-          src={`https://www.facebook.com/adnw_request?placement=${placement.fbPlacementId}&adtype=banner728x90`}
-          width="728"
-          height="90"
+          src={`https://www.facebook.com/adnw_request?placement=${placement.fbPlacementId}&adtype=${adtype}`}
+          width={width}
+          height={height}
           frameBorder="0"
           scrolling="no"
           style={{ border: 'none', overflow: 'hidden' }}
@@ -87,7 +96,7 @@ export function AdPlacement({ position }: AdPlacementProps) {
   if (provider === 'custom') {
     return (
       <div 
-        className="w-full max-w-4xl mx-auto my-4 overflow-hidden flex justify-center"
+        className="w-full mx-auto my-4 overflow-hidden flex justify-center"
         dangerouslySetInnerHTML={{ __html: placement.customHtml }}
       />
     );

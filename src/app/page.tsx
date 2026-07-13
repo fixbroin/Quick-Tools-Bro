@@ -4,6 +4,7 @@ import { ToolCard } from '@/components/ToolCard';
 import { tools } from '@/lib/tools';
 import { Button } from '@/components/ui/button';
 import { AdPlacement } from '@/components/AdPlacement';
+import { HostingPromo } from '@/components/HostingPromo';
 
 const toolCategories = [
   {
@@ -170,6 +171,8 @@ export default function Home() {
           </section>
         ))}
       </div>
+
+      <HostingPromo />
 
       <AdPlacement position="bottom" />
     </div>
