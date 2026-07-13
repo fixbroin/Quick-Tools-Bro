@@ -8,16 +8,28 @@ import { HostingPromo } from '@/components/HostingPromo';
 
 const toolCategories = [
   {
-    name: 'QR Code Tools',
+    name: 'Daily Updates',
+    filterKey: 'updates',
+    tools: tools.filter(t => ['Daily Updates Dashboard'].includes(t.name)),
+    color: 'bg-violet-500/10 text-violet-500'
+  },
+  {
+    name: 'WhatsApp Quotes',
     filterKey: 'utility',
-    tools: tools.filter(t => ['QR Code Generator', 'QR Code Scanner', 'WiFi QR Code Generator'].includes(t.name)),
-    color: 'bg-green-500/10 text-green-500'
+    tools: tools.filter(t => ['WhatsApp Quotes'].includes(t.name)),
+    color: 'bg-sky-500/10 text-sky-500'
   },
   {
     name: 'PDF Tools',
     filterKey: 'document',
     tools: tools.filter(t => ['JPG to PDF Converter', 'PDF to JPG Converter', 'Merge PDF', 'Split PDF', 'Compress PDF', 'PDF to Word Converter', 'Word to PDF Converter', 'Excel to PDF Converter', 'Presentation to PDF', 'OCR Text Extractor', 'eSign PDF'].includes(t.name)),
     color: 'bg-red-500/10 text-red-500'
+  },
+  {
+    name: 'QR Code Tools',
+    filterKey: 'utility',
+    tools: tools.filter(t => ['QR Code Generator', 'QR Code Scanner', 'WiFi QR Code Generator'].includes(t.name)),
+    color: 'bg-green-500/10 text-green-500'
   },
   {
     name: 'Image Tools',
@@ -84,18 +96,6 @@ const toolCategories = [
     filterKey: 'developer',
     tools: tools.filter(t => ['JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'].includes(t.name)),
     color: 'bg-cyan-500/10 text-cyan-500'
-  },
-  {
-    name: 'Daily Updates',
-    filterKey: 'updates',
-    tools: tools.filter(t => ['Daily Updates Dashboard'].includes(t.name)),
-    color: 'bg-violet-500/10 text-violet-500'
-  },
-  {
-    name: 'WhatsApp Quotes',
-    filterKey: 'utility',
-    tools: tools.filter(t => ['WhatsApp Quotes'].includes(t.name)),
-    color: 'bg-sky-500/10 text-sky-500'
   }
 ];
 
