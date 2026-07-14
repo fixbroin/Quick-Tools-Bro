@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToolCard } from '@/components/ToolCard';
 import { tools } from '@/lib/tools';
 import { Button } from '@/components/ui/button';
@@ -115,6 +115,32 @@ const FILTER_CHIPS = [
 export default function Home() {
   const [filter, setFilter] = useState('all');
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
+
+  useEffect(() => {
+    // 1. Restore scroll position
+    const savedScrollY = sessionStorage.getItem('home-scroll-y');
+    if (savedScrollY) {
+      const scrollPos = parseInt(savedScrollY, 10);
+      if (!isNaN(scrollPos) && scrollPos > 0) {
+        const timer = setTimeout(() => {
+          window.scrollTo({ top: scrollPos, behavior: 'instant' as ScrollBehavior });
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // 2. Track scroll position
+    const handleScroll = () => {
+      sessionStorage.setItem('home-scroll-y', String(window.scrollY));
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const visibleCategories = toolCategories
     .map(category => ({
