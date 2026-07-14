@@ -25,6 +25,10 @@ export function BottomNavBar() {
   const pathname = usePathname();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
+  if (pathname === '/tools/whatsapp-quotes') {
+    return null;
+  }
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur-sm md:hidden">
       <div className="flex h-16 items-center justify-around">

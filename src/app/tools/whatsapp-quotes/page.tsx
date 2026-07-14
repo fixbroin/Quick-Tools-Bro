@@ -7,124 +7,27 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Image as ImageIcon, Type, Sparkles, Quote, Search, Palette, Move, ArrowRight, LayoutGrid, Smartphone, RotateCcw } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Download, Image as ImageIcon, Type, Sparkles, Quote, Search, Palette, Move, ArrowRight, LayoutGrid, Smartphone, RotateCcw, Maximize } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { scrollToDownload } from '@/lib/utils';
-
-const QUOTES_DB = {
-  motivation: [
-    "The only way to do great work is to love what you do.",
-    "Believe you can and you're halfway there.",
-    "Don't watch the clock; do what it does. Keep going.",
-    "Hardships often prepare ordinary people for an extraordinary destiny.",
-    "Your limitation—it's only your imagination.",
-    "Push yourself, because no one else is going to do it for you.",
-    "Great things never come from comfort zones.",
-    "Dream it. Wish it. Do it.",
-    "Success doesn’t just find you. You have to go out and get it.",
-    "The harder you work for something, the greater you’ll feel when you achieve it.",
-    "Dream bigger. Do bigger.",
-    "Don’t stop when you’re tired. Stop when you’re done.",
-    "Wake up with determination. Go to bed with satisfaction.",
-    "Do something today that your future self will thank you for.",
-    "Little things make big days.",
-    "It’s going to be hard, but hard does not mean impossible.",
-    "Don’t wait for opportunity. Create it.",
-    "Sometimes we’re tested not to show our weaknesses, but to discover our strengths.",
-    "The key to success is to focus on goals, not obstacles.",
-    "Dream it. Believe it. Build it."
-  ],
-  success: [
-    "Success is not final; failure is not fatal: it is the courage to continue that counts.",
-    "Play by the rules, but be ferocious.",
-    "Business opportunities are like buses, there's always another one coming.",
-    "Success usually comes to those who are too busy to be looking for it.",
-    "The way to get started is to quit talking and begin doing.",
-    "If you really look closely, most overnight successes took a long time.",
-    "The secret of success is to do the common thing uncommonly well.",
-    "I find that the harder I work, the more luck I seem to have.",
-    "Opportunities don't happen. You create them.",
-    "Successful people do what unsuccessful people are not willing to do.",
-    "Success is walking from failure to failure with no loss of enthusiasm.",
-    "The starting point of all achievement is desire.",
-    "Everything you've ever wanted is on the other side of fear.",
-    "Success is not the key to happiness. Happiness is the key to success.",
-    "What seems to us as bitter trials are often blessings in disguise.",
-    "The only limit to our realization of tomorrow will be our doubts of today.",
-    "Don't be afraid to give up the good to go for the great.",
-    "I never dreamed about success, I worked for it.",
-    "Success is how high you bounce when you hit bottom.",
-    "Action is the foundational key to all success."
-  ],
-  love: [
-    "To love and be loved is to feel the sun from both sides.",
-    "The best thing to hold onto in life is each other.",
-    "You are my today and all of my tomorrows.",
-    "Love is not about how many days, months, or years you have been together.",
-    "Where there is love there is life.",
-    "If I know what love is, it is because of you.",
-    "My soul and your soul are forever tangled.",
-    "Love all, trust a few, do wrong to none.",
-    "Life without love is like a tree without blossoms or fruit.",
-    "The greatest healing therapy is friendship and love.",
-    "Love is when the other person's happiness is more important than your own.",
-    "You don't marry someone you can live with—you marry someone you cannot live without.",
-    "In all the world, there is no heart for me like yours.",
-    "I saw that you were perfect, and so I loved you.",
-    "Being deeply loved by someone gives you strength.",
-    "There is only one happiness in this life, to love and be loved.",
-    "Love is a canvas furnished by nature and embroidered by imagination.",
-    "We love because it's the only true adventure.",
-    "To the world you may be one person, but to one person you are the world.",
-    "Love is composed of a single soul inhabiting two bodies."
-  ],
-  life: [
-    "Life is what happens when you're busy making other plans.",
-    "Get busy living or get busy dying.",
-    "You only live once, but if you do it right, once is enough.",
-    "The purpose of our lives is to be happy.",
-    "Life is a long lesson in humility.",
-    "In three words I can sum up everything I've learned about life: it goes on.",
-    "Life is really simple, but we insist on making it complicated.",
-    "The unexamined life is not worth living.",
-    "Life is 10% what happens to us and 90% how we react to it.",
-    "Your time is limited, so don't waste it living someone else's life.",
-    "Good friends, good books, and a sleepy conscience: this is the ideal life.",
-    "Life is either a daring adventure or nothing at all.",
-    "Keep smiling, because life is a beautiful thing.",
-    "Life is made of ever so many partings welded together.",
-    "The greatest glory in living lies not in never falling, but in rising every time we fall.",
-    "The way I see it, if you want the rainbow, you gotta put up with the rain.",
-    "Life is short, and it is here to be lived.",
-    "Turn your wounds into wisdom.",
-    "Life isn't about finding yourself. Life is about creating yourself.",
-    "Live in the sunshine, swim the sea, drink the wild air."
-  ],
-  wisdom: [
-    "The only true wisdom is in knowing you know nothing.",
-    "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.",
-    "Silence is a source of great strength.",
-    "Knowing yourself is the beginning of all wisdom.",
-    "Count your age by friends, not years. Count your life by smiles, not tears.",
-    "The journey of a thousand miles begins with one step.",
-    "It is the mark of an educated mind to be able to entertain a thought without accepting it.",
-    "Wisdom begins in wonder.",
-    "By three methods we may learn wisdom: First, by reflection; Second, by imitation; Third by experience.",
-    "The simple things are also the most extraordinary things.",
-    "A wise man adapts himself to circumstances, as water shapes itself to the vessel that contains it.",
-    "Patience is the companion of wisdom.",
-    "The saddest aspect of life right now is that science gathers knowledge faster than society gathers wisdom.",
-    "Turn your obstacles into opportunities and your problems into possibilities.",
-    "He who knows all the answers has not been asked all the questions.",
-    "Wisdom is not a product of schooling but of the lifelong attempt to acquire it.",
-    "A fool is known by his speech and a wise man by his silence.",
-    "The art of being wise is the art of knowing what to overlook.",
-    "Never mistake knowledge for wisdom. One helps you make a living; the other helps you make a life.",
-    "Wisdom is the reward you get for a lifetime of listening when you would have rather talked."
-  ]
-};
+import { QUOTES_DB } from './quotes-db';
 
 type Category = keyof typeof QUOTES_DB;
+
+const COLOR_PRESETS = [
+  '#FFFFFF', // White
+  '#000000', // Black
+  '#F5F5F7', // Off-White/Light Gray
+  '#3A3A3C', // Dark Gray
+  '#FFD700', // Gold/Yellow
+  '#FF9500', // Orange
+  '#FF3B30', // Red
+  '#FF2D55', // Pink
+  '#AF52DE', // Purple
+  '#007AFF', // Blue
+  '#5AC8FA', // Sky Blue
+  '#34C759'  // Green
+];
 
 const ASPECT_RATIOS = [
   { id: 'square', label: 'Square', width: 1080, height: 1080, icon: <LayoutGrid className="h-4 w-4" /> },
@@ -132,8 +35,21 @@ const ASPECT_RATIOS = [
   { id: 'horizontal', label: 'Horizontal', width: 1920, height: 1080, icon: <ImageIcon className="h-4 w-4" /> }
 ];
 
+const CATEGORY_META = [
+  { id: 'motivation', label: 'Motivation', emoji: '🔥', desc: 'Inspiring quotes to fuel your ambition' },
+  { id: 'success', label: 'Success', emoji: '🏆', desc: 'Insights on achievement and greatness' },
+  { id: 'love', label: 'Love', emoji: '💖', desc: 'Heartfelt quotes about romance and affection' },
+  { id: 'life', label: 'Life', emoji: '🌍', desc: 'Observations on living and the human journey' },
+  { id: 'wisdom', label: 'Wisdom', emoji: '🧠', desc: 'Deep reflections and timeless insights' }
+];
+
 export default function WhatsAppQuotesPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category>('motivation');
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [isQuotesDialogOpen, setIsQuotesDialogOpen] = useState(false);
+  const [quoteSearchQuery, setQuoteSearchQuery] = useState('');
+  const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
+  const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
   const [activeQuote, setActiveQuote] = useState(QUOTES_DB.motivation[0]);
   const [bgImage, setBgImage] = useState<string | null>(null);
   const [overlayImage, setOverlayImage] = useState<string | null>(null);
@@ -150,6 +66,7 @@ export default function WhatsAppQuotesPage() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
   const overlayImgRef = useRef<HTMLImageElement | null>(null);
   const { toast } = useToast();
 
@@ -315,8 +232,36 @@ export default function WhatsAppQuotesPage() {
 
   return (<>
       <div className="space-y-8 pb-20">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-4 space-y-6 order-2 lg:order-1">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Item A: Live Preview (Desktop Left Top, Mobile Top - Sticky on Mobile) */}
+        <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pb-4 pt-2 shadow-sm border-b md:relative md:top-auto md:z-auto md:bg-transparent md:pb-0 md:pt-0 md:shadow-none md:border-none lg:col-span-8 lg:row-span-1 order-1 lg:order-1 space-y-3">
+          <div className="flex items-center justify-between px-2">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2"><Move className="h-4 w-4" /> Drag Text to Position</h3>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono bg-primary/10 text-primary px-3 py-1 rounded-full border">LIVE PREVIEW</span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border-primary/20 hover:bg-primary/5 transition-all"
+                onClick={() => {
+                  const canvas = canvasRef.current;
+                  if (canvas) {
+                    setPreviewDataUrl(canvas.toDataURL('image/png'));
+                    setIsFullscreenPreviewOpen(true);
+                  }
+                }}
+              >
+                <Maximize className="h-3.5 w-3.5 mr-1" /> Fullscreen
+              </Button>
+            </div>
+          </div>
+          <div className="relative group rounded-[2.5rem] border-[8px] md:border-[12px] border-muted shadow-2xl bg-muted/20 overflow-hidden cursor-move mx-auto transition-all duration-500 max-h-[180px] md:max-h-none" style={{ aspectRatio: `${canvasDim.w} / ${canvasDim.h}`, maxWidth: canvasDim.w > canvasDim.h ? '100%' : (canvasDim.w === canvasDim.h ? '450px' : '340px') }}>
+            <canvas ref={canvasRef} width={canvasDim.w} height={canvasDim.h} onMouseDown={handlePointerStart} onMouseMove={handlePointerMove} onMouseUp={() => setIsDragging(null)} onMouseLeave={() => setIsDragging(null)} onTouchStart={handlePointerStart} onTouchMove={handlePointerMove} onTouchEnd={() => setIsDragging(null)} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.01] touch-none" />
+          </div>
+        </div>
+
+        {/* Item B: Studio Controls (Desktop Right, Mobile Middle) */}
+        <div className="lg:col-span-4 lg:row-span-2 order-2 lg:order-2 space-y-6">
           <Card className="shadow-lg border-primary/10">
             <CardHeader className="bg-primary/5 border-b">
               <CardTitle className="flex items-center gap-2 text-xl italic font-black"><Palette className="h-5 w-5 text-primary" /> STUDIO CONTROLS</CardTitle>
@@ -324,17 +269,116 @@ export default function WhatsAppQuotesPage() {
             <CardContent className="p-6 space-y-6">
               <div className="space-y-4">
                 <Label className="text-xs font-black uppercase tracking-widest text-primary">1. Content</Label>
-                <Select value={selectedCategory} onValueChange={(v:any) => setSelectedCategory(v)}>
-                    <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="motivation">🔥 Motivation</SelectItem>
-                        <SelectItem value="success">🏆 Success</SelectItem>
-                        <SelectItem value="love">💖 Love</SelectItem>
-                        <SelectItem value="life">🌍 Life</SelectItem>
-                        <SelectItem value="wisdom">🧠 Wisdom</SelectItem>
-                    </SelectContent>
-                </Select>
-                <textarea className="w-full min-h-[100px] p-3 text-sm rounded-xl border bg-muted/30 outline-none" value={activeQuote} onChange={(e) => setActiveQuote(e.target.value)} />
+                
+                {/* Category Dialog Picker */}
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Select Category</Label>
+                  <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full justify-between h-11 rounded-xl text-sm font-semibold border-primary/10 hover:bg-primary/5 transition-all">
+                        <span className="flex items-center gap-2">
+                          {selectedCategory === 'motivation' && '🔥 Motivation'}
+                          {selectedCategory === 'success' && '🏆 Success'}
+                          {selectedCategory === 'love' && '💖 Love'}
+                          {selectedCategory === 'life' && '🌍 Life'}
+                          {selectedCategory === 'wisdom' && '🧠 Wisdom'}
+                        </span>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-[90vw] md:max-w-lg rounded-2xl p-6">
+                      <DialogHeader>
+                        <DialogTitle className="text-lg font-black italic text-primary uppercase tracking-wider">Choose a Category</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid grid-cols-1 gap-3 mt-4">
+                        {CATEGORY_META.map((cat) => (
+                          <button
+                            key={cat.id}
+                            onClick={() => {
+                              setSelectedCategory(cat.id as Category);
+                              setActiveQuote(QUOTES_DB[cat.id as Category][0]);
+                              setIsCategoryDialogOpen(false);
+                              toast({ title: `Category Switched: ${cat.label}`, description: `Loaded quotes from ${cat.label}.` });
+                            }}
+                            className={`flex items-center gap-4 p-4 rounded-xl border text-left transition-all ${
+                              selectedCategory === cat.id
+                                ? 'bg-primary/5 border-primary text-primary font-bold'
+                                : 'hover:bg-muted border-border text-foreground'
+                            }`}
+                          >
+                            <span className="text-2xl">{cat.emoji}</span>
+                            <div className="space-y-0.5">
+                              <p className="text-sm font-bold">{cat.label}</p>
+                              <p className="text-xs text-muted-foreground">{cat.desc}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                {/* Browse Quotes Pop-up Dialog */}
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Select Quote Template</Label>
+                  <Dialog open={isQuotesDialogOpen} onOpenChange={(open) => {
+                    setIsQuotesDialogOpen(open);
+                    if (!open) setQuoteSearchQuery('');
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full justify-between h-11 rounded-xl text-sm font-semibold border-primary/10 hover:bg-primary/5 transition-all text-indigo-500 hover:text-indigo-600">
+                        <span className="flex items-center gap-2">
+                          <Quote className="h-4 w-4 shrink-0" /> Browse Category Quotes
+                        </span>
+                        <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-[90vw] md:max-w-2xl rounded-2xl p-6 flex flex-col h-[80vh]">
+                      <DialogHeader>
+                        <DialogTitle className="text-lg font-black italic text-primary uppercase tracking-wider">
+                          Browse {selectedCategory.toUpperCase()} Quotes
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 mt-4 flex-1 flex flex-col min-h-0">
+                        <div className="relative font-semibold">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search quotes in this category..."
+                            value={quoteSearchQuery}
+                            onChange={(e) => setQuoteSearchQuery(e.target.value)}
+                            className="pl-9 rounded-xl border-primary/15"
+                          />
+                        </div>
+                        <div className="flex-1 overflow-y-auto pr-1 space-y-2 min-h-0 custom-scrollbar">
+                          {QUOTES_DB[selectedCategory]
+                            .filter(q => q.toLowerCase().includes(quoteSearchQuery.toLowerCase()))
+                            .map((q, i) => (
+                              <button
+                                key={i}
+                                onClick={() => {
+                                  setActiveQuote(q);
+                                  setIsQuotesDialogOpen(false);
+                                  setQuoteSearchQuery('');
+                                  toast({ title: "Quote Applied!" });
+                                }}
+                                className="w-full p-4 rounded-xl border text-left bg-card hover:bg-primary/5 border-border hover:border-primary/30 transition-all block"
+                              >
+                                <p className="text-sm font-medium italic leading-relaxed">"{q}"</p>
+                              </button>
+                            ))}
+                          {QUOTES_DB[selectedCategory].filter(q => q.toLowerCase().includes(quoteSearchQuery.toLowerCase())).length === 0 && (
+                            <p className="text-center py-8 text-xs text-muted-foreground">No matching quotes found.</p>
+                          )}
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Quote Text Editor</Label>
+                  <textarea className="w-full min-h-[100px] p-3 text-sm rounded-xl border bg-muted/30 outline-none" value={activeQuote} onChange={(e) => setActiveQuote(e.target.value)} />
+                </div>
               </div>
               <div className="space-y-4 pt-4 border-t">
                 <Label className="text-xs font-black uppercase tracking-widest text-primary">2. Format & Size</Label>
@@ -371,8 +415,53 @@ export default function WhatsAppQuotesPage() {
                     <Label className="text-[10px] uppercase font-bold flex justify-between italic">3. Typography Size <span>{fontSize}px</span></Label>
                     <Slider value={[fontSize]} onValueChange={([v]) => setFontSize(v)} min={20} max={150} />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <Input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)} className="h-10 rounded-xl p-1" />
+                <div className="space-y-3 pt-4 border-t">
+                    <Label className="text-[10px] uppercase font-bold flex justify-between italic">4. Typography Color <span>{fontColor}</span></Label>
+                    <div className="flex flex-wrap gap-1.5 py-1">
+                        {COLOR_PRESETS.map((color) => (
+                            <button
+                                key={color}
+                                type="button"
+                                onClick={() => setFontColor(color)}
+                                className={`h-6 w-6 rounded-full border transition-all ${
+                                    fontColor.toLowerCase() === color.toLowerCase()
+                                        ? 'ring-2 ring-primary ring-offset-1 scale-110 border-primary'
+                                        : 'hover:scale-105 border-muted-foreground/20'
+                                }`}
+                                style={{ backgroundColor: color }}
+                                title={color}
+                            />
+                        ))}
+                        {/* Custom trigger button */}
+                        <button
+                            type="button"
+                            onClick={() => colorInputRef.current?.click()}
+                            className="h-6 w-6 rounded-full border bg-muted flex items-center justify-center hover:scale-110 transition-all border-dashed border-primary/30"
+                            title="Custom Color Picker"
+                        >
+                            <Palette className="h-3.5 w-3.5 text-primary" />
+                        </button>
+                        {/* Hidden native input */}
+                        <input
+                            type="color"
+                            ref={colorInputRef}
+                            value={fontColor}
+                            onChange={(e) => setFontColor(e.target.value)}
+                            className="sr-only"
+                        />
+                    </div>
+                    <div className="flex gap-2">
+                        <Input
+                            placeholder="HEX Code (e.g. #FFFFFF)"
+                            value={fontColor}
+                            onChange={(e) => setFontColor(e.target.value)}
+                            className="h-8 rounded-xl text-[10px] font-mono border-primary/10"
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-3 pt-4 border-t">
+                    <Label className="text-[10px] uppercase font-bold flex justify-between italic">5. Background Overlay Opacity <span>{overlayOpacity}%</span></Label>
                     <Slider value={[overlayOpacity]} onValueChange={([v]) => setOverlayOpacity(v)} min={0} max={100} />
                 </div>
               </div>
@@ -382,25 +471,18 @@ export default function WhatsAppQuotesPage() {
             </CardFooter>
           </Card>
         </div>
-        <div className="lg:col-span-8 space-y-6 order-1 lg:order-2">
-          <div className="flex items-center justify-between px-2">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2"><Move className="h-4 w-4" /> Drag Text to Position</h3>
-            <span className="text-[10px] font-mono bg-primary/10 text-primary px-3 py-1 rounded-full border">LIVE PREVIEW</span>
-          </div>
-          <div className="relative group rounded-[2.5rem] border-[12px] border-muted shadow-2xl bg-muted/20 overflow-hidden cursor-move mx-auto transition-all duration-500" style={{ aspectRatio: `${canvasDim.w} / ${canvasDim.h}`, maxWidth: canvasDim.w > canvasDim.h ? '100%' : '450px' }}>
-            <canvas ref={canvasRef} width={canvasDim.w} height={canvasDim.h} onMouseDown={handlePointerStart} onMouseMove={handlePointerMove} onMouseUp={() => setIsDragging(null)} onMouseLeave={() => setIsDragging(null)} onTouchStart={handlePointerStart} onTouchMove={handlePointerMove} onTouchEnd={() => setIsDragging(null)} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.01] touch-none" />
-          </div>
-          <div className="space-y-4 pt-8">
-            <div className="flex items-center gap-2 text-primary font-black italic"><Search className="h-5 w-5" /> EXPLORE QUOTES</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {QUOTES_DB[selectedCategory].map((q, i) => (
-                    <button key={i} onClick={() => { setActiveQuote(q); scrollToDownload(); }} className="p-6 text-left rounded-3xl border bg-card/50 hover:bg-primary/5 transition-all group relative overflow-hidden">
-                        <Quote className="absolute -top-2 -right-2 h-12 w-12 text-primary/5" />
-                        <p className="text-sm font-medium italic leading-relaxed">"{q}"</p>
-                        <div className="mt-4 flex items-center text-[10px] font-black uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity">Apply <ArrowRight className="ml-1 h-3 w-3" /></div>
-                    </button>
-                ))}
-            </div>
+
+        {/* Item C: Explore Quotes (Desktop Left Bottom, Mobile Bottom) */}
+        <div className="lg:col-span-8 lg:row-span-1 order-3 lg:order-3 space-y-4">
+          <div className="flex items-center gap-2 text-primary font-black italic"><Search className="h-5 w-5" /> EXPLORE QUOTES</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+              {QUOTES_DB[selectedCategory].map((q, i) => (
+                  <button key={i} onClick={() => { setActiveQuote(q); scrollToDownload(); }} className="p-6 text-left rounded-3xl border bg-card/50 hover:bg-primary/5 transition-all group relative overflow-hidden">
+                      <Quote className="absolute -top-2 -right-2 h-12 w-12 text-primary/5" />
+                      <p className="text-sm font-medium italic leading-relaxed">"{q}"</p>
+                      <div className="mt-4 flex items-center text-[10px] font-black uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity">Apply <ArrowRight className="ml-1 h-3 w-3" /></div>
+                  </button>
+              ))}
           </div>
         </div>
       </div>
@@ -450,5 +532,36 @@ export default function WhatsAppQuotesPage() {
             </div>
         </div>
       </section>
+
+      {/* Fullscreen Preview Dialog */}
+      <Dialog open={isFullscreenPreviewOpen} onOpenChange={setIsFullscreenPreviewOpen}>
+        <DialogContent className="max-w-[95vw] md:max-w-xl rounded-3xl p-6 flex flex-col items-center justify-center">
+          <DialogHeader className="w-full text-center">
+            <DialogTitle className="text-lg font-black italic text-primary uppercase tracking-wider">Fullscreen Preview</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4 w-full flex items-center justify-center p-2 bg-muted/20 rounded-2xl border border-dashed">
+            {previewDataUrl ? (
+              <img
+                src={previewDataUrl}
+                alt="Quote Fullscreen Preview"
+                className="max-w-full max-h-[60vh] object-contain rounded-2xl shadow-xl"
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">Loading preview...</p>
+            )}
+          </div>
+          <div className="mt-6 flex gap-3 w-full">
+            <Button variant="outline" className="flex-1 rounded-xl font-bold font-mono text-xs uppercase" onClick={() => setIsFullscreenPreviewOpen(false)}>
+              Close
+            </Button>
+            <Button className="flex-1 rounded-xl font-bold font-mono text-xs uppercase shadow-lg shadow-primary/20" onClick={() => {
+              handleDownload();
+              setIsFullscreenPreviewOpen(false);
+            }}>
+              Download <Download className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>);
 }
