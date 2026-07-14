@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Image as ImageIcon, Type, Sparkles, Quote, Search, Palette, Move, ArrowRight, LayoutGrid, Smartphone, RotateCcw, Maximize } from 'lucide-react';
+import { Download, Image as ImageIcon, Type, Sparkles, Quote, Search, Palette, Move, ArrowRight, LayoutGrid, Smartphone, RotateCcw, Maximize, X, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { scrollToDownload } from '@/lib/utils';
 import { QUOTES_DB } from './quotes-db';
@@ -283,14 +283,14 @@ export default function WhatsAppQuotesPage() {
                           {selectedCategory === 'life' && '🌍 Life'}
                           {selectedCategory === 'wisdom' && '🧠 Wisdom'}
                         </span>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                        <ChevronDown className="h-4 w-4 text-muted-foreground opacity-50 shrink-0 ml-2" />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-[90vw] md:max-w-lg rounded-2xl p-6">
-                      <DialogHeader>
-                        <DialogTitle className="text-lg font-black italic text-primary uppercase tracking-wider">Choose a Category</DialogTitle>
+                    <DialogContent className="max-w-md w-[92vw] rounded-2xl p-6 gap-4 overflow-hidden flex flex-col z-50">
+                      <DialogHeader className="border-b pb-2">
+                        <DialogTitle className="text-lg font-black italic tracking-wide text-left uppercase">Choose a Category</DialogTitle>
                       </DialogHeader>
-                      <div className="grid grid-cols-1 gap-3 mt-4">
+                      <div className="grid grid-cols-1 gap-3 mt-2 max-h-[350px] overflow-y-auto pr-1">
                         {CATEGORY_META.map((cat) => (
                           <button
                             key={cat.id}
@@ -333,21 +333,29 @@ export default function WhatsAppQuotesPage() {
                         <Search className="h-4 w-4 text-muted-foreground shrink-0" />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-[90vw] md:max-w-2xl rounded-2xl p-6 flex flex-col h-[80vh]">
-                      <DialogHeader>
-                        <DialogTitle className="text-lg font-black italic text-primary uppercase tracking-wider">
+                    <DialogContent className="max-w-xl w-[92vw] rounded-2xl p-6 flex flex-col h-[80vh] z-50 gap-4">
+                      <DialogHeader className="border-b pb-2">
+                        <DialogTitle className="text-lg font-black italic tracking-wide text-left uppercase">
                           Browse {selectedCategory.toUpperCase()} Quotes
                         </DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 mt-4 flex-1 flex flex-col min-h-0">
-                        <div className="relative font-semibold">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <div className="space-y-4 mt-2 flex-1 flex flex-col min-h-0">
+                        <div className="relative w-full">
+                          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input
                             placeholder="Search quotes in this category..."
                             value={quoteSearchQuery}
                             onChange={(e) => setQuoteSearchQuery(e.target.value)}
-                            className="pl-9 rounded-xl border-primary/15"
+                            className="pl-9 rounded-xl border bg-muted/10 focus:outline-none focus:ring-2 focus:ring-primary/20 h-10"
                           />
+                          {quoteSearchQuery && (
+                            <button
+                              onClick={() => setQuoteSearchQuery('')}
+                              className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                         <div className="flex-1 overflow-y-auto pr-1 space-y-2 min-h-0 custom-scrollbar">
                           {QUOTES_DB[selectedCategory]
@@ -368,6 +376,23 @@ export default function WhatsAppQuotesPage() {
                             ))}
                           {QUOTES_DB[selectedCategory].filter(q => q.toLowerCase().includes(quoteSearchQuery.toLowerCase())).length === 0 && (
                             <p className="text-center py-8 text-xs text-muted-foreground">No matching quotes found.</p>
+                          )}
+                        </div>
+                        
+                        {/* Search Statistics Footer */}
+                        <div className="border-t pt-3 flex justify-between items-center text-xs mt-2 shrink-0">
+                          <span className="text-muted-foreground">
+                            Showing {QUOTES_DB[selectedCategory].filter(q => q.toLowerCase().includes(quoteSearchQuery.toLowerCase())).length} of {QUOTES_DB[selectedCategory].length} templates
+                          </span>
+                          {quoteSearchQuery && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setQuoteSearchQuery('')}
+                              className="text-primary hover:text-primary/80 font-bold h-auto p-0"
+                            >
+                              Clear Search
+                            </Button>
                           )}
                         </div>
                       </div>
