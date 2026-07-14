@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Download, Image as ImageIcon, X, ZoomIn, ZoomOut, RefreshCw, Zap, ShieldCheck } from 'lucide-react';
+import { Loader2, Download, Image as ImageIcon, X, ZoomIn, ZoomOut, RefreshCw, Zap, ShieldCheck, Minus, Plus } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { scrollToDownload } from '@/lib/utils';
@@ -212,7 +212,7 @@ export default function PassportPhotoMakerPage() {
               <CardDescription>Upload a headshot to crop, adjust sizing presets, customize backdrops, and download high-quality printing sheets.</CardDescription>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-xs font-bold uppercase tracking-wider">Photo Size Specification</Label>
                   <Select value={selectedSize} onValueChange={setSelectedSize}>
@@ -269,23 +269,112 @@ export default function PassportPhotoMakerPage() {
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
                           <span>Zoom</span>
-                          <span>{zoom.toFixed(1)}x</span>
+                          <span>{zoom.toFixed(2)}x</span>
                         </div>
-                        <Slider value={[zoom]} onValueChange={(val) => setZoom(val[0])} min={0.5} max={3.0} step={0.1} />
+                        <div className="flex items-center gap-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-lg shrink-0"
+                            onClick={() => setZoom(Math.max(0.5, Math.round((zoom - 0.05) * 100) / 100))}
+                            title="Zoom Out"
+                          >
+                            <ZoomOut className="h-4 w-4" />
+                          </Button>
+                          <Slider
+                            value={[zoom]}
+                            onValueChange={(val) => setZoom(val[0])}
+                            min={0.5}
+                            max={3.0}
+                            step={0.01}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-lg shrink-0"
+                            onClick={() => setZoom(Math.min(3.0, Math.round((zoom + 0.05) * 100) / 100))}
+                            title="Zoom In"
+                          >
+                            <ZoomIn className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
+
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
                           <span>Horizontal Position</span>
-                          <span>{posX}px</span>
+                          <span>{posX.toFixed(1)}px</span>
                         </div>
-                        <Slider value={[posX]} onValueChange={(val) => setPosX(val[0])} min={-100} max={100} step={2} />
+                        <div className="flex items-center gap-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-lg shrink-0"
+                            onClick={() => setPosX(Math.max(-100, Math.round((posX - 1) * 2) / 2))}
+                            title="Move Left"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Slider
+                            value={[posX]}
+                            onValueChange={(val) => setPosX(val[0])}
+                            min={-100}
+                            max={100}
+                            step={0.5}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-lg shrink-0"
+                            onClick={() => setPosX(Math.min(100, Math.round((posX + 1) * 2) / 2))}
+                            title="Move Right"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
+
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
                           <span>Vertical Position</span>
-                          <span>{posY}px</span>
+                          <span>{posY.toFixed(1)}px</span>
                         </div>
-                        <Slider value={[posY]} onValueChange={(val) => setPosY(val[0])} min={-100} max={100} step={2} />
+                        <div className="flex items-center gap-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-lg shrink-0"
+                            onClick={() => setPosY(Math.max(-100, Math.round((posY - 1) * 2) / 2))}
+                            title="Move Up"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Slider
+                            value={[posY]}
+                            onValueChange={(val) => setPosY(val[0])}
+                            min={-100}
+                            max={100}
+                            step={0.5}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-lg shrink-0"
+                            onClick={() => setPosY(Math.min(100, Math.round((posY + 1) * 2) / 2))}
+                            title="Move Down"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -294,9 +383,9 @@ export default function PassportPhotoMakerPage() {
             </CardContent>
             {image && (
               <CardFooter className="bg-muted/30 p-6 border-t">
-                <Button className="w-full h-14 rounded-2xl font-black italic text-lg shadow-lg shadow-primary/20" onClick={handleGenerate} disabled={isLoading}>
-                  {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Zap className="mr-2 h-5 w-5" />}
-                  GENERATE PASSPORT PHOTOS
+                <Button className="w-full h-14 rounded-2xl font-black italic text-sm sm:text-base md:text-lg px-2 sm:px-4 shadow-lg shadow-primary/20 whitespace-normal leading-tight flex items-center justify-center gap-2" onClick={handleGenerate} disabled={isLoading}>
+                  {isLoading ? <Loader2 className="h-5 w-5 animate-spin shrink-0" /> : <Zap className="h-5 w-5 shrink-0" />}
+                  <span>GENERATE PASSPORT PHOTOS</span>
                 </Button>
               </CardFooter>
             )}
@@ -318,28 +407,26 @@ export default function PassportPhotoMakerPage() {
                   
                   <div className="flex flex-col gap-3 w-full">
                     <a href={resultUrl} download="passport-photo-single.jpg" className="w-full">
-                      <Button className="w-full h-12 rounded-xl text-xs font-bold bg-primary hover:bg-primary/95 text-white">
-                        <Download className="mr-2 h-4 w-4" /> SINGLE PHOTO
+                      <Button className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold bg-primary hover:bg-primary/95 text-white">
+                        <Download className="mr-2 h-4 w-4" /> DOWNLOAD SINGLE PHOTO
                       </Button>
                     </a>
 
-                    <div className="grid grid-cols-2 gap-3 w-full">
-                      {sheetUrl && (
-                        <a href={sheetUrl} download="passport-photo-sheet-4x6.jpg" className="w-full">
-                          <Button className="w-full h-12 rounded-xl text-xs font-bold bg-green-600 hover:bg-green-700 text-white">
-                            <Download className="mr-2 h-4 w-4" /> 4X6" SHEET ({sheetPhotosCount} PCS)
-                          </Button>
-                        </a>
-                      )}
+                    {sheetUrl && (
+                      <a href={sheetUrl} download="passport-photo-sheet-4x6.jpg" className="w-full">
+                        <Button className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold bg-green-600 hover:bg-green-700 text-white">
+                          <Download className="mr-2 h-4 w-4" /> DOWNLOAD 4X6" SHEET ({sheetPhotosCount} PCS)
+                        </Button>
+                      </a>
+                    )}
 
-                      {a4SheetUrl && (
-                        <a href={a4SheetUrl} download="passport-photo-sheet-a4.jpg" className="w-full">
-                          <Button className="w-full h-12 rounded-xl text-xs font-bold bg-violet-600 hover:bg-violet-700 text-white">
-                            <Download className="mr-2 h-4 w-4" /> A4 SHEET ({a4PhotosCount} PCS)
-                          </Button>
-                        </a>
-                      )}
-                    </div>
+                    {a4SheetUrl && (
+                      <a href={a4SheetUrl} download="passport-photo-sheet-a4.jpg" className="w-full">
+                        <Button className="w-full h-12 rounded-xl text-xs sm:text-sm font-bold bg-violet-600 hover:bg-violet-700 text-white">
+                          <Download className="mr-2 h-4 w-4" /> DOWNLOAD A4 SHEET ({a4PhotosCount} PCS)
+                        </Button>
+                      </a>
+                    )}
                   </div>
                 </div>
               ) : (
