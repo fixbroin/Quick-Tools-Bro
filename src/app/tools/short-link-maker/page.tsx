@@ -135,7 +135,7 @@ export default function ShortLinkMakerPage() {
                     </Button>
                 </div>
             </div>
-            <p className="text-xs text-muted-foreground">Powered by your own database shortlink service.</p>
+            <p className="text-xs text-muted-foreground">Powered by UseBro.in Shortlink service.</p>
         </CardFooter>
       )}
     </Card>
