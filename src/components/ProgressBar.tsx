@@ -1,18 +1,29 @@
 'use client';
 import { useState, useEffect, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Wrench } from 'lucide-react';
+import Image from 'next/image';
 
 function LoadingSpinner() {
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-card p-8 shadow-2xl border w-full max-w-[280px] text-center space-y-4">
+      <div className="flex flex-col items-center justify-center rounded-2xl bg-card p-8 shadow-2xl border w-full max-w-[280px] text-center space-y-6">
         <div>
           <span className="font-headline text-2xl font-bold block">{siteName}</span>
         </div>
-        <div className="text-primary">
-          <Wrench className="h-12 w-12 animate-spin" />
+        <div className="relative flex items-center justify-center h-20 w-20">
+          {/* Outer expanding ping ring */}
+          <div className="absolute inset-0 rounded-2xl bg-primary/20 animate-ping opacity-75" />
+          {/* Inner pulsating logo */}
+          <div className="relative rounded-2xl bg-background p-2 border shadow-sm animate-pulse">
+            <Image 
+              src="/android-chrome-192x192.png" 
+              alt={siteName} 
+              width={64} 
+              height={64} 
+              className="rounded-xl"
+            />
+          </div>
         </div>
         <div>
           <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Loading...</p>
