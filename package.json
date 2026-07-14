@@ -57,6 +57,7 @@
     "jspdf-autotable": "^3.8.2",
     "jszip": "^3.10.1",
     "lucide-react": "^0.475.0",
+    "mysql2": "^3.22.6",
     "next": "^15.5.9",
     "next-intl": "^3.19.0",
     "next-nprogress-bar": "^2.3.13",

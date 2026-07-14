@@ -12,6 +12,7 @@ import { scrollToDownload } from '@/lib/utils';
 export default function ShortLinkMakerPage() {
   const [longUrl, setLongUrl] = useState('');
   const [customAlias, setCustomAlias] = useState('');
+  const [aliasError, setAliasError] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -31,9 +32,10 @@ export default function ShortLinkMakerPage() {
 
     setIsLoading(true);
     setShortUrl('');
+    setAliasError('');
     
     try {
-      const apiUrl = 'https://s.fixbro.in/api/shorten';
+      const apiUrl = '/api/shorten';
       
       const requestBody: { originalUrl: string; customAlias?: string } = {
         originalUrl: longUrl,
@@ -67,6 +69,9 @@ export default function ShortLinkMakerPage() {
 
     } catch (error: any) {
       console.error(error);
+      if (error.message && error.message.toLowerCase().includes('alias')) {
+        setAliasError('This custom alias is already taken. Try a different one.');
+      }
       toast({ title: 'Creation Failed', description: error.message || 'Could not shorten the URL. Please check the console for details.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
@@ -101,9 +106,18 @@ export default function ShortLinkMakerPage() {
           <Input 
             id="custom-alias" 
             value={customAlias}
-            onChange={(e) => setCustomAlias(e.target.value)}
+            onChange={(e) => {
+              setCustomAlias(e.target.value);
+              setAliasError('');
+            }}
             placeholder="e.g., my-cool-link" 
+            className={aliasError ? 'border-destructive focus-visible:ring-destructive' : ''}
           />
+          {aliasError && (
+            <p className="text-xs font-semibold text-destructive mt-1">
+              {aliasError}
+            </p>
+          )}
         </div>
         <Button onClick={handleShorten} disabled={isLoading}>
           {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -121,7 +135,7 @@ export default function ShortLinkMakerPage() {
                     </Button>
                 </div>
             </div>
-            <p className="text-xs text-muted-foreground">Powered by FixBro Shortlink service.</p>
+            <p className="text-xs text-muted-foreground">Powered by your own database shortlink service.</p>
         </CardFooter>
       )}
     </Card>
