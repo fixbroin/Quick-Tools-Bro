@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { QrCode, Minimize, FileImage, HeartPulse, Home, Menu, FileText, Info, Shield, Mail } from 'lucide-react';
+import { QrCode, Minimize, FileImage, HeartPulse, Home, Menu, FileText, Info, Shield, Mail, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useState } from 'react';
@@ -11,8 +11,8 @@ import { useState } from 'react';
 const navItems = [
   { href: '/', label: 'Home', Icon: Home },
   { href: '/tools/qr-generator', label: 'QR Gen', Icon: QrCode },
-  { href: '/tools/image-compressor', label: 'Compress', Icon: Minimize },
-  { href: '/tools/jpg-to-pdf', label: 'JPG to PDF', Icon: FileImage },
+  { href: '/tools/passport-photo-maker', label: 'Passport', Icon: User },
+  { href: '/tools/pdf-to-jpg', label: 'PDF to JPG', Icon: FileImage },
 ];
 
 const legalLinks = [
@@ -69,6 +69,21 @@ export function BottomNavBar() {
                             <span>{label}</span>
                         </Link>
                     ))}
+                </div>
+                <div className="mt-4 pt-4 border-t text-center text-xs text-muted-foreground">
+                    <p className="flex items-center justify-center gap-1 font-medium">
+                        <span>Made in India with</span>
+                        <span className="text-red-500 animate-pulse">❤️</span>
+                        <span>by</span>
+                        <a 
+                          href="https://fixbro.in" 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="font-bold text-primary hover:underline"
+                        >
+                          FixBro.in
+                        </a>
+                    </p>
                 </div>
             </SheetContent>
         </Sheet>

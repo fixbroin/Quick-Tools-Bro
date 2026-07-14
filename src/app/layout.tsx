@@ -131,6 +131,23 @@ export default function RootLayout({
                   <InstallPWAButton />
               </div>
               <main className="flex-1">{children}</main>
+              {/* Mobile-only premium signature attribution */}
+              <div className="block md:hidden py-6 text-center text-xs text-muted-foreground border-t border-border/40 bg-card/50 backdrop-blur-sm">
+                <p className="font-semibold">&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
+                <p className="mt-1 flex items-center justify-center gap-1 font-medium">
+                  <span>Made in India with</span>
+                  <span className="text-red-500 animate-pulse">❤️</span>
+                  <span>• A product of</span>
+                  <a 
+                    href="https://fixbro.in" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="font-bold text-primary hover:underline"
+                  >
+                    FixBro.in
+                  </a>
+                </p>
+              </div>
               <div className="hidden md:block">
                 <Footer />
               </div>
