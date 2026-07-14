@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { Loader2, Download, Upload, File as FileIcon, Lock } from 'lucide-react';
+import { Loader2, Download, Upload, File as FileIcon, Lock, Eye, EyeOff } from 'lucide-react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
@@ -32,6 +32,7 @@ export default function PdfToJpgPage() {
   const { toast } = useToast();
   const [password, setPassword] = useState('');
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { triggerDownload } = useDownloadGate();
 
@@ -181,7 +182,23 @@ export default function PdfToJpgPage() {
                       </Alert>
                       <div className="pt-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter PDF password"/>
+                        <div className="relative mt-1">
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter PDF password"
+                            className="pr-10"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}

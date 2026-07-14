@@ -5,7 +5,7 @@ import {
   RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine,
   Split, EyeOff, Droplet, RotateCw, Percent, Braces, Timer, StopCircle,
   FileEdit, Mail, Instagram, FileCode, Code, Palette, Calendar, GraduationCap,
-  CloudSun, UserCheck, Hash, Link, Play, Key
+  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock
 } from 'lucide-react';
 
 export interface Tool {
@@ -31,6 +31,13 @@ export const tools: Tool[] = [
     description: 'Convert between various image formats.',
     href: '/tools/image-converter',
     Icon: Replace,
+  },
+  {
+    title: 'Passport Photo Maker',
+    name: 'Passport Photo Maker',
+    description: 'Crop and resize photos to official passport sizes.',
+    href: '/tools/passport-photo-maker',
+    Icon: UserCheck,
   },
   {
     title: 'Image Resizer',
@@ -67,13 +74,7 @@ export const tools: Tool[] = [
     href: '/tools/feature-graphic-generator',
     Icon: ImageIcon,
   },
-  {
-    title: 'Passport Photo Maker',
-    name: 'Passport Photo Maker',
-    description: 'Crop and resize photos to official passport sizes.',
-    href: '/tools/passport-photo-maker',
-    Icon: UserCheck,
-  },
+
   {
     title: 'Blur Image',
     name: 'Blur Image',
@@ -110,6 +111,13 @@ export const tools: Tool[] = [
     description: 'Convert each page of a PDF to JPG images.',
     href: '/tools/pdf-to-jpg',
     Icon: FileText,
+  },
+  {
+    title: 'PDF Password Unlocker',
+    name: 'PDF Password Unlocker',
+    description: 'Remove password security from your encrypted PDF documents.',
+    href: '/tools/password-unlocker',
+    Icon: Unlock,
   },
   {
     title: 'Merge PDF',
@@ -174,6 +182,7 @@ export const tools: Tool[] = [
     href: '/tools/esign-pdf',
     Icon: Edit3,
   },
+
 
   // Video Tools
   {

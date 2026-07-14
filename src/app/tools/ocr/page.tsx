@@ -36,18 +36,47 @@ export default function OCRPage() {
     }
   };
 
+  const preprocessImage = (url: string): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(url);
+          return;
+        }
+
+        // Scale by 2x for smaller fonts
+        const scale = 2.0;
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+
+        // Draw with high-contrast grayscale filter
+        ctx.filter = 'grayscale(100%) contrast(160%) brightness(110%)';
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => resolve(url);
+      img.src = url;
+    });
+  };
+
   const handleExtractText = async () => {
     if (!previewUrl) return;
 
     setIsLoading(true);
     setProgress(0);
-    setStatusMessage('Initializing OCR engine...');
+    setStatusMessage('Preprocessing image for OCR...');
 
     try {
+      const processedUrl = await preprocessImage(previewUrl);
       const Tesseract = (await import('tesseract.js')).default;
 
+      setStatusMessage('Initializing OCR engine...');
       const result = await Tesseract.recognize(
-        previewUrl,
+        processedUrl,
         language,
         {
           logger: (m: any) => {
@@ -103,11 +132,23 @@ export default function OCRPage() {
                   <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="eng">English</SelectItem>
+                    <SelectItem value="hin">Hindi (हिन्दी)</SelectItem>
                     <SelectItem value="spa">Spanish (Español)</SelectItem>
                     <SelectItem value="fra">French (Français)</SelectItem>
                     <SelectItem value="deu">German (Deutsch)</SelectItem>
-                    <SelectItem value="hin">Hindi (हिन्दी)</SelectItem>
+                    <SelectItem value="ita">Italian (Italiano)</SelectItem>
+                    <SelectItem value="por">Portuguese (Português)</SelectItem>
+                    <SelectItem value="rus">Russian (Русский)</SelectItem>
+                    <SelectItem value="chi_sim">Chinese Simplified (简体中文)</SelectItem>
+                    <SelectItem value="jpn">Japanese (日本語)</SelectItem>
+                    <SelectItem value="ara">Arabic (العربية)</SelectItem>
                     <SelectItem value="tel">Telugu (తెలుగు)</SelectItem>
+                    <SelectItem value="tam">Tamil (தமிழ்)</SelectItem>
+                    <SelectItem value="kan">Kannada (ಕನ್ನಡ)</SelectItem>
+                    <SelectItem value="mal">Malayalam (മലയാളം)</SelectItem>
+                    <SelectItem value="ben">Bengali (বাংলা)</SelectItem>
+                    <SelectItem value="guj">Gujarati (ગુજરાતી)</SelectItem>
+                    <SelectItem value="mar">Marathi (मराठी)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -87,29 +87,133 @@ export default function WordToPDFPage() {
         unit: 'mm',
       });
 
-      doc.setFont(fontFamily);
-      doc.setFontSize(11);
-
-      const margin = 20; // 20mm margins
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      const maxLineWidth = pageWidth - (margin * 2);
-      const maxPageHeight = pageHeight - (margin * 2);
 
-      // Split text into lines
-      const splitText = doc.splitTextToSize(text, maxLineWidth);
-      let cursorY = margin;
+      // We render text to a high-resolution canvas to support all Unicode scripts (Kannada, Hindi, Arabic, Chinese, etc.)
+      const canvasWidth = 1200;
+      const canvasHeight = 1700;
+      const marginX = 80;
+      const marginY = 100;
+      const maxLineWidth = canvasWidth - marginX * 2;
+      const maxPageHeight = canvasHeight - marginY * 2;
 
-      splitText.forEach((line: string) => {
-        if (cursorY + 6 > maxPageHeight + margin) {
-          doc.addPage();
-          doc.setFont(fontFamily);
-          doc.setFontSize(11);
-          cursorY = margin;
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) throw new Error("Could not create canvas context");
+
+      // Match selected font style with system fallbacks for regional languages
+      let fontStack = 'Arial, "Helvetica Neue", Helvetica, "Noto Sans", "Lohit Kannada", "Lohit Devanagari", "Segoe UI", sans-serif';
+      if (fontFamily === 'times') {
+        fontStack = '"Times New Roman", Times, "Noto Serif", "Lohit Kannada", "Lohit Devanagari", Georgia, serif';
+      } else if (fontFamily === 'courier') {
+        fontStack = '"Courier New", Courier, "Noto Sans Mono", monospace';
+      }
+      const fontStyle = `22px ${fontStack}`;
+      tempCtx.font = fontStyle;
+
+      // Smart wrapping function (handles spacing languages and non-spacing East Asian scripts)
+      const wrapText = (ctx: CanvasRenderingContext2D, rawText: string, maxW: number): string[] => {
+        const lines: string[] = [];
+        const paragraphs = rawText.split('\n');
+
+        for (const paragraph of paragraphs) {
+          if (paragraph.trim() === '') {
+            lines.push('');
+            continue;
+          }
+
+          // Detect CJK non-spaced languages
+          const isNoSpaceLang = /[\u4e00-\u9fa5\u3040-\u30ff\uac00-\ud7af]/.test(paragraph);
+          if (isNoSpaceLang) {
+            let currentLine = '';
+            for (let i = 0; i < paragraph.length; i++) {
+              const char = paragraph[i];
+              const testLine = currentLine + char;
+              const metrics = ctx.measureText(testLine);
+              if (metrics.width > maxW && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = char;
+              } else {
+                currentLine = testLine;
+              }
+            }
+            if (currentLine) lines.push(currentLine);
+          } else {
+            // Spaced languages
+            const words = paragraph.split(' ');
+            let currentLine = '';
+            for (let i = 0; i < words.length; i++) {
+              const word = words[i];
+              const testLine = currentLine ? currentLine + ' ' + word : word;
+              const metrics = ctx.measureText(testLine);
+              if (metrics.width > maxW && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = word;
+              } else {
+                currentLine = testLine;
+              }
+            }
+            if (currentLine) lines.push(currentLine);
+          }
         }
-        doc.text(line, margin, cursorY);
-        cursorY += 6; // line spacing
-      });
+        return lines;
+      };
+
+      const wrappedLines = wrapText(tempCtx, text, maxLineWidth);
+      const pagesDataUrls: string[] = [];
+      const lineHeight = 36; // spacing height for 22px font size
+
+      let currentPageLines: string[] = [];
+      let currentHeight = 0;
+
+      for (let i = 0; i < wrappedLines.length; i++) {
+        const line = wrappedLines[i];
+        currentPageLines.push(line);
+        currentHeight += lineHeight;
+
+        const isLastLine = i === wrappedLines.length - 1;
+        const reachedPageBottom = currentHeight + lineHeight > maxPageHeight;
+
+        if (reachedPageBottom || isLastLine) {
+          // Render current page lines to a new canvas
+          const pageCanvas = document.createElement('canvas');
+          const pageCtx = pageCanvas.getContext('2d');
+          if (pageCtx) {
+            pageCanvas.width = canvasWidth;
+            pageCanvas.height = canvasHeight;
+
+            // White background
+            pageCtx.fillStyle = '#ffffff';
+            pageCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            // Setup text settings
+            pageCtx.font = fontStyle;
+            pageCtx.fillStyle = '#1f2937'; // Slate 800 for softer premium contrast
+            pageCtx.textBaseline = 'top';
+
+            let cursorY = marginY;
+            currentPageLines.forEach((pageLine) => {
+              pageCtx.fillText(pageLine, marginX, cursorY);
+              cursorY += lineHeight;
+            });
+
+            pagesDataUrls.push(pageCanvas.toDataURL('image/jpeg', 0.92));
+          }
+
+          // Reset page height and array buffer
+          currentPageLines = [];
+          currentHeight = 0;
+        }
+      }
+
+      // Add pages to jsPDF
+      for (let i = 0; i < pagesDataUrls.length; i++) {
+        if (i > 0) {
+          doc.addPage();
+        }
+        doc.addImage(pagesDataUrls[i], 'JPEG', 0, 0, pageWidth, pageHeight);
+      }
 
       const pdfBytes = doc.output('arraybuffer');
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });

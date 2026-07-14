@@ -8,14 +8,42 @@ import { Loader2, Download, FileText, X, ShieldCheck, Copy, Zap } from 'lucide-r
 import { scrollToDownload } from '@/lib/utils';
 import { saveAs } from 'file-saver';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Progress } from '@/components/ui/progress';
 
 // Set worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+const OCR_LANGUAGES = [
+  { value: 'eng', label: 'English' },
+  { value: 'hin', label: 'Hindi (हिन्दी)' },
+  { value: 'tel', label: 'Telugu (తెలుగు)' },
+  { value: 'kan', label: 'Kannada (ಕನ್ನಡ)' },
+  { value: 'tam', label: 'Tamil (தமிழ்)' },
+  { value: 'ben', label: 'Bengali (বাংলা)' },
+  { value: 'guj', label: 'Gujarati (ગુજરાતી)' },
+  { value: 'mar', label: 'Marathi (मराठी)' },
+  { value: 'mal', label: 'Malayalam (മലയാളം)' },
+  { value: 'spa', label: 'Spanish (Español)' },
+  { value: 'fra', label: 'French (Français)' },
+  { value: 'deu', label: 'German (Deutsch)' },
+  { value: 'ita', label: 'Italian (Italiano)' },
+  { value: 'por', label: 'Portuguese (Português)' },
+  { value: 'rus', label: 'Russian (Русский)' },
+  { value: 'chi_sim', label: 'Chinese Simplified (简体中文)' },
+  { value: 'jpn', label: 'Japanese (日本語)' },
+  { value: 'ara', label: 'Arabic (العربية)' }
+];
 
 export default function PDFToWordPage() {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [extractedText, setExtractedText] = useState<string>('');
+  const [ocrMode, setOcrMode] = useState<boolean>(false);
+  const [ocrLanguage, setOcrLanguage] = useState<string>('eng');
+  const [progress, setProgress] = useState<number>(0);
+  const [statusMessage, setStatusMessage] = useState<string>('');
   const { toast } = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +62,8 @@ export default function PDFToWordPage() {
     if (!file) return;
 
     setIsLoading(true);
+    setProgress(0);
+    setStatusMessage('Loading PDF document...');
     try {
       const arrayBuffer = await file.arrayBuffer();
       const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
@@ -41,26 +71,65 @@ export default function PDFToWordPage() {
       const numPages = pdf.numPages;
       let fullText = '';
 
-      for (let i = 1; i <= numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => item.str)
-          .join(' ');
-        
-        fullText += `--- PAGE ${i} ---\n\n${pageText}\n\n`;
+      if (ocrMode) {
+        const Tesseract = (await import('tesseract.js')).default;
+        for (let i = 1; i <= numPages; i++) {
+          setStatusMessage(`Rendering page ${i} of ${numPages}...`);
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: 2.0 }); // high resolution for crisp OCR
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          if (context) {
+            context.filter = 'grayscale(100%) contrast(160%) brightness(110%)';
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+            const imgUrl = canvas.toDataURL('image/png');
+            
+            setStatusMessage(`OCR scanning page ${i} of ${numPages}...`);
+            const result = await Tesseract.recognize(
+              imgUrl,
+              ocrLanguage,
+              {
+                logger: (m: any) => {
+                  if (m.status === 'recognizing text') {
+                    const pageProgress = Math.floor(m.progress * 100);
+                    setProgress(Math.floor(((i - 1) / numPages) * 100 + (pageProgress / numPages)));
+                  }
+                }
+              }
+            );
+            fullText += `--- PAGE ${i} ---\n\n${result.data.text}\n\n`;
+          }
+        }
+      } else {
+        // Standard text extraction
+        for (let i = 1; i <= numPages; i++) {
+          setProgress(Math.floor((i / numPages) * 100));
+          setStatusMessage(`Extracting text from page ${i} of ${numPages}...`);
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items
+            .map((item: any) => item.str)
+            .join(' ');
+          
+          fullText += `--- PAGE ${i} ---\n\n${pageText}\n\n`;
+        }
       }
 
       setExtractedText(fullText.trim());
-      toast({ title: 'Text Extracted Successfully!' });
+      toast({ title: 'Conversion Complete!' });
       scrollToDownload();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast({ title: 'Extraction Failed', description: 'Could not extract text from this PDF.', variant: 'destructive' });
+      toast({ title: 'Conversion Failed', description: error.message || 'Could not convert this PDF.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
+      setProgress(0);
+      setStatusMessage('');
     }
-  }, [file, toast]);
+  }, [file, ocrMode, ocrLanguage, toast]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(extractedText);
@@ -69,19 +138,13 @@ export default function PDFToWordPage() {
 
   const downloadAsDoc = () => {
     // Generate a basic HTML format doc file that MS Word parses perfectly as docx/doc
-    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><title>Document</title><style>body { font-family: Arial; }</style></head><body>";
+    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Document</title><style>body { font-family: Arial; }</style></head><body>";
     const footer = "</body></html>";
     // Replace newlines with breaks
     const formattedText = extractedText.replace(/\n/g, '<br>');
     const sourceHtml = header + formattedText + footer;
     
-    const fileBuffer = new ArrayBuffer(sourceHtml.length);
-    const view = new Uint8Array(fileBuffer);
-    for (let i = 0; i < sourceHtml.length; i++) {
-      view[i] = sourceHtml.charCodeAt(i) & 0xff;
-    }
-    
-    const blob = new Blob([fileBuffer], { type: 'application/msword' });
+    const blob = new Blob([sourceHtml], { type: 'application/msword;charset=utf-8' });
     saveAs(blob, `${file?.name.replace(/\.pdf$/i, '')}.doc`);
   };
 
@@ -119,6 +182,57 @@ export default function PDFToWordPage() {
                     </div>
                     <Button size="icon" variant="ghost" onClick={() => { setFile(null); setExtractedText(''); }} className="h-8 w-8 text-destructive"><X className="h-4 w-4" /></Button>
                   </div>
+
+                  <div className="space-y-4 pt-2">
+                    <Label className="text-xs font-black uppercase tracking-wider text-primary">Conversion Mode</Label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setOcrMode(false)}
+                        className={`p-4 border rounded-2xl text-left transition-all ${
+                          !ocrMode ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'hover:bg-muted/50 border-primary/10'
+                        }`}
+                      >
+                        <p className="font-bold text-sm">Standard Mode</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">Extracts digitally embedded text. Fast and best for digital PDFs.</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOcrMode(true)}
+                        className={`p-4 border rounded-2xl text-left transition-all ${
+                          ocrMode ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'hover:bg-muted/50 border-primary/10'
+                        }`}
+                      >
+                        <p className="font-bold text-sm">OCR Mode (Unicode)</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">Extracts text visually. Best for Indian languages (Kannada, Hindi, etc.) and scanned PDFs.</p>
+                      </button>
+                    </div>
+                  </div>
+
+                  {ocrMode && (
+                    <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
+                      <Label className="text-xs font-black uppercase tracking-wider text-primary">Document Language</Label>
+                      <Select value={ocrLanguage} onValueChange={(val) => setOcrLanguage(val)}>
+                        <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
+                        <SelectContent className="max-h-[250px]">
+                          {OCR_LANGUAGES.map((lang) => (
+                            <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[10px] text-muted-foreground">Select the language script used in your PDF to get highly accurate recognition.</p>
+                    </div>
+                  )}
+
+                  {isLoading && (
+                    <div className="space-y-2 pt-2 animate-in fade-in duration-300">
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground uppercase">
+                        <span>{statusMessage}</span>
+                        <span>{progress}%</span>
+                      </div>
+                      <Progress value={progress} className="h-2 rounded-full" />
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>

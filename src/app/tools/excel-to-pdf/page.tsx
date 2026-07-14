@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Download, FileSpreadsheet, X, ShieldCheck, Zap } from 'lucide-react';
 import { scrollToDownload } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
+import * as XLSX from 'xlsx';
 
 export default function ExcelToPDFPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -22,8 +23,8 @@ export default function ExcelToPDFPage() {
     if (!selectedFile) return;
 
     const extension = selectedFile.name.split('.').pop()?.toLowerCase();
-    if (extension !== 'csv' && extension !== 'txt') {
-      toast({ title: "Invalid file format", description: "Only CSV or TXT spreadsheet files are supported client-side.", variant: "destructive" });
+    if (extension !== 'csv' && extension !== 'txt' && extension !== 'xlsx' && extension !== 'xls') {
+      toast({ title: "Invalid file format", description: "Only Excel (.xlsx, .xls) or CSV/TXT files are supported.", variant: "destructive" });
       return;
     }
 
@@ -32,12 +33,22 @@ export default function ExcelToPDFPage() {
     setIsLoading(true);
 
     try {
-      const textContent = await selectedFile.text();
-      setCsvText(textContent);
-      toast({ title: "CSV Loaded!" });
+      if (extension === 'xlsx' || extension === 'xls') {
+        const arrayBuffer = await selectedFile.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const csvContent = XLSX.utils.sheet_to_csv(worksheet);
+        setCsvText(csvContent);
+        toast({ title: "Excel Sheet Loaded!" });
+      } else {
+        const textContent = await selectedFile.text();
+        setCsvText(textContent);
+        toast({ title: "CSV Loaded!" });
+      }
     } catch (err) {
       console.error(err);
-      toast({ title: "Error parsing file", description: "Failed to read text contents.", variant: "destructive" });
+      toast({ title: "Error parsing file", description: "Failed to read spreadsheet contents.", variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
@@ -129,9 +140,9 @@ export default function ExcelToPDFPage() {
                   <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-2xl cursor-pointer bg-muted/20 hover:bg-muted/40 border-primary/20 transition-all group">
                     <div className="flex flex-col items-center justify-center pt-3 pb-4">
                       <FileSpreadsheet className="w-8 h-8 mb-2 text-primary group-hover:scale-110 transition-transform" />
-                      <p className="text-sm font-bold uppercase italic">Upload CSV document</p>
+                      <p className="text-sm font-bold uppercase italic">Upload Excel or CSV document</p>
                     </div>
-                    <input type="file" accept=".csv,.txt" className="hidden" onChange={handleFileChange} />
+                    <input type="file" accept=".csv,.txt,.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" className="hidden" onChange={handleFileChange} />
                   </label>
                 </div>
               ) : (
