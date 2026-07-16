@@ -111,6 +111,15 @@ const FILTER_CHIPS = [
   { label: '📊 Business & Legal', value: 'business' }
 ];
 
+const BANNER_LINKS = [
+  'https://play.google.com/store/apps/details?id=com.fixbro.invoicebro&hl=en_IN',
+  'https://brobookme.com',
+  'https://play.google.com/store/apps/details?id=com.fixbro.newtalent&hl=en_IN',
+  'https://play.google.com/store/apps/details?id=com.fixbro.chat&hl=en_IN',
+  'https://fixbro.in/referral',
+  'https://fixbro.in'
+];
+
 export default function Home() {
   const [filter, setFilter] = useState('all');
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Quick Tools Bro';
@@ -176,25 +185,46 @@ export default function Home() {
       <AdPlacement position="top" />
 
       <div className="space-y-12">
-        {visibleCategories.map(category => (
-          <section key={category.name} className="animate-in fade-in duration-500">
-            <h2 className="font-headline text-2xl font-bold tracking-tight md:text-3xl mb-6">
-              {category.name}
-            </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {category.tools.map((tool) => (
-                <ToolCard
-                  key={tool.href}
-                  title={tool.title}
-                  description={tool.description}
-                  href={tool.href}
-                  Icon={tool.Icon}
-                  color={category.color}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+        {visibleCategories.map((category, index) => {
+          const bannerIndex = index % BANNER_LINKS.length;
+          const bannerLink = BANNER_LINKS[bannerIndex];
+          return (
+            <section key={category.name} className="animate-in fade-in duration-500 space-y-6">
+              <h2 className="font-headline text-2xl font-bold tracking-tight md:text-3xl mb-4">
+                {category.name}
+              </h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {category.tools.map((tool) => (
+                  <ToolCard
+                    key={tool.href}
+                    title={tool.title}
+                    description={tool.description}
+                    href={tool.href}
+                    Icon={tool.Icon}
+                    color={category.color}
+                  />
+                ))}
+              </div>
+              
+              {/* Category Promotion Banner */}
+              {process.env.NEXT_PUBLIC_SHOW_BANNERS === 'true' && (
+                <div className="relative w-full h-[180px] sm:h-[250px] md:h-[300px] lg:h-[400px] xl:h-[450px] mt-6 rounded-2xl overflow-hidden border border-primary/10 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.005]">
+                  {/* Ad Attribution Badge */}
+                  <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-white text-[9px] font-black tracking-widest uppercase select-none pointer-events-none">
+                    Ad
+                  </span>
+                  <a href={bannerLink} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                    <img 
+                      src={`/banners/${bannerIndex + 1}.png`} 
+                      alt="FixBro Promotion" 
+                      className="absolute inset-0 w-full h-full object-cover" 
+                    />
+                  </a>
+                </div>
+              )}
+            </section>
+          );
+        })}
       </div>
 
       <HostingPromo />

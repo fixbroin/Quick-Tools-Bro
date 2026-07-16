@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { SeoSection } from '@/components/SeoSection';
 import { AdPlacement } from '@/components/AdPlacement';
 import { HostingPromo } from '@/components/HostingPromo';
+import { PromoBanner } from '@/components/PromoBanner';
 
 export default function ToolsLayout({
   children,
@@ -23,6 +24,7 @@ export default function ToolsLayout({
         {children}
         <HostingPromo />
         <AdPlacement position="bottom" />
+        <PromoBanner />
         <SeoSection />
       </div>
     </div>
