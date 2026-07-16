@@ -8,10 +8,10 @@ import { HostingPromo } from '@/components/HostingPromo';
 
 const toolCategories = [
   {
-    name: 'Daily Updates',
-    filterKey: 'updates',
-    tools: tools.filter(t => ['Daily Updates Dashboard'].includes(t.name)),
-    color: 'bg-violet-500/10 text-violet-500'
+    name: 'Gold Price and Weather',
+    filterKey: 'finance',
+    tools: tools.filter(t => ['Gold Price and Weather'].includes(t.name)),
+    color: 'bg-yellow-500/10 text-yellow-500'
   },
   {
     name: 'WhatsApp Quotes',
@@ -108,8 +108,7 @@ const FILTER_CHIPS = [
   { label: '🤖 Content & Writing', value: 'content' },
   { label: '👨💻 Developer Tools', value: 'developer' },
   { label: '🎓 Student Tools', value: 'student' },
-  { label: '📊 Business & Legal', value: 'business' },
-  { label: '✨ Daily Updates', value: 'updates' }
+  { label: '📊 Business & Legal', value: 'business' }
 ];
 
 export default function Home() {

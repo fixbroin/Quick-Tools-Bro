@@ -549,10 +549,10 @@ export const tools: Tool[] = [
 
   // Daily Updates
   {
-    title: 'Daily Updates Dashboard',
-    name: 'Daily Updates Dashboard',
-    description: 'Check weather, metal prices, jobs, coupons, and offers.',
-    href: '/tools/daily-features',
+    title: 'Gold Price and Weather',
+    name: 'Gold Price and Weather',
+    description: 'Check live gold rates today (24K & 22K), silver prices, and local weather updates.',
+    href: '/tools/gold-price-and-weather',
     Icon: CloudSun,
   },
 

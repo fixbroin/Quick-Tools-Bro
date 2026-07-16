@@ -82,28 +82,28 @@ export const SEO_MAP: Record<string, SeoEntry> = {
       }
     ]
   },
-  '/tools/daily-features': {
-    title: 'Daily Updates Dashboard - Weather, Live Gold Price, Fuel Rates India',
-    description: 'Get real-time updates for weather conditions, official IBJA gold and silver prices, petrol and diesel rates, active coupons, and government jobs in India.',
-    guideTitle: 'How to Use the Daily Updates Dashboard',
+  '/tools/gold-price-and-weather': {
+    title: 'Gold Price Today: Live 24K & 22K Gold Rate & Weather Updates',
+    description: 'Check live gold price today (24K & 22K) and silver rate in Chennai, Bangalore, Mumbai, Delhi, Hyderabad, Pune, Ahmedabad, Kolkata, Jaipur, Lucknow, and major cities in India. Get real-time weather updates & forecasts.',
+    guideTitle: 'How to Track Daily Gold Rates & Live Weather',
     steps: [
-      'Select your city from the unified location selector dropdown at the top.',
-      'Check the Weather tab for current temperature and wind metrics.',
-      'Visit the Gold / Silver tab for real-time IBJA bullion rates.',
-      'Browse the Fuel, Jobs, and Coupons tabs for active localized retail details.'
+      'Select your city from the location dropdown (e.g. Mumbai, Delhi, Bangalore, Chennai).',
+      'Check the Gold / Silver tab to see live 24K and 22K prices per gram and per 10g.',
+      'View the transparent breakdown of base price, 15% customs/GST duty, and final rate.',
+      'Switch to the Weather tab for real-time local temperature and forecasts.'
     ],
     faqs: [
       {
         question: 'Where do the live gold and silver prices come from?',
-        answer: 'Our daily updates fetch official benchmark bullion rates directly from the India Bullion and Jewellers Association (IBJA) sessions.'
+        answer: 'Our dashboard calculates prices in real-time by taking global bullion spot market feeds (XAU & XAG) and converting them using the live USD to INR exchange rate.'
       },
       {
-        question: 'How often are the petrol, diesel, and weather updates refreshed?',
-        answer: 'All daily dashboard features are cached on an hourly basis, ensuring you see fresh, accurate updates throughout the morning, afternoon, and night.'
+        question: 'Why is the retail gold price in India higher than the global spot rate?',
+        answer: 'Indian gold retail prices include basic customs duty, agriculture infrastructure cess, local dealer premiums, and a 3% GST, which adds roughly 15% to the base international rate.'
       },
       {
-        question: 'Are the job and exam notifications on this dashboard real?',
-        answer: 'Yes. The Jobs & Exams tab fetches live active notifications directly from official Indian recruitment portals and educational boards via aggregated search feeds.'
+        question: 'How often are the daily gold rates and weather updates refreshed?',
+        answer: 'The live gold prices, exchange rates, and weather conditions are automatically updated every 5 minutes on this page.'
       }
     ]
   },
