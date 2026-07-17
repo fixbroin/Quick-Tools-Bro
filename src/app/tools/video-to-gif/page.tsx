@@ -54,6 +54,19 @@ export default function VideoToGIFPage() {
         toast({ title: "Invalid file type", description: "Please upload a video file.", variant: "destructive" });
         return;
       }
+      const isMobile = typeof window !== 'undefined' && (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768);
+      const maxFileSize = isMobile ? 100 * 1024 * 1024 : 500 * 1024 * 1024; // 100MB on mobile, 500MB on desktop
+      if (file.size > maxFileSize) {
+        toast({
+          title: "File too large",
+          description: isMobile 
+            ? "To prevent mobile browser crashes due to device memory limits, video files are capped at 100MB on mobile. Please use a desktop browser to convert larger videos to GIF."
+            : `Please upload a video file smaller than ${formatSize(maxFileSize)}.`,
+          variant: "destructive",
+          duration: 6000,
+        });
+        return;
+      }
       setOriginalFile(file);
       setOriginalUrl(URL.createObjectURL(file));
       setCompressedUrl(null);

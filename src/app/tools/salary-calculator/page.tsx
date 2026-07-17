@@ -72,32 +72,32 @@ export default function SalaryCalculatorPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="basic" className="text-xs font-bold uppercase tracking-wider">Basic Salary (₹)</Label>
-                    <Input id="basic" type="number" value={basic} onChange={(e) => setBasic(Number(e.target.value))} className="rounded-xl" />
+                    <Input id="basic" type="number" value={basic === 0 ? '' : basic} placeholder="0" onChange={(e) => setBasic(Number(e.target.value))} className="rounded-xl" />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="hra" className="text-xs font-bold uppercase tracking-wider">House Rent Allowance (HRA) (₹)</Label>
-                    <Input id="hra" type="number" value={hra} onChange={(e) => setHra(Number(e.target.value))} className="rounded-xl" />
+                    <Input id="hra" type="number" value={hra === 0 ? '' : hra} placeholder="0" onChange={(e) => setHra(Number(e.target.value))} className="rounded-xl" />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="allowance" className="text-xs font-bold uppercase tracking-wider">Other Allowances (₹)</Label>
-                    <Input id="allowance" type="number" value={allowance} onChange={(e) => setAllowance(Number(e.target.value))} className="rounded-xl" />
+                    <Input id="allowance" type="number" value={allowance === 0 ? '' : allowance} placeholder="0" onChange={(e) => setAllowance(Number(e.target.value))} className="rounded-xl" />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="pf" className="text-xs font-bold uppercase tracking-wider">PF Deduction / EPF (₹)</Label>
-                    <Input id="pf" type="number" value={pf} onChange={(e) => setPf(Number(e.target.value))} className="rounded-xl" />
+                    <Input id="pf" type="number" value={pf === 0 ? '' : pf} placeholder="0" onChange={(e) => setPf(Number(e.target.value))} className="rounded-xl" />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="proftax" className="text-xs font-bold uppercase tracking-wider">Professional Tax (PT) (₹)</Label>
-                    <Input id="proftax" type="number" value={profTax} onChange={(e) => setProfTax(Number(e.target.value))} className="rounded-xl" />
+                    <Input id="proftax" type="number" value={profTax === 0 ? '' : profTax} placeholder="0" onChange={(e) => setProfTax(Number(e.target.value))} className="rounded-xl" />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="other" className="text-xs font-bold uppercase tracking-wider">Other Deductions (₹)</Label>
-                    <Input id="other" type="number" value={otherDeduction} onChange={(e) => setOtherDeduction(Number(e.target.value))} className="rounded-xl" />
+                    <Input id="other" type="number" value={otherDeduction === 0 ? '' : otherDeduction} placeholder="0" onChange={(e) => setOtherDeduction(Number(e.target.value))} className="rounded-xl" />
                   </div>
                 </div>
               </div>

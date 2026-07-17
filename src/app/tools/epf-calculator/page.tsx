@@ -112,9 +112,10 @@ export default function EPFCalculatorPage() {
                 </div>
                 <Input 
                   type="number" 
-                  value={monthlyBasic} 
+                  value={monthlyBasic === 0 ? '' : monthlyBasic} 
+                  placeholder="0"
                   min={1000} 
-                  onChange={(e) => setMonthlyBasic(Math.max(0, parseInt(e.target.value) || 0))} 
+                  onChange={(e) => setMonthlyBasic(e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value) || 0))} 
                   className="h-11 rounded-xl"
                 />
                 <Slider 
@@ -142,7 +143,13 @@ export default function EPFCalculatorPage() {
               {/* Current PF Balance */}
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Current EPF Balance (₹)</Label>
-                <Input type="number" value={currentBalance} onChange={(e) => setCurrentBalance(Math.max(0, parseInt(e.target.value) || 0))} className="h-11 rounded-xl" />
+                <Input 
+                  type="number" 
+                  value={currentBalance === 0 ? '' : currentBalance} 
+                  placeholder="0"
+                  onChange={(e) => setCurrentBalance(e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value) || 0))} 
+                  className="h-11 rounded-xl" 
+                />
               </div>
 
               {/* Yearly Increment % */}

@@ -72,7 +72,8 @@ export default function SIPCalculatorPage() {
                   <Input
                     id="monthly"
                     type="number"
-                    value={monthlyInvestment}
+                    value={monthlyInvestment === 0 ? '' : monthlyInvestment}
+                    placeholder="0"
                     onChange={(e) => setMonthlyInvestment(Number(e.target.value))}
                     className="rounded-xl"
                   />
@@ -86,7 +87,8 @@ export default function SIPCalculatorPage() {
                   <Input
                     id="returns"
                     type="number"
-                    value={expectedReturn}
+                    value={expectedReturn === 0 ? '' : expectedReturn}
+                    placeholder="0"
                     onChange={(e) => setExpectedReturn(Number(e.target.value))}
                     className="rounded-xl"
                   />
@@ -100,7 +102,8 @@ export default function SIPCalculatorPage() {
                   <Input
                     id="period"
                     type="number"
-                    value={timePeriod}
+                    value={timePeriod === 0 ? '' : timePeriod}
+                    placeholder="0"
                     onChange={(e) => setTimePeriod(Number(e.target.value))}
                     className="rounded-xl"
                   />

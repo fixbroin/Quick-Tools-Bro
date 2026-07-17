@@ -94,7 +94,7 @@ export default function GPACalculatorPage() {
                 </div>
                 <div>
                   <Label htmlFor="ccred" className="text-xs font-bold uppercase tracking-wider block mb-1">Credits</Label>
-                  <Input id="ccred" type="number" min={1} value={credits} onChange={(e) => setCredits(Number(e.target.value))} />
+                  <Input id="ccred" type="number" min={1} value={credits === 0 ? '' : credits} placeholder="3" onChange={(e) => setCredits(Number(e.target.value))} />
                 </div>
                 <div className="col-span-2">
                   <Label className="text-xs font-bold uppercase tracking-wider block mb-1">Grade</Label>

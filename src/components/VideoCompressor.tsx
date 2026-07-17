@@ -52,13 +52,16 @@ export default function VideoCompressor() {
         return;
       }
       
-      const maxFileSize = 2 * 1024 * 1024 * 1024; // 2 GB
+      const isMobile = typeof window !== 'undefined' && (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768);
+      const maxFileSize = isMobile ? 100 * 1024 * 1024 : 2 * 1024 * 1024 * 1024; // 100MB on mobile, 2GB on desktop
       if (file.size > maxFileSize) {
         toast({
           title: "File too large",
-          description: `Please upload a video smaller than ${formatSize(maxFileSize)}. The ideal size for browser-based compression is under 200MB on mobile and 1GB on desktop to prevent tab crashes.`,
+          description: isMobile 
+            ? "To prevent mobile browser crashes due to device memory limits, uploads are capped at 100MB on mobile. Please use a desktop browser to process larger videos."
+            : `Please upload a video smaller than ${formatSize(maxFileSize)}. The ideal size for browser-based compression is under 200MB.`,
           variant: "destructive",
-          duration: 5000,
+          duration: 6000,
         });
         return;
       }

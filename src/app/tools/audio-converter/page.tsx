@@ -33,6 +33,19 @@ export default function AudioConverterPage() {
         toast({ title: "Invalid file type", description: "Please upload an audio file.", variant: "destructive" });
         return;
       }
+      const isMobile = typeof window !== 'undefined' && (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768);
+      const maxFileSize = isMobile ? 100 * 1024 * 1024 : 100 * 1024 * 1024; // 100MB on mobile, 100MB on desktop
+      if (file.size > maxFileSize) {
+        toast({
+          title: "File too large",
+          description: isMobile 
+            ? "To prevent mobile browser crashes due to device memory limits, audio files are capped at 100MB on mobile. Please use a desktop browser to convert larger files."
+            : `Please upload an audio file smaller than ${formatSize(maxFileSize)}.`,
+          variant: "destructive",
+          duration: 6000,
+        });
+        return;
+      }
       setOriginalFile(file);
       setConvertedUrl(null);
       setConvertedSize(null);

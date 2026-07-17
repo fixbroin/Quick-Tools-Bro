@@ -51,9 +51,9 @@ export default function PercentageCalculatorPage() {
               <h3 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">1. Calculate Percentage Value</h3>
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <span className="text-sm font-semibold">What is</span>
-                <Input type="number" value={m1X} onChange={(e) => setM1X(Number(e.target.value))} className="w-20 text-center rounded-xl font-bold" />
+                <Input type="number" value={m1X === 0 ? '' : m1X} placeholder="0" onChange={(e) => setM1X(Number(e.target.value))} className="w-20 text-center rounded-xl font-bold" />
                 <span className="text-sm font-semibold">% of</span>
-                <Input type="number" value={m1Y} onChange={(e) => setM1Y(Number(e.target.value))} className="w-24 text-center rounded-xl font-bold" />
+                <Input type="number" value={m1Y === 0 ? '' : m1Y} placeholder="0" onChange={(e) => setM1Y(Number(e.target.value))} className="w-24 text-center rounded-xl font-bold" />
                 <span className="text-sm font-semibold sm:ml-auto">Result:</span>
                 <div className="border px-4 py-2 bg-muted/20 font-black text-primary rounded-xl text-center min-w-[80px]">
                   {getM1Result().toFixed(2)}
@@ -65,9 +65,9 @@ export default function PercentageCalculatorPage() {
             <div className="space-y-4 pt-4 border-t">
               <h3 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">2. Calculate Ratio Percentage</h3>
               <div className="flex flex-col sm:flex-row items-center gap-3">
-                <Input type="number" value={m2X} onChange={(e) => setM2X(Number(e.target.value))} className="w-20 text-center rounded-xl font-bold" />
+                <Input type="number" value={m2X === 0 ? '' : m2X} placeholder="0" onChange={(e) => setM2X(Number(e.target.value))} className="w-20 text-center rounded-xl font-bold" />
                 <span className="text-sm font-semibold">is what percent of</span>
-                <Input type="number" value={m2Y} onChange={(e) => setM2Y(Number(e.target.value))} className="w-24 text-center rounded-xl font-bold" />
+                <Input type="number" value={m2Y === 0 ? '' : m2Y} placeholder="0" onChange={(e) => setM2Y(Number(e.target.value))} className="w-24 text-center rounded-xl font-bold" />
                 <span className="text-sm font-semibold sm:ml-auto">Result:</span>
                 <div className="border px-4 py-2 bg-muted/20 font-black text-primary rounded-xl text-center min-w-[80px]">
                   {getM2Result().toFixed(2)}%
@@ -80,9 +80,9 @@ export default function PercentageCalculatorPage() {
               <h3 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">3. Percentage Increase / Decrease</h3>
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <span className="text-sm font-semibold">From</span>
-                <Input type="number" value={m3X} onChange={(e) => setM3X(Number(e.target.value))} className="w-20 text-center rounded-xl font-bold" />
+                <Input type="number" value={m3X === 0 ? '' : m3X} placeholder="0" onChange={(e) => setM3X(Number(e.target.value))} className="w-20 text-center rounded-xl font-bold" />
                 <span className="text-sm font-semibold">to</span>
-                <Input type="number" value={m3Y} onChange={(e) => setM3Y(Number(e.target.value))} className="w-24 text-center rounded-xl font-bold" />
+                <Input type="number" value={m3Y === 0 ? '' : m3Y} placeholder="0" onChange={(e) => setM3Y(Number(e.target.value))} className="w-24 text-center rounded-xl font-bold" />
                 <span className="text-sm font-semibold sm:ml-auto">Result:</span>
                 <div className="border px-4 py-2 bg-muted/20 font-black text-primary rounded-xl text-center min-w-[80px]">
                   {getM3Result() >= 0 ? `+${getM3Result().toFixed(2)}%` : `${getM3Result().toFixed(2)}%`}

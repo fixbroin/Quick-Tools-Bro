@@ -122,7 +122,8 @@ export default function GSTCalculatorPage() {
                     <Input
                       id="custom-gst"
                       type="number"
-                      value={customRate}
+                      value={customRate === 0 ? '' : customRate}
+                      placeholder="0"
                       onChange={(e) => setCustomRate(Number(e.target.value))}
                       className="rounded-xl"
                     />

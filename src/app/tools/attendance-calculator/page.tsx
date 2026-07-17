@@ -64,15 +64,15 @@ export default function AttendanceCalculatorPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="total">Total Classes Conducted</Label>
-                  <Input id="total" type="number" value={totalClasses} onChange={(e) => setTotalClasses(Number(e.target.value))} />
+                  <Input id="total" type="number" value={totalClasses === 0 ? '' : totalClasses} placeholder="0" onChange={(e) => setTotalClasses(Number(e.target.value))} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="attended">Classes You Attended</Label>
-                  <Input id="attended" type="number" value={attendedClasses} onChange={(e) => setAttendedClasses(Number(e.target.value))} />
+                  <Input id="attended" type="number" value={attendedClasses === 0 ? '' : attendedClasses} placeholder="0" onChange={(e) => setAttendedClasses(Number(e.target.value))} />
                 </div>
                 <div className="space-y-2 col-span-2">
                   <Label htmlFor="target">Target Attendance Percentage (%)</Label>
-                  <Input id="target" type="number" value={targetPercent} onChange={(e) => setTargetPercent(Number(e.target.value))} />
+                  <Input id="target" type="number" value={targetPercent === 0 ? '' : targetPercent} placeholder="0" onChange={(e) => setTargetPercent(Number(e.target.value))} />
                 </div>
               </div>
             </CardContent>

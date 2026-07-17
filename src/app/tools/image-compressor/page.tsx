@@ -166,7 +166,7 @@ export default function ImageCompressorPage() {
             {mode === 'size' ? (
               <div className="space-y-2">
                 <Label htmlFor='max-size'>Target Size (MB)</Label>
-                <Input id="max-size" type="number" value={maxSizeMB} onChange={(e) => setMaxSizeMB(parseFloat(e.target.value) || 0)} min="0.01" step="0.1" />
+                <Input id="max-size" type="number" value={maxSizeMB === 0 ? '' : maxSizeMB} placeholder="1.0" onChange={(e) => setMaxSizeMB(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)} min="0.01" step="0.1" />
               </div>
             ) : (
               <div className="space-y-2">

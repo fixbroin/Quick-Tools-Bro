@@ -58,9 +58,10 @@ export default function GratuityCalculatorPage() {
                 </div>
                 <Input 
                   type="number" 
-                  value={monthlyBasic} 
+                  value={monthlyBasic === 0 ? '' : monthlyBasic} 
+                  placeholder="0"
                   min={1000} 
-                  onChange={(e) => setMonthlyBasic(Math.max(0, parseInt(e.target.value) || 0))} 
+                  onChange={(e) => setMonthlyBasic(e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value) || 0))} 
                   className="h-11 rounded-xl"
                 />
                 <Slider 

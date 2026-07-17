@@ -70,11 +70,12 @@ export default function PPFCalculatorPage() {
                 </div>
                 <Input 
                   type="number" 
-                  value={yearlyContribution} 
+                  value={yearlyContribution === 0 ? '' : yearlyContribution} 
+                  placeholder="0"
                   min={500} 
                   max={150000} 
                   step={500} 
-                  onChange={(e) => setYearlyContribution(Math.min(150000, Math.max(0, parseInt(e.target.value) || 0)))} 
+                  onChange={(e) => setYearlyContribution(e.target.value === '' ? 0 : Math.min(150000, Math.max(0, parseInt(e.target.value) || 0)))} 
                   className="h-11 rounded-xl"
                 />
                 <Slider 

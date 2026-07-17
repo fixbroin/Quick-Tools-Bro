@@ -53,6 +53,19 @@ export default function AudioCutterPage() {
         toast({ title: "Invalid file type", description: "Please upload an audio file.", variant: "destructive" });
         return;
       }
+      const isMobile = typeof window !== 'undefined' && (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768);
+      const maxFileSize = isMobile ? 100 * 1024 * 1024 : 100 * 1024 * 1024; // 100MB on mobile, 100MB on desktop
+      if (file.size > maxFileSize) {
+        toast({
+          title: "File too large",
+          description: isMobile 
+            ? "To prevent mobile browser crashes due to device memory limits, audio files are capped at 100MB on mobile. Please use a desktop browser to slice larger files."
+            : `Please upload an audio file smaller than ${formatSize(maxFileSize)}.`,
+          variant: "destructive",
+          duration: 6000,
+        });
+        return;
+      }
       setOriginalFile(file);
       setOriginalUrl(URL.createObjectURL(file));
       setTrimmedUrl(null);
@@ -265,7 +278,8 @@ export default function AudioCutterPage() {
                   <Input 
                     id="start-time" 
                     type="number" 
-                    value={startTime.toFixed(1)} 
+                    value={startTime === 0 ? '' : startTime} 
+                    placeholder="0.0"
                     step={0.1}
                     min={0}
                     max={duration}
@@ -278,7 +292,8 @@ export default function AudioCutterPage() {
                   <Input 
                     id="end-time" 
                     type="number" 
-                    value={endTime.toFixed(1)} 
+                    value={endTime === 0 ? '' : endTime} 
+                    placeholder="0.0"
                     step={0.1}
                     min={0}
                     max={duration}
