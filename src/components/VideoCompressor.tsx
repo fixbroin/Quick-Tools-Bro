@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { SITE_CONFIG } from '@/lib/config';
 import { scrollToDownload } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CompressionResult {
   compressedUrl: string;
@@ -31,6 +32,8 @@ export default function VideoCompressor() {
   const [mode, setMode] = useState<CompressionMode>('quality');
   const [quality, setQuality] = useState(28); // CRF value, lower is better quality. Slider will be inverted.
   const [targetSize, setTargetSize] = useState(25); // in MB
+  const [resolution, setResolution] = useState<string>('720'); // Default to 720p HD for fast browser compression
+  const [speed, setSpeed] = useState<string>('ultrafast'); // Default to ultrafast for maximum speed
   const { toast } = useToast();
   const ffmpegRef = useRef(new FFmpeg());
   const [progressMessage, setProgressMessage] = useState('');
@@ -51,11 +54,11 @@ export default function VideoCompressor() {
         return;
       }
       
-      const maxFileSize = 500 * 1024 * 1024; // 500 MB
+      const maxFileSize = 2 * 1024 * 1024 * 1024; // 2 GB
       if (file.size > maxFileSize) {
         toast({
           title: "File too large",
-          description: `Please upload a video smaller than ${formatSize(maxFileSize)}. The ideal size for browser-based compression is under 500MB for best performance.`,
+          description: `Please upload a video smaller than ${formatSize(maxFileSize)}. The ideal size for browser-based compression is under 200MB on mobile and 1GB on desktop to prevent tab crashes.`,
           variant: "destructive",
           duration: 5000,
         });
@@ -74,7 +77,8 @@ export default function VideoCompressor() {
          setProgress(Math.round(progress * 100));
       });
       await ffmpeg.load({
-        coreURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+        coreURL: `${window.location.origin}/ffmpeg/ffmpeg-core.js`,
+        wasmURL: `${window.location.origin}/ffmpeg/ffmpeg-core.wasm`,
       });
     }
   };
@@ -98,11 +102,25 @@ export default function VideoCompressor() {
       
       await ffmpeg.writeFile(inputFileName, await fetchFile(originalFile));
       
+      let vfArgs: string[] = [];
+      if (resolution !== 'original') {
+        // H.264 requires width and height to be divisible by 2. scale=-2:height handles this.
+        vfArgs = ['-vf', `scale=-2:${resolution}`];
+      }
+
       let command: string[];
       if (mode === 'quality') {
         setProgressMessage('Compressing...');
         const crfValue = 51 - quality;
-        command = ['-i', inputFileName, '-vcodec', 'libx264', '-crf', crfValue.toString(), '-preset', 'fast', '-c:a', 'aac', outputFileName];
+        command = [
+          '-i', inputFileName,
+          ...vfArgs,
+          '-vcodec', 'libx264',
+          '-crf', crfValue.toString(),
+          '-preset', speed,
+          '-c:a', 'aac',
+          outputFileName
+        ];
         await ffmpeg.exec(command);
       } else { // Target Size
         const originalDuration = await getVideoDuration(originalFile);
@@ -119,10 +137,30 @@ export default function VideoCompressor() {
         }
         
         setProgressMessage('Pass 1 of 2: Analyzing...');
-        await ffmpeg.exec(['-i', inputFileName, '-c:v', 'libx264', '-b:v', `${targetVideoBitrate}k`, '-pass', '1', '-an', '-f', 'null', '/dev/null']);
+        await ffmpeg.exec([
+          '-i', inputFileName,
+          ...vfArgs,
+          '-c:v', 'libx264',
+          '-b:v', `${targetVideoBitrate}k`,
+          '-preset', speed,
+          '-pass', '1',
+          '-an',
+          '-f', 'null',
+          '/dev/null'
+        ]);
         
         setProgressMessage('Pass 2 of 2: Compressing...');
-        command = ['-i', inputFileName, '-c:v', 'libx264', '-b:v', `${targetVideoBitrate}k`, '-pass', '2', '-c:a', 'aac', '-b:a', `${audioBitrate}k`, outputFileName];
+        command = [
+          '-i', inputFileName,
+          ...vfArgs,
+          '-c:v', 'libx264',
+          '-b:v', `${targetVideoBitrate}k`,
+          '-preset', speed,
+          '-pass', '2',
+          '-c:a', 'aac',
+          '-b:a', `${audioBitrate}k`,
+          outputFileName
+        ];
         await ffmpeg.exec(command);
       }
       
@@ -148,7 +186,7 @@ export default function VideoCompressor() {
       setProgress(0);
       setProgressMessage('');
     }
-  }, [originalFile, toast, mode, quality, targetSize]);
+  }, [originalFile, toast, mode, quality, targetSize, resolution, speed]);
 
   const getVideoDuration = (file: File): Promise<number | null> => {
       return new Promise((resolve) => {
@@ -186,12 +224,12 @@ export default function VideoCompressor() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="video-upload">Upload Video (Max 500MB)</Label>
+          <Label htmlFor="video-upload">Upload Video (Max 2GB)</Label>
            <div className="flex items-center gap-4 rounded-lg border p-4">
               <Upload className="h-8 w-8 text-muted-foreground" />
               <div className="flex-1">
                 <Input id="video-upload" type="file" accept="video/mp4,video/webm,video/mov,video/quicktime" onChange={handleFileChange} />
-                <p className="text-xs text-muted-foreground mt-1">Select a video file (MP4, WebM, MOV).</p>
+                <p className="text-xs text-muted-foreground mt-1">Select a video file (MP4, WebM, MOV). Max 2GB limit. Keep under 200MB on mobile to prevent crashes.</p>
               </div>
             </div>
         </div>
@@ -210,6 +248,42 @@ export default function VideoCompressor() {
                   <Label htmlFor="size">By Target Size</Label>
                 </div>
               </RadioGroup>
+            </div>
+
+            {/* Speed & Resolution Controls */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-b py-4">
+              <div className="space-y-2">
+                <Label htmlFor="resolution-select">Target Resolution</Label>
+                <Select value={resolution} onValueChange={setResolution}>
+                  <SelectTrigger id="resolution-select" className="rounded-xl border border-primary/15 bg-card shadow-sm h-11">
+                    <SelectValue placeholder="Select Resolution" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-primary/15">
+                    <SelectItem value="original">Original Resolution</SelectItem>
+                    <SelectItem value="720">720p HD (Recommended - Fast)</SelectItem>
+                    <SelectItem value="480">480p SD (Very Fast)</SelectItem>
+                    <SelectItem value="360">360p Mobile (Fastest)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-[10px] text-muted-foreground leading-relaxed">Downscaling high-resolution videos (like 1080p/4K) significantly reduces encoding time in the browser.</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="speed-select">Encoding Speed Preset</Label>
+                <Select value={speed} onValueChange={setSpeed}>
+                  <SelectTrigger id="speed-select" className="rounded-xl border border-primary/15 bg-card shadow-sm h-11">
+                    <SelectValue placeholder="Select Speed" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-primary/15">
+                    <SelectItem value="ultrafast">Ultrafast (Max Speed, Larger File)</SelectItem>
+                    <SelectItem value="superfast">Superfast (Very Fast)</SelectItem>
+                    <SelectItem value="veryfast">Veryfast (Fast)</SelectItem>
+                    <SelectItem value="fast">Fast (Standard)</SelectItem>
+                    <SelectItem value="medium">Medium (Slowest, Best Compression)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-[10px] text-muted-foreground leading-relaxed">Ultrafast/Superfast presets use fewer CPU encoding cycles, speeding up browser compressions.</p>
+              </div>
             </div>
             
             {mode === 'quality' ? (
@@ -309,7 +383,7 @@ export default function VideoCompressor() {
                 </div>
                 <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
                     <h4 className="font-bold mb-2 text-base">Is there a limit on video length or size?</h4>
-                    <p className="text-muted-foreground text-sm">To ensure a smooth experience, we limit uploads to 500MB. The time it takes to compress depends on your computer's processing power and the video duration.</p>
+                    <p className="text-muted-foreground text-sm">To ensure a smooth experience, we limit uploads to 2GB. The time it takes to compress depends on your computer's processing power and the video duration.</p>
                 </div>
                 <div className="p-6 rounded-xl border border-border/50 bg-card hover:border-primary/50 transition-colors">
                     <h4 className="font-bold mb-2 text-base">Which mode should I choose: Quality or Target Size?</h4>

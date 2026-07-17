@@ -5,7 +5,7 @@ import {
   RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine,
   Split, EyeOff, Droplet, RotateCw, Percent, Braces, Timer, StopCircle,
   FileEdit, Mail, Instagram, FileCode, Code, Palette, Calendar, GraduationCap,
-  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock
+  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders
 } from 'lucide-react';
 
 export interface Tool {
@@ -614,6 +614,78 @@ export const tools: Tool[] = [
     description: 'Find and share quotes for WhatsApp.',
     href: '/tools/whatsapp-quotes',
     Icon: Quote,
+  },
+  
+  // New Indian High-Traffic Tools
+  {
+    title: 'Govt Job Photo & Signature Resizer',
+    name: 'Govt Job Photo & Signature Resizer',
+    description: 'Resize and compress photos to exactly 20KB or 50KB for government job portals (SSC, UPSC, Bank, etc.).',
+    href: '/tools/govt-job-photo-resizer',
+    Icon: ImageIcon,
+  },
+  {
+    title: 'Sukanya Samriddhi Yojana (SSY) Calculator',
+    name: 'Sukanya Samriddhi Yojana (SSY) Calculator',
+    description: 'Calculate maturity amount and interest earned for Sukanya Samriddhi account contributions.',
+    href: '/tools/ssy-calculator',
+    Icon: Landmark,
+  },
+  {
+    title: 'PPF Calculator',
+    name: 'PPF Calculator',
+    description: 'Calculate Public Provident Fund returns, interest earned, and maturity values online.',
+    href: '/tools/ppf-calculator',
+    Icon: Banknote,
+  },
+  {
+    title: 'EPF Calculator',
+    name: 'EPF Calculator',
+    description: 'Calculate Employee Provident Fund retirement corpus and interest earnings.',
+    href: '/tools/epf-calculator',
+    Icon: Scale,
+  },
+  {
+    title: 'Gratuity Calculator',
+    name: 'Gratuity Calculator',
+    description: 'Calculate your tax-free gratuity payout based on monthly salary and years of service.',
+    href: '/tools/gratuity-calculator',
+    Icon: Landmark,
+  },
+  {
+    title: 'Video to MP3 Converter',
+    name: 'Video to MP3 Converter',
+    description: 'Extract audio from any video file and save it as high-quality MP3 format.',
+    href: '/tools/video-to-mp3',
+    Icon: Music,
+  },
+  {
+    title: 'Video to GIF Converter',
+    name: 'Video to GIF Converter',
+    description: 'Convert short video clips into lightweight, animated GIF images online.',
+    href: '/tools/video-to-gif',
+    Icon: Video,
+  },
+  {
+    title: 'Audio Cutter & Ringtone Maker',
+    name: 'Audio Cutter & Ringtone Maker',
+    description: 'Trim your songs, cut MP3/WAV files, and create custom ringtones online.',
+    href: '/tools/audio-cutter',
+    Icon: Scissors,
+  },
+  {
+    title: 'Audio Converter',
+    name: 'Audio Converter',
+    description: 'Convert audio files between MP3, WAV, AAC, M4A, and OGG formats.',
+    href: '/tools/audio-converter',
+    Icon: RefreshCw,
+  },
+  {
+    title: 'Basic Video Editor',
+    name: 'Basic Video Editor',
+    description: 'Trim, crop, and mute video clips online without uploading to any server.',
+    href: '/tools/video-editor',
+    Icon: Sliders,
   },
 ];
 import { Edit3, Table } from 'lucide-react';

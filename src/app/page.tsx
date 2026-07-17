@@ -8,15 +8,19 @@ import { HostingPromo } from '@/components/HostingPromo';
 
 const toolCategories = [
   {
-    name: 'Gold Price and Weather',
+    name: 'Gold Price & Daily Finance',
     filterKey: 'finance',
-    tools: tools.filter(t => ['Gold Price and Weather'].includes(t.name)),
+    tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
     color: 'bg-yellow-500/10 text-yellow-500'
   },
   {
-    name: 'WhatsApp Quotes',
+    name: 'WhatsApp Quotes & Social Tools',
     filterKey: 'utility',
-    tools: tools.filter(t => ['WhatsApp Quotes'].includes(t.name)),
+    tools: ['WhatsApp Quotes', 'Social Caption Generator', 'Social Bio Generator', 'Hashtag Generator']
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
     color: 'bg-sky-500/10 text-sky-500'
   },
   {
@@ -34,13 +38,15 @@ const toolCategories = [
   {
     name: 'Image Tools',
     filterKey: 'image',
-    tools: tools.filter(t => ['Image Compressor', 'Image Converter', 'Image Resizer', 'Image Background Remover', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator', 'Passport Photo Maker', 'Blur Image', 'Watermark Maker', 'Rotate Image'].includes(t.name)),
+    tools: tools.filter(t => ['Image Compressor', 'Image Converter', 'Image Resizer', 'Image Background Remover', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator', 'Passport Photo Maker', 'Blur Image', 'Watermark Maker', 'Rotate Image', 'Govt Job Photo & Signature Resizer'].includes(t.name)),
     color: 'bg-blue-500/10 text-blue-500'
   },
   {
-    name: 'Video Tools',
+    name: 'Video & Audio Tools',
     filterKey: 'image',
-    tools: tools.filter(t => ['Video Compressor'].includes(t.name)),
+    tools: ['Video Compressor', 'Video to MP3 Converter', 'Video to GIF Converter', 'Audio Cutter & Ringtone Maker', 'Audio Converter', 'Basic Video Editor']
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
     color: 'bg-purple-500/10 text-purple-500'
   },
   {
@@ -52,7 +58,7 @@ const toolCategories = [
   {
     name: 'Web & Utility Tools',
     filterKey: 'utility',
-    tools: tools.filter(t => ['Short Link Maker', 'Unit Converter', 'Currency Converter'].includes(t.name)),
+    tools: tools.filter(t => ['Short Link Maker', 'Unit Converter'].includes(t.name)),
     color: 'bg-indigo-500/10 text-indigo-500'
   },
   {
@@ -64,7 +70,7 @@ const toolCategories = [
   {
     name: 'Financial Calculators',
     filterKey: 'finance',
-    tools: tools.filter(t => ['Loan EMI Calculator', 'Gold Loan Calculator', 'SIP Calculator', 'GST Calculator', 'Salary Calculator', 'Income Tax Calculator'].includes(t.name)),
+    tools: tools.filter(t => ['Loan EMI Calculator', 'SIP Calculator', 'Salary Calculator', 'Income Tax Calculator', 'Sukanya Samriddhi Yojana (SSY) Calculator', 'PPF Calculator', 'EPF Calculator', 'Gratuity Calculator'].includes(t.name)),
     color: 'bg-yellow-500/10 text-yellow-500'
   },
   {
@@ -82,7 +88,7 @@ const toolCategories = [
   {
     name: 'Content & Marketing',
     filterKey: 'content',
-    tools: tools.filter(t => ['Email Writer', 'Social Caption Generator', 'Resume Builder', 'Cover Letter Generator', 'AI Prompt Generator', 'Social Bio Generator', 'Business Name Generator', 'Video Title Generator', 'Hashtag Generator', 'YouTube Tag Generator', 'YouTube Thumbnail Downloader'].includes(t.name)),
+    tools: tools.filter(t => ['Email Writer', 'Resume Builder', 'Cover Letter Generator', 'AI Prompt Generator', 'Business Name Generator', 'Video Title Generator', 'YouTube Tag Generator', 'YouTube Thumbnail Downloader'].includes(t.name)),
     color: 'bg-rose-500/10 text-rose-500'
   },
   {

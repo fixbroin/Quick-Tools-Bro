@@ -36,8 +36,39 @@ function getAdvancedSeoDetails(path: string, originalTitle?: string, originalDes
   }
 
   const nameLower = toolName.toLowerCase();
-  
-  if (nameLower.includes('compress')) {
+
+  if (nameLower.includes('video') || nameLower.includes('audio') || nameLower.includes('mp3') || nameLower.includes('gif')) {
+    if (nameLower.includes('compress')) {
+      title = `Free Online ${toolName} - Compress Video Size without Quality Loss`;
+      description = `Reduce video file sizes (MP4, WebM, MOV) online for free. Compress to specific megabytes instantly inside your browser with 100% privacy.`;
+      keywords = ['video compressor', 'compress video online', 'reduce mp4 size', 'compress video size', 'free online video compressor'];
+    } else if (nameLower.includes('to mp3')) {
+      title = `Video to MP3 Converter - Free Online Audio Extractor`;
+      description = `Extract high-quality MP3 audio from any video file (MP4, WebM, MOV) online for free. 100% private, browser-based conversion.`;
+      keywords = ['video to mp3', 'convert video to mp3', 'extract audio from video', 'mp4 to mp3 converter'];
+    } else if (nameLower.includes('to gif')) {
+      title = `Video to GIF Converter - Create Animated GIFs Online`;
+      description = `Convert MP4, WebM, and MOV video clips into high-quality animated GIFs online for free. 100% private, browser-based maker.`;
+      keywords = ['video to gif', 'convert video to gif', 'gif maker online', 'mp4 to gif converter'];
+    } else if (nameLower.includes('cutter') || nameLower.includes('trim')) {
+      title = `Audio Cutter & Ringtone Maker - Cut MP3 Online`;
+      description = `Trim your songs, cut MP3/WAV files, and create custom ringtones online for free. 100% private, browser-based audio editor.`;
+      keywords = ['audio cutter', 'mp3 cutter online', 'ringtone maker', 'trim song online', 'audio trimmer'];
+    } else if (nameLower.includes('converter')) {
+      title = `Audio Converter - Convert MP3, WAV, AAC, M4A Online`;
+      description = `Convert audio files between MP3, WAV, AAC, M4A, OGG, and FLAC formats online for free. 100% private, browser-based conversion.`;
+      keywords = ['audio converter', 'convert audio online', 'mp3 converter', 'wav to mp3', 'audio format changer'];
+    } else if (nameLower.includes('editor')) {
+      title = `Basic Video Editor - Trim, Crop & Mute Videos Online`;
+      description = `Edit your video clips online. Trim length, crop to square or vertical aspect ratios, and mute audio. 100% private, browser-based video editor.`;
+      keywords = ['video editor online', 'trim video online', 'crop video online', 'mute video', 'free basic video editor'];
+    } else {
+      title = `Free Online ${toolName} - Browser-Based Media Tool`;
+      description = `Process and edit your video and audio files online for free. Fast, secure, and 100% local processing inside your browser.`;
+      keywords = [nameLower, 'online media tool', 'free media converter', 'browser editor'];
+    }
+  }
+  else if (nameLower.includes('compress')) {
     const isImg = nameLower.includes('image') || nameLower.includes('jpg') || nameLower.includes('png');
     const target = isImg ? 'images (JPG, PNG, WebP)' : nameLower.includes('pdf') ? 'PDF documents' : 'files';
     title = `Free Online ${toolName} - Reduce ${isImg ? 'Image' : 'PDF'} Size without Quality Loss`;
