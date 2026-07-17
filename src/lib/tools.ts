@@ -5,7 +5,7 @@ import {
   RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine,
   Split, EyeOff, Droplet, RotateCw, Percent, Braces, Timer, StopCircle,
   FileEdit, Mail, Instagram, FileCode, Code, Palette, Calendar, GraduationCap,
-  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders
+  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders, Volume2
 } from 'lucide-react';
 
 export interface Tool {
@@ -686,6 +686,13 @@ export const tools: Tool[] = [
     description: 'Trim, crop, and mute video clips online without uploading to any server.',
     href: '/tools/video-editor',
     Icon: Sliders,
+  },
+  {
+    title: 'Text-to-Speech Converter',
+    name: 'Text-to-Speech Converter',
+    description: 'Convert text into spoken audio online. Select from multiple voices, adjust speech speed, and pitch.',
+    href: '/tools/text-to-speech',
+    Icon: Volume2,
   },
 ];
 import { Edit3, Table } from 'lucide-react';

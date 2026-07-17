@@ -65,7 +65,7 @@ export function SeoSection() {
       },
       {
         name: 'Video & Audio Tools',
-        matches: ['Video Compressor', 'Video to MP3 Converter', 'Video to GIF Converter', 'Audio Cutter & Ringtone Maker', 'Audio Converter', 'Basic Video Editor']
+        matches: ['Video Compressor', 'Video to MP3 Converter', 'Video to GIF Converter', 'Audio Cutter & Ringtone Maker', 'Audio Converter', 'Basic Video Editor', 'Text-to-Speech Converter']
       },
       {
         name: 'Business Tools',

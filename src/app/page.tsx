@@ -44,7 +44,7 @@ const toolCategories = [
   {
     name: 'Video & Audio Tools',
     filterKey: 'image',
-    tools: ['Video Compressor', 'Video to MP3 Converter', 'Video to GIF Converter', 'Audio Cutter & Ringtone Maker', 'Audio Converter', 'Basic Video Editor']
+    tools: ['Video Compressor', 'Video to MP3 Converter', 'Video to GIF Converter', 'Audio Cutter & Ringtone Maker', 'Audio Converter', 'Basic Video Editor', 'Text-to-Speech Converter']
       .map(name => tools.find(t => t.name === name))
       .filter((t): t is typeof tools[number] => !!t),
     color: 'bg-purple-500/10 text-purple-500'

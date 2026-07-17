@@ -7,8 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Download, Loader2, Upload } from 'lucide-react';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile } from '@ffmpeg/util';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { SITE_CONFIG } from '@/lib/config';
@@ -35,7 +33,7 @@ export default function VideoCompressor() {
   const [resolution, setResolution] = useState<string>('720'); // Default to 720p HD for fast browser compression
   const [speed, setSpeed] = useState<string>('ultrafast'); // Default to ultrafast for maximum speed
   const { toast } = useToast();
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef<any>(null);
   const [progressMessage, setProgressMessage] = useState('');
 
   const formatSize = (bytes: number) => {
@@ -71,9 +69,13 @@ export default function VideoCompressor() {
   };
 
   const loadFFmpeg = async () => {
+    if (!ffmpegRef.current) {
+      const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+      ffmpegRef.current = new FFmpeg();
+    }
     const ffmpeg = ffmpegRef.current;
     if (!ffmpeg.loaded) {
-      ffmpeg.on('progress', ({ progress, time }) => {
+      ffmpeg.on('progress', ({ progress, time }: { progress: number; time: number }) => {
          setProgress(Math.round(progress * 100));
       });
       await ffmpeg.load({
@@ -100,6 +102,7 @@ export default function VideoCompressor() {
       const inputFileName = originalFile.name;
       const outputFileName = `compressed-${Date.now()}.mp4`;
       
+      const { fetchFile } = await import('@ffmpeg/util');
       await ffmpeg.writeFile(inputFileName, await fetchFile(originalFile));
       
       let vfArgs: string[] = [];

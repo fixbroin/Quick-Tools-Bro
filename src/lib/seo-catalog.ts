@@ -410,6 +410,27 @@ export const SEO_MAP: Record<string, SeoEntry> = {
         answer: 'No! All editing tools on UseBro are 100% free, unlimited, and run directly on your device without watermarks or server subscriptions.'
       }
     ]
+  },
+  '/tools/text-to-speech': {
+    title: 'Text-to-Speech Converter - Free Online TTS Read Aloud',
+    description: 'Convert text to spoken audio online for free. Adjust speech rate, pitch, and choose from multiple voices. 100% private browser-based tool.',
+    guideTitle: 'How to Convert Text to Speech Online',
+    steps: [
+      'Type or paste your text into the input field.',
+      'Select your preferred voice language from the dropdown menu.',
+      'Adjust the Speech Speed (Rate) and Voice Pitch using the sliders.',
+      'Click Play Speech to start reading aloud. Use Pause or Stop to control playback.'
+    ],
+    faqs: [
+      {
+        question: 'Are there character limits for the Text-to-Speech tool?',
+        answer: 'There are no strict limits! Because the speech synthesis is processed entirely locally inside your browser, it can handle very long texts without crashing or timed timeouts.'
+      },
+      {
+        question: 'Does this text-to-speech converter store my typed texts?',
+        answer: 'No. The conversion runs entirely client-side using the browser SpeechSynthesis engine. No texts are sent to any database, preserving 100% user confidentiality.'
+      }
+    ]
   }
 };
 

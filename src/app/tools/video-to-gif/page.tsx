@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Download, Loader2, Upload, Sparkles, Video } from 'lucide-react';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile } from '@ffmpeg/util';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 
@@ -24,7 +22,7 @@ export default function VideoToGIFPage() {
   const [endTime, setEndTime] = useState<number>(10);
   const [progressMessage, setProgressMessage] = useState('');
   const { toast } = useToast();
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef<any>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleSliderChange = useCallback((values: number[]) => {
@@ -72,9 +70,13 @@ export default function VideoToGIFPage() {
   };
 
   const loadFFmpeg = async () => {
+    if (!ffmpegRef.current) {
+      const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+      ffmpegRef.current = new FFmpeg();
+    }
     const ffmpeg = ffmpegRef.current;
     if (!ffmpeg.loaded) {
-      ffmpeg.on('progress', ({ progress }) => {
+      ffmpeg.on('progress', ({ progress }: { progress: number }) => {
          setProgress(Math.round(progress * 100));
       });
       await ffmpeg.load({
@@ -97,6 +99,7 @@ export default function VideoToGIFPage() {
       const inputName = originalFile.name;
       const outputName = `animated-${Date.now()}.gif`;
 
+      const { fetchFile } = await import('@ffmpeg/util');
       await ffmpeg.writeFile(inputName, await fetchFile(originalFile));
       setProgressMessage('Creating animated GIF...');
 

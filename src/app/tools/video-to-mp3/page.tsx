@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Download, Loader2, Upload, Music, Sparkles } from 'lucide-react';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile } from '@ffmpeg/util';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function VideoToMP3Page() {
@@ -18,7 +16,7 @@ export default function VideoToMP3Page() {
   const [bitrate, setBitrate] = useState('192k');
   const [progressMessage, setProgressMessage] = useState('');
   const { toast } = useToast();
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef<any>(null);
 
   const formatSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -42,9 +40,13 @@ export default function VideoToMP3Page() {
   };
 
   const loadFFmpeg = async () => {
+    if (!ffmpegRef.current) {
+      const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+      ffmpegRef.current = new FFmpeg();
+    }
     const ffmpeg = ffmpegRef.current;
     if (!ffmpeg.loaded) {
-      ffmpeg.on('progress', ({ progress }) => {
+      ffmpeg.on('progress', ({ progress }: { progress: number }) => {
          setProgress(Math.round(progress * 100));
       });
       await ffmpeg.load({
@@ -67,6 +69,7 @@ export default function VideoToMP3Page() {
       const inputName = originalFile.name;
       const outputName = `audio-${Date.now()}.mp3`;
 
+      const { fetchFile } = await import('@ffmpeg/util');
       await ffmpeg.writeFile(inputName, await fetchFile(originalFile));
       setProgressMessage('Extracting audio track...');
 

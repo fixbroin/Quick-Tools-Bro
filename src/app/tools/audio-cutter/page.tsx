@@ -6,8 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Download, Loader2, Upload, Scissors, Sparkles } from 'lucide-react';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile } from '@ffmpeg/util';
 import { Slider } from '@/components/ui/slider';
 
 export default function AudioCutterPage() {
@@ -23,7 +21,7 @@ export default function AudioCutterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [progressMessage, setProgressMessage] = useState('');
   const { toast } = useToast();
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleSliderChange = useCallback((values: number[]) => {
@@ -101,6 +99,10 @@ export default function AudioCutterPage() {
   };
 
   const loadFFmpeg = async () => {
+    if (!ffmpegRef.current) {
+      const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+      ffmpegRef.current = new FFmpeg();
+    }
     const ffmpeg = ffmpegRef.current;
     if (!ffmpeg.loaded) {
       await ffmpeg.load({
@@ -128,6 +130,7 @@ export default function AudioCutterPage() {
       const extension = inputName.substring(inputName.lastIndexOf('.') + 1);
       const outputName = `trimmed-${Date.now()}.${extension}`;
 
+      const { fetchFile } = await import('@ffmpeg/util');
       await ffmpeg.writeFile(inputName, await fetchFile(originalFile));
       setProgressMessage('Cutting audio track...');
 

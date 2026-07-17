@@ -37,11 +37,15 @@ function getAdvancedSeoDetails(path: string, originalTitle?: string, originalDes
 
   const nameLower = toolName.toLowerCase();
 
-  if (nameLower.includes('video') || nameLower.includes('audio') || nameLower.includes('mp3') || nameLower.includes('gif')) {
+  if (nameLower.includes('video') || nameLower.includes('audio') || nameLower.includes('mp3') || nameLower.includes('gif') || nameLower.includes('speech')) {
     if (nameLower.includes('compress')) {
       title = `Free Online ${toolName} - Compress Video Size without Quality Loss`;
       description = `Reduce video file sizes (MP4, WebM, MOV) online for free. Compress to specific megabytes instantly inside your browser with 100% privacy.`;
       keywords = ['video compressor', 'compress video online', 'reduce mp4 size', 'compress video size', 'free online video compressor'];
+    } else if (nameLower.includes('speech')) {
+      title = `Text-to-Speech Converter - Free Online TTS Read Aloud`;
+      description = `Convert text to spoken audio online for free. Adjust speech rate, pitch, and choose from multiple voices. 100% private browser-based tool.`;
+      keywords = ['text to speech online', 'tts converter', 'read text aloud', 'convert text to speech', 'free text to voice converter'];
     } else if (nameLower.includes('to mp3')) {
       title = `Video to MP3 Converter - Free Online Audio Extractor`;
       description = `Extract high-quality MP3 audio from any video file (MP4, WebM, MOV) online for free. 100% private, browser-based conversion.`;
