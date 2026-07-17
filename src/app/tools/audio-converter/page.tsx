@@ -8,7 +8,6 @@ import { Download, Loader2, Upload, RefreshCw, Sparkles } from 'lucide-react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile } from '@ffmpeg/util';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SeoSection } from '@/components/SeoSection';
 
 export default function AudioConverterPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -187,7 +186,6 @@ export default function AudioConverterPage() {
           )}
         </CardContent>
       </Card>
-      <SeoSection />
     </div>
   );
 }

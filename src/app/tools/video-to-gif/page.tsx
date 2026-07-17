@@ -8,7 +8,6 @@ import { Download, Loader2, Upload, Sparkles, Video } from 'lucide-react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile } from '@ffmpeg/util';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SeoSection } from '@/components/SeoSection';
 import { Slider } from '@/components/ui/slider';
 
 export default function VideoToGIFPage() {
@@ -256,7 +255,6 @@ export default function VideoToGIFPage() {
           )}
         </CardContent>
       </Card>
-      <SeoSection />
     </div>
   );
 }

@@ -43,32 +43,88 @@ export function SeoSection() {
     }))
   };
 
-  // Find 4 related tools dynamically for SEO interlinking
+  // Find 4 related tools dynamically for SEO interlinking based on exact category alignment
   const relatedTools = (() => {
     const currentHref = pathname || '';
-    const isPdf = currentHref.includes('pdf') || currentHref.includes('ocr') || currentHref.includes('esign') || currentHref.includes('unlocker');
-    const isImage = currentHref.includes('image') || currentHref.includes('compressor') || currentHref.includes('converter') || currentHref.includes('cropper') || currentHref.includes('resizer') || currentHref.includes('favicon') || currentHref.includes('graphic') || currentHref.includes('blur') || currentHref.includes('watermark') || currentHref.includes('rotate') || currentHref.includes('passport');
-    const isCalc = currentHref.includes('calculator') || currentHref.includes('loan') || currentHref.includes('emi') || currentHref.includes('tax') || currentHref.includes('gpa') || currentHref.includes('percentage') || currentHref.includes('attendance');
-    const isGen = currentHref.includes('generator') || currentHref.includes('uuid') || currentHref.includes('barcode') || currentHref.includes('random') || currentHref.includes('short-link') || currentHref.includes('notes');
+    
+    // Find current tool details
+    const currentTool = tools.find(t => t.href.toLowerCase().replace(/\/$/, '') === currentHref.toLowerCase().replace(/\/$/, ''));
+    
+    const CATEGORIES_MAP = [
+      {
+        name: 'PDF Tools',
+        matches: ['JPG to PDF Converter', 'PDF to JPG Converter', 'Merge PDF', 'Split PDF', 'Compress PDF', 'PDF to Word Converter', 'Word to PDF Converter', 'Excel to PDF Converter', 'Presentation to PDF', 'OCR Text Extractor', 'eSign PDF', 'PDF Password Unlocker']
+      },
+      {
+        name: 'QR Code Tools',
+        matches: ['QR Code Generator', 'QR Code Scanner', 'WiFi QR Code Generator']
+      },
+      {
+        name: 'Image Tools',
+        matches: ['Image Compressor', 'Image Converter', 'Image Resizer', 'Image Background Remover', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator', 'Passport Photo Maker', 'Blur Image', 'Watermark Maker', 'Rotate Image', 'Govt Job Photo & Signature Resizer']
+      },
+      {
+        name: 'Video & Audio Tools',
+        matches: ['Video Compressor', 'Video to MP3 Converter', 'Video to GIF Converter', 'Audio Cutter & Ringtone Maker', 'Audio Converter', 'Basic Video Editor']
+      },
+      {
+        name: 'Business Tools',
+        matches: ['Quotation Maker', 'Invoice Maker', 'Receipt Generator', 'GST Invoice Maker']
+      },
+      {
+        name: 'Web & Utility Tools',
+        matches: ['Short Link Maker', 'Unit Converter']
+      },
+      {
+        name: 'Health & Lifestyle Calculators',
+        matches: ['BMI Calculator', 'Calorie Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator']
+      },
+      {
+        name: 'Financial Calculators',
+        matches: ['Loan EMI Calculator', 'SIP Calculator', 'Salary Calculator', 'Income Tax Calculator', 'Sukanya Samriddhi Yojana (SSY) Calculator', 'PPF Calculator', 'EPF Calculator', 'Gratuity Calculator']
+      },
+      {
+        name: 'Legal Document Generators',
+        matches: ['Privacy Policy Generator', 'Terms & Conditions Generator', 'Refund Policy Generator', 'Return Policy Generator']
+      },
+      {
+        name: 'Daily & Productivity',
+        matches: ['Barcode Generator', 'Password Generator', 'Username Generator', 'UUID Generator', 'Random Number Generator', 'Countdown Timer', 'Stopwatch', 'Notes Notepad']
+      },
+      {
+        name: 'Content & Marketing',
+        matches: ['Email Writer', 'Resume Builder', 'Cover Letter Generator', 'AI Prompt Generator', 'Business Name Generator', 'Video Title Generator', 'YouTube Tag Generator', 'YouTube Thumbnail Downloader']
+      },
+      {
+        name: 'Student Tools',
+        matches: ['GPA Calculator', 'Percentage Calculator', 'Attendance Calculator', 'Study Pomodoro Timer']
+      },
+      {
+        name: 'Developer Tools',
+        matches: ['JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
+      }
+    ];
 
     let list: Tool[] = [];
-    if (isPdf) {
-      list = tools.filter(t => t.href.includes('pdf') || t.href.includes('ocr') || t.href.includes('esign') || t.href.includes('unlocker'));
-    } else if (isImage) {
-      list = tools.filter(t => t.href.includes('image') || t.href.includes('compressor') || t.href.includes('converter') || t.href.includes('cropper') || t.href.includes('resizer') || t.href.includes('passport') || t.href.includes('watermark') || t.href.includes('rotate') || t.href.includes('blur'));
-    } else if (isCalc) {
-      list = tools.filter(t => t.href.includes('calculator') || t.href.includes('loan') || t.href.includes('emi') || t.href.includes('tax') || t.href.includes('gpa') || t.href.includes('percentage') || t.href.includes('attendance'));
-    } else if (isGen) {
-      list = tools.filter(t => t.href.includes('generator') || t.href.includes('uuid') || t.href.includes('barcode') || t.href.includes('random') || t.href.includes('short-link') || t.href.includes('notes'));
+    if (currentTool) {
+      // Find which category this tool belongs to
+      const matchedCategory = CATEGORIES_MAP.find(cat => cat.matches.includes(currentTool.name));
+      if (matchedCategory) {
+        // Grab all tools inside this category
+        list = tools.filter(t => matchedCategory.matches.includes(t.name));
+      }
     }
 
-    // Remove current tool
-    list = list.filter(t => t.href !== currentHref);
+    // Remove the current tool from recommendations
+    list = list.filter(t => t.href.toLowerCase().replace(/\/$/, '') !== currentHref.toLowerCase().replace(/\/$/, ''));
 
-    // Fallback to fill up to 4
+    // Fallback to fill up to 4 using other tools in the registry
     if (list.length < 4) {
-      const fallbacks = tools.filter(t => t.href !== currentHref && !list.some(l => l.href === t.href));
-      list = [...list, ...fallbacks].slice(0, 4);
+      const fallbacks = tools.filter(t => 
+        t.href.toLowerCase().replace(/\/$/, '') !== currentHref.toLowerCase().replace(/\/$/, '') && 
+        !list.some(l => l.href.toLowerCase().replace(/\/$/, '') === t.href.toLowerCase().replace(/\/$/, ''))
+      );
+      list = [...list, ...fallbacks];
     }
 
     return list.slice(0, 4);

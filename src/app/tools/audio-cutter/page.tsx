@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Download, Loader2, Upload, Scissors, Sparkles } from 'lucide-react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile } from '@ffmpeg/util';
-import { SeoSection } from '@/components/SeoSection';
 import { Slider } from '@/components/ui/slider';
 
 export default function AudioCutterPage() {
@@ -311,7 +310,6 @@ export default function AudioCutterPage() {
           )}
         </CardContent>
       </Card>
-      <SeoSection />
     </div>
   );
 }

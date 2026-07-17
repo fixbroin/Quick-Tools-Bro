@@ -10,7 +10,6 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile } from '@ffmpeg/util';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { SeoSection } from '@/components/SeoSection';
 import { Slider } from '@/components/ui/slider';
 
 export default function VideoEditorPage() {
@@ -304,7 +303,6 @@ export default function VideoEditorPage() {
           )}
         </CardContent>
       </Card>
-      <SeoSection />
     </div>
   );
 }
