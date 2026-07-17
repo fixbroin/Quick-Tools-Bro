@@ -256,62 +256,202 @@ export default function GoldPriceAndWeatherPage() {
               {ratesLoading ? (
                 <div className="flex justify-center py-10"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
               ) : (
-                 <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Metal Standard</TableHead>
-                      <TableHead>Original Rate</TableHead>
-                      <TableHead>Customs/GST (15%)</TableHead>
-                      <TableHead className="text-right">Final Rate</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {/* Gold 24k per 10g */}
-                    <TableRow>
-                      <TableCell className="font-bold">Gold (24K) <span className="text-[10px] text-muted-foreground font-normal block">Per 10 grams</span></TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-xs">₹{gold24kBase.toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-xs">₹{gold24kDuty.toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="text-right font-mono font-bold text-primary text-sm">₹{gold24k.toLocaleString('en-IN')}</TableCell>
-                    </TableRow>
-                    {/* Gold 24k per 1g */}
-                    <TableRow className="bg-muted/30">
-                      <TableCell className="font-medium text-xs pl-6">↳ Per 1 gram</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold24kBase / 10).toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold24kDuty / 10).toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="text-right font-mono font-semibold text-foreground/80 text-xs">₹{Math.round(gold24k / 10).toLocaleString('en-IN')}</TableCell>
-                    </TableRow>
+                  <>
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Metal Standard</TableHead>
+                            <TableHead>Original Rate</TableHead>
+                            <TableHead>Customs/GST (15%)</TableHead>
+                            <TableHead className="text-right">Final Rate</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {/* Gold 24k per 10g */}
+                          <TableRow className="bg-yellow-500/[0.02] hover:bg-yellow-500/[0.08] transition-colors border-l-2 border-l-yellow-500">
+                            <TableCell className="font-bold">
+                              <span className="text-yellow-600 flex items-center gap-1.5 font-headline">
+                                <span className="h-1.5 w-1.5 rounded-full bg-yellow-500 animate-pulse" />
+                                Gold (24K)
+                              </span>
+                              <span className="text-[10px] text-muted-foreground font-normal block pl-3">Per 10 grams</span>
+                            </TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-xs">₹{gold24kBase.toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-xs">₹{gold24kDuty.toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="text-right font-mono font-extrabold text-yellow-600 text-sm">₹{gold24k.toLocaleString('en-IN')}</TableCell>
+                          </TableRow>
+                          {/* Gold 24k per 1g */}
+                          <TableRow className="bg-yellow-500/[0.04] hover:bg-yellow-500/[0.08] transition-colors border-l-2 border-l-yellow-500/50">
+                            <TableCell className="font-medium text-xs pl-6 text-foreground/80">↳ Per 1 gram</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold24kBase / 10).toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold24kDuty / 10).toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="text-right font-mono font-bold text-foreground/80 text-xs">₹{Math.round(gold24k / 10).toLocaleString('en-IN')}</TableCell>
+                          </TableRow>
 
-                    {/* Gold 22k per 10g */}
-                    <TableRow>
-                      <TableCell className="font-bold">Gold (22K) <span className="text-[10px] text-muted-foreground font-normal block">Per 10 grams</span></TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-xs">₹{gold22kBase.toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-xs">₹{gold22kDuty.toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="text-right font-mono font-bold text-primary text-sm">₹{gold22k.toLocaleString('en-IN')}</TableCell>
-                    </TableRow>
-                    {/* Gold 22k per 1g */}
-                    <TableRow className="bg-muted/30">
-                      <TableCell className="font-medium text-xs pl-6">↳ Per 1 gram</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold22kBase / 10).toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold22kDuty / 10).toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="text-right font-mono font-semibold text-foreground/80 text-xs">₹{Math.round(gold22k / 10).toLocaleString('en-IN')}</TableCell>
-                    </TableRow>
+                          {/* Gold 22k per 10g */}
+                          <TableRow className="bg-amber-600/[0.02] hover:bg-amber-600/[0.08] transition-colors border-l-2 border-l-amber-600">
+                            <TableCell className="font-bold">
+                              <span className="text-amber-600 flex items-center gap-1.5 font-headline">
+                                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                Gold (22K)
+                              </span>
+                              <span className="text-[10px] text-muted-foreground font-normal block pl-3">Per 10 grams</span>
+                            </TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-xs">₹{gold22kBase.toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-xs">₹{gold22kDuty.toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="text-right font-mono font-extrabold text-amber-600 text-sm">₹{gold22k.toLocaleString('en-IN')}</TableCell>
+                          </TableRow>
+                          {/* Gold 22k per 1g */}
+                          <TableRow className="bg-amber-600/[0.04] hover:bg-amber-600/[0.08] transition-colors border-l-2 border-l-amber-600/50">
+                            <TableCell className="font-medium text-xs pl-6 text-foreground/80">↳ Per 1 gram</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold22kBase / 10).toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-[11px]">₹{Math.round(gold22kDuty / 10).toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="text-right font-mono font-bold text-foreground/80 text-xs">₹{Math.round(gold22k / 10).toLocaleString('en-IN')}</TableCell>
+                          </TableRow>
 
-                    {/* Silver per 1kg */}
-                    <TableRow>
-                      <TableCell className="font-bold">Pure Silver <span className="text-[10px] text-muted-foreground font-normal block">Per 1 kilogram (1kg)</span></TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-xs">₹{silverBase.toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-xs">₹{silverDuty.toLocaleString('en-IN')}</TableCell>
-                      <TableCell className="text-right font-mono font-bold text-primary text-sm">₹{silver.toLocaleString('en-IN')}</TableCell>
-                    </TableRow>
-                    {/* Silver per 1g */}
-                    <TableRow className="bg-muted/30">
-                      <TableCell className="font-medium text-xs pl-6">↳ Per 1 gram</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-[11px]">₹{(silverBase / 1000).toFixed(2)}</TableCell>
-                      <TableCell className="font-mono text-muted-foreground text-[11px]">₹{(silverDuty / 1000).toFixed(2)}</TableCell>
-                      <TableCell className="text-right font-mono font-semibold text-foreground/80 text-xs">₹{(silver / 1000).toFixed(2)}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                          {/* Silver per 1kg */}
+                          <TableRow className="bg-slate-400/[0.02] hover:bg-slate-400/[0.08] transition-colors border-l-2 border-l-slate-400">
+                            <TableCell className="font-bold">
+                              <span className="text-slate-600 flex items-center gap-1.5 font-headline">
+                                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-pulse" />
+                                Pure Silver
+                              </span>
+                              <span className="text-[10px] text-muted-foreground font-normal block pl-3">Per 1 kilogram (1kg)</span>
+                            </TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-xs">₹{silverBase.toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-xs">₹{silverDuty.toLocaleString('en-IN')}</TableCell>
+                            <TableCell className="text-right font-mono font-extrabold text-slate-600 text-sm">₹{silver.toLocaleString('en-IN')}</TableCell>
+                          </TableRow>
+                          {/* Silver per 1g */}
+                          <TableRow className="bg-slate-400/[0.04] hover:bg-slate-400/[0.08] transition-colors border-l-2 border-l-slate-400/50">
+                            <TableCell className="font-medium text-xs pl-6 text-foreground/80">↳ Per 1 gram</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-[11px]">₹{(silverBase / 1000).toFixed(2)}</TableCell>
+                            <TableCell className="font-mono text-muted-foreground text-[11px]">₹{(silverDuty / 1000).toFixed(2)}</TableCell>
+                            <TableCell className="text-right font-mono font-bold text-foreground/80 text-xs">₹{(silver / 1000).toFixed(2)}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+
+                    {/* Mobile Card List View */}
+                    <div className="block md:hidden p-4 space-y-4">
+                      {/* Card 1: Gold 24K */}
+                      <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 space-y-3">
+                        <div className="flex justify-between items-center border-b border-yellow-500/10 pb-2">
+                          <span className="font-bold text-sm text-yellow-600 flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-yellow-500 animate-pulse" />
+                            Gold (24K)
+                          </span>
+                          <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider">Live Rates</span>
+                        </div>
+                        
+                        {/* Sub 1: 10g */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                            <span>Per 10 grams</span>
+                            <span>Base: ₹{gold24kBase.toLocaleString('en-IN')} + Duty: ₹{gold24kDuty.toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-foreground/70">Final Price (10g)</span>
+                            <span className="font-mono font-extrabold text-sm text-yellow-600">₹{gold24k.toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Divider */}
+                        <div className="border-t border-yellow-500/10 my-2" />
+                        
+                        {/* Sub 2: 1g */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                            <span>Per 1 gram</span>
+                            <span>Base: ₹{Math.round(gold24kBase / 10).toLocaleString('en-IN')} + Duty: ₹{Math.round(gold24kDuty / 10).toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-foreground/70">Final Price (1g)</span>
+                            <span className="font-mono font-bold text-xs text-foreground/80">₹{Math.round(gold24k / 10).toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card 2: Gold 22K */}
+                      <div className="rounded-xl border border-amber-600/20 bg-amber-600/5 p-4 space-y-3">
+                        <div className="flex justify-between items-center border-b border-amber-600/10 pb-2">
+                          <span className="font-bold text-sm text-amber-600 flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                            Gold (22K)
+                          </span>
+                          <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider">Live Rates</span>
+                        </div>
+                        
+                        {/* Sub 1: 10g */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                            <span>Per 10 grams</span>
+                            <span>Base: ₹{gold22kBase.toLocaleString('en-IN')} + Duty: ₹{gold22kDuty.toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-foreground/70">Final Price (10g)</span>
+                            <span className="font-mono font-extrabold text-sm text-amber-600">₹{gold22k.toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Divider */}
+                        <div className="border-t border-amber-600/10 my-2" />
+                        
+                        {/* Sub 2: 1g */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                            <span>Per 1 gram</span>
+                            <span>Base: ₹{Math.round(gold22kBase / 10).toLocaleString('en-IN')} + Duty: ₹{Math.round(gold22kDuty / 10).toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-foreground/70">Final Price (1g)</span>
+                            <span className="font-mono font-bold text-xs text-foreground/80">₹{Math.round(gold22k / 10).toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card 3: Pure Silver */}
+                      <div className="rounded-xl border border-slate-400/20 bg-slate-400/5 p-4 space-y-3">
+                        <div className="flex justify-between items-center border-b border-slate-400/10 pb-2">
+                          <span className="font-bold text-sm text-slate-600 flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-pulse" />
+                            Pure Silver
+                          </span>
+                          <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider">Live Rates</span>
+                        </div>
+                        
+                        {/* Sub 1: 1kg */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                            <span>Per 1 kilogram (1kg)</span>
+                            <span>Base: ₹{silverBase.toLocaleString('en-IN')} + Duty: ₹{silverDuty.toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-foreground/70">Final Price (1kg)</span>
+                            <span className="font-mono font-extrabold text-sm text-slate-600">₹{silver.toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Divider */}
+                        <div className="border-t border-slate-400/10 my-2" />
+                        
+                        {/* Sub 2: 1g */}
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                            <span>Per 1 gram</span>
+                            <span>Base: ₹{(silverBase / 1000).toFixed(2)} + Duty: ₹{(silverDuty / 1000).toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-foreground/70">Final Price (1g)</span>
+                            <span className="font-mono font-bold text-xs text-foreground/80">₹{(silver / 1000).toFixed(2)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
               )}
             </CardContent>
           </Card>
