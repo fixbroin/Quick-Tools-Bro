@@ -10,6 +10,7 @@ const legalLinks = [
     { name: 'Contact Us', href: '/contact', icon: Mail },
     { name: 'Privacy Policy', href: '/privacy', icon: Shield },
     { name: 'Terms of Use', href: '/terms', icon: FileText },
+    { name: 'HTML Sitemap', href: '/sitemap', icon: FileText },
 ]
 
 export function Footer() {
