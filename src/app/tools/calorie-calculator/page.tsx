@@ -141,8 +141,8 @@ export default function CalorieCalculatorPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(calculateCalories)}>
             <CardHeader>
-              <CardTitle className="font-headline">Calorie Calculator</CardTitle>
-              <CardDescription>Estimate your daily calorie needs based on your activity level.</CardDescription>
+              <CardTitle className="font-headline">Daily Calorie Intake Calculator</CardTitle>
+              <CardDescription>Estimate your body's daily calorie needs based on your activity level.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -335,7 +335,7 @@ export default function CalorieCalculatorPage() {
 
       <section className="mt-12 space-y-8 prose prose-slate dark:prose-invert max-w-none">
         <div className="bg-primary/5 rounded-2xl p-6 md:p-10 border border-primary/10">
-            <h2 className="text-3xl font-bold font-headline mb-6">Master Your Nutrition with Our Calorie Calculator</h2>
+            <h2 className="text-3xl font-bold font-headline mb-6">Master Your Nutrition with Our Daily Calorie Intake Calculator</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
                 <div className="space-y-4">
                     <p>

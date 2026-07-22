@@ -77,7 +77,7 @@ export function SeoSection() {
       },
       {
         name: 'Health & Lifestyle Calculators',
-        matches: ['BMI Calculator', 'Calorie Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator']
+        matches: ['BMI Calculator', 'Daily Calorie Intake Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator']
       },
       {
         name: 'Financial Calculators',

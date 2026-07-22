@@ -248,8 +248,8 @@ export const tools: Tool[] = [
     Icon: PersonStanding,
   },
   {
-    title: 'Calorie Calculator',
-    name: 'Calorie Calculator',
+    title: 'Daily Calorie Intake Calculator',
+    name: 'Daily Calorie Intake Calculator',
     description: 'Estimate your daily calorie needs.',
     href: '/tools/calorie-calculator',
     Icon: HeartPulse,

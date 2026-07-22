@@ -64,7 +64,7 @@ const toolCategories = [
   {
     name: 'Health & Lifestyle Calculators',
     filterKey: 'utility',
-    tools: tools.filter(t => ['BMI Calculator', 'Calorie Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator'].includes(t.name)),
+    tools: tools.filter(t => ['BMI Calculator', 'Daily Calorie Intake Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator'].includes(t.name)),
     color: 'bg-pink-500/10 text-pink-500'
   },
   {

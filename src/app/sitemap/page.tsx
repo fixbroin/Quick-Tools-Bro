@@ -50,7 +50,7 @@ const sitemapCategories = [
   },
   {
     name: 'Health & Lifestyle Calculators',
-    tools: ['BMI Calculator', 'Calorie Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator']
+    tools: ['BMI Calculator', 'Daily Calorie Intake Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator']
   },
   {
     name: 'Financial Calculators',
