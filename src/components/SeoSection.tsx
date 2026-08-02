@@ -101,7 +101,7 @@ export function SeoSection() {
       },
       {
         name: 'Developer Tools',
-        matches: ['JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
+        matches: ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
       }
     ];
 
@@ -110,8 +110,10 @@ export function SeoSection() {
       // Find which category this tool belongs to
       const matchedCategory = CATEGORIES_MAP.find(cat => cat.matches.includes(currentTool.name));
       if (matchedCategory) {
-        // Grab all tools inside this category
-        list = tools.filter(t => matchedCategory.matches.includes(t.name));
+        // Grab all tools inside this category and sort them in order
+        list = tools
+          .filter(t => matchedCategory.matches.includes(t.name))
+          .sort((a, b) => matchedCategory.matches.indexOf(a.name) - matchedCategory.matches.indexOf(b.name));
       }
     }
 

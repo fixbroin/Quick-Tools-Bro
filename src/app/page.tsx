@@ -5,6 +5,7 @@ import { tools } from '@/lib/tools';
 import { Button } from '@/components/ui/button';
 import { AdPlacement } from '@/components/AdPlacement';
 import { HostingPromo } from '@/components/HostingPromo';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const toolCategories = [
   {
@@ -100,7 +101,12 @@ const toolCategories = [
   {
     name: 'Developer Tools',
     filterKey: 'developer',
-    tools: tools.filter(t => ['JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'].includes(t.name)),
+    tools: (() => {
+      const order = ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'];
+      return tools
+        .filter(t => order.includes(t.name))
+        .sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    })(),
     color: 'bg-cyan-500/10 text-cyan-500'
   }
 ];
@@ -236,6 +242,8 @@ export default function Home() {
       <HostingPromo />
 
       <AdPlacement position="bottom" />
+      
+      <ScrollToTop />
     </div>
   );
 }
