@@ -10,7 +10,6 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { InstallPWAButton } from '@/components/InstallPWAButton';
-import DynamicManifest from '@/components/DynamicManifest';
 import { SITE_CONFIG, getMetadata } from '@/lib/config';
 import { AD_CONFIG } from '@/lib/ad-config';
 import { DownloadGateProvider } from '@/context/DownloadGateContext';
@@ -126,7 +125,6 @@ export default function RootLayout({
         >
           <DownloadGateProvider>
             <ProgressBar />
-            <DynamicManifest />
             <div className="flex min-h-screen flex-col pb-16 md:pb-0">
               <Header />
               <div className="container mx-auto flex justify-center py-1">
