@@ -38,11 +38,25 @@ export function InstallPWAButton() {
   const pathname = usePathname();
   const DISMISS_KEY = 'pwa_install_prompt_dismissed_v3';
 
-  // Determine which app we are installing based on UseBro branding
-  const appInfo = {
-    name: "UseBro App",
-    desc: "Fast, 100% private in-browser web utilities"
-  };
+  // Determine which app we are installing based on current page pathname
+  const appInfo = (() => {
+    if (pathname === '/tools/diff-checker') {
+      return {
+        name: "Text Diff Checker App",
+        desc: "Compare and merge text & code files 100% offline"
+      };
+    }
+    if (pathname === '/tools/html-preview') {
+      return {
+        name: "HTML Live Preview App",
+        desc: "Write, edit, and preview custom code offline in real-time"
+      };
+    }
+    return {
+      name: "UseBro App",
+      desc: "Fast, 100% private in-browser web utilities"
+    };
+  })();
 
   // 1. Core initialization and event listeners
   useEffect(() => {

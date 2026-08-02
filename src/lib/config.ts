@@ -177,6 +177,7 @@ export function getMetadata({
   path = '',
   image = SITE_CONFIG.image,
   type = 'website',
+  manifest,
 }: {
   title?: string;
   description?: string;
@@ -184,17 +185,28 @@ export function getMetadata({
   path?: string;
   image?: string;
   type?: 'website' | 'article';
+  manifest?: string;
 } = {}): Metadata {
   // Apply advanced SEO query patterns for tool sub-pages dynamically
   let seoTitle = title;
   let seoDescription = description;
   let seoKeywords = keywords;
+  let dynamicManifest = manifest;
 
   if (path && path.startsWith('/tools/')) {
     const adv = getAdvancedSeoDetails(path, title, description, keywords);
     seoTitle = adv.title;
     seoDescription = adv.description;
     seoKeywords = adv.keywords;
+    
+    // Automatically generate PWA manifest router link for this individual tool
+    if (!dynamicManifest) {
+      const segments = path.split('/');
+      const toolId = segments[segments.length - 1] || segments[segments.length - 2];
+      if (toolId) {
+        dynamicManifest = `/api/manifest/${toolId}`;
+      }
+    }
   }
 
   const fullTitle = seoTitle ? `${seoTitle} | ${SITE_CONFIG.name}` : SITE_CONFIG.title;
@@ -204,6 +216,7 @@ export function getMetadata({
   return {
     title: fullTitle,
     description: fullDescription,
+    manifest: dynamicManifest || '/manifest.json',
     keywords: seoKeywords || [
       'free online tools',
       'pdf to jpg converter',
