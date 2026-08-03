@@ -13,7 +13,6 @@ import { InstallPWAButton } from '@/components/InstallPWAButton';
 import { SITE_CONFIG, getMetadata } from '@/lib/config';
 import { AD_CONFIG } from '@/lib/ad-config';
 import { DownloadGateProvider } from '@/context/DownloadGateContext';
-import PWASplashScreen from '@/components/PWASplashScreen';
 
 export const metadata: Metadata = {
   ...getMetadata(),
@@ -126,7 +125,6 @@ export default function RootLayout({
         >
           <DownloadGateProvider>
             <ProgressBar />
-            <PWASplashScreen />
             <div className="flex min-h-screen flex-col pb-16 md:pb-0">
               <Header />
               <div className="container mx-auto flex justify-center py-1">
