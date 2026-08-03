@@ -10,8 +10,9 @@ import { Plus, Trash, Download, Save, XCircle } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useToast } from '@/hooks/use-toast';
-import { cn, scrollToDownload } from '@/lib/utils';
+import { cn, scrollToDownload, compressImage } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import BusinessSettingsModal, { BusinessProfile } from '@/components/BusinessSettingsModal';
 
 interface Item {
   description: string;
@@ -78,15 +79,54 @@ export default function QuotationMakerPage() {
         } catch (error) {
             console.error("Failed to parse saved data:", error);
         }
+    } else {
+        // No draft exists, check if there is a saved business profile in settings
+        const savedProfile = localStorage.getItem('usebro_business_profile');
+        if (savedProfile) {
+            try {
+                const profile = JSON.parse(savedProfile);
+                let addr = profile.address || '';
+                if (profile.mobile) addr += `\nMob: ${profile.mobile}`;
+                if (profile.email) addr += `\nEmail: ${profile.email}`;
+                if (profile.gstin) addr += `\nGSTIN: ${profile.gstin}`;
+                
+                setFormState(prev => ({
+                    ...prev,
+                    yourCompanyName: profile.companyName || '',
+                    yourCompanyAddress: addr,
+                    yourLogo: profile.logo || null,
+                }));
+            } catch (e) {
+                console.error("Failed to parse business profile:", e);
+            }
+        }
     }
     setIsLoaded(true);
   }, [toast]);
 
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem(storageKey, JSON.stringify(formState));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(formState));
+      } catch (error) {
+        console.warn("Failed to auto-save draft to localStorage (storage full):", error);
+      }
     }
   }, [formState, isLoaded]);
+
+  const handleSaveProfile = (profile: BusinessProfile) => {
+    let addr = profile.address || '';
+    if (profile.mobile) addr += `\nMob: ${profile.mobile}`;
+    if (profile.email) addr += `\nEmail: ${profile.email}`;
+    if (profile.gstin) addr += `\nGSTIN: ${profile.gstin}`;
+
+    setFormState(prev => ({
+      ...prev,
+      yourCompanyName: profile.companyName || '',
+      yourCompanyAddress: addr,
+      yourLogo: profile.logo || prev.yourLogo || null,
+    }));
+  };
 
   const handleInputChange = (field: keyof FormState, value: string) => {
     setFormState(prev => ({ ...prev, [field]: value }));
@@ -108,13 +148,11 @@ export default function QuotationMakerPage() {
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-          setFormState(prev => ({ ...prev, yourLogo: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    } else {
-        toast({ title: "Invalid file type", description: "Please upload an image.", variant: "destructive" });
+      compressImage(file, 250, 250, (base64) => {
+        setFormState(prev => ({ ...prev, yourLogo: base64 }));
+      });
+    } else if (file) {
+      toast({ title: "Invalid file type", description: "Please upload an image.", variant: "destructive" });
     }
   };
 
@@ -302,7 +340,10 @@ export default function QuotationMakerPage() {
           <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4 p-4 border rounded-lg">
-                      <h3 className="font-semibold text-lg">Your Details</h3>
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-semibold text-lg">Your Details</h3>
+                        <BusinessSettingsModal onSave={handleSaveProfile} />
+                      </div>
                       <div><Label>Company Name</Label><Input value={formState.yourCompanyName} onChange={e => handleInputChange('yourCompanyName', e.target.value)} className={cn(errors.yourCompanyName && 'border-destructive')} /></div>
                       <div><Label>Address</Label><Textarea value={formState.yourCompanyAddress} onChange={e => handleInputChange('yourCompanyAddress', e.target.value)} className={cn(errors.yourCompanyAddress && 'border-destructive')} /></div>
                       <div><Label>Logo</Label><Input type="file" accept="image/png, image/jpeg" onChange={handleLogoChange}/></div>

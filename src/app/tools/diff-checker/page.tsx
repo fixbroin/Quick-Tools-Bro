@@ -237,6 +237,31 @@ export default function DiffCheckerPage() {
   // Merge Navigation states (stores absolute index of the selected pair row)
   const [selectedPairIdx, setSelectedPairIdx] = useState<number | null>(null);
 
+  // Line-editing input states
+  const [leftEditValue, setLeftEditValue] = useState<string>('');
+  const [rightEditValue, setRightEditValue] = useState<string>('');
+
+  // Sync edits when selected line changes (including pre-merge values for merged rows)
+  useEffect(() => {
+    if (selectedPairIdx !== null && diffResult && diffResult.pairs[selectedPairIdx]) {
+      const pair = diffResult.pairs[selectedPairIdx];
+      const preMerge = originalMergedState[selectedPairIdx];
+      
+      const leftVal = preMerge?.left !== undefined 
+        ? preMerge.left.value 
+        : (pair.left.type !== 'empty' ? pair.left.value : '');
+      const rightVal = preMerge?.right !== undefined 
+        ? preMerge.right.value 
+        : (pair.right.type !== 'empty' ? pair.right.value : '');
+        
+      setLeftEditValue(leftVal);
+      setRightEditValue(rightVal);
+    } else {
+      setLeftEditValue('');
+      setRightEditValue('');
+    }
+  }, [selectedPairIdx, diffResult, originalMergedState]);
+
   // Derive change points dynamically for easy merge navigation
   const changePoints = useMemo(() => {
     if (!diffResult) return [];
@@ -431,6 +456,61 @@ export default function DiffCheckerPage() {
     }
   };
 
+  // Save manual line edits from the pop-up panel to original or changed document strings
+  const handleSaveLineEdit = (side: 'left' | 'right') => {
+    if (selectedPairIdx === null || !diffResult || !diffResult.pairs[selectedPairIdx]) return;
+    const pair = diffResult.pairs[selectedPairIdx];
+
+    // Disable auto-scroll transitions during line edit save
+    isMergingRef.current = true;
+    setTimeout(() => {
+      isMergingRef.current = false;
+    }, 200);
+
+    // Save history Memento before updating
+    setHistory(prev => [
+      ...prev,
+      {
+        originalText,
+        changedText,
+        mergedIndices: [...mergedIndices],
+        originalMergedState: { ...originalMergedState }
+      }
+    ]);
+
+    if (side === 'left') {
+      const lineNum = pair.left.lineNum;
+      if (lineNum !== undefined) {
+        const lines = originalText.split('\n');
+        lines[lineNum - 1] = leftEditValue;
+        const newText = lines.join('\n');
+        setOriginalText(newText);
+        localStorage.setItem('diff_original_text', newText);
+
+        const newDiff = getDiff(newText, changedText);
+        setDiffResult(newDiff);
+      }
+    } else {
+      const lineNum = pair.right.lineNum;
+      if (lineNum !== undefined) {
+        const lines = changedText.split('\n');
+        lines[lineNum - 1] = rightEditValue;
+        const newText = lines.join('\n');
+        setChangedText(newText);
+        localStorage.setItem('diff_changed_text', newText);
+
+        const newDiff = getDiff(originalText, newText);
+        setDiffResult(newDiff);
+      }
+    }
+
+    // If this line was in mergedIndices (meaning we are editing a merged row),
+    // remove it from mergedIndices since it is now manually updated
+    if (mergedIndices.includes(selectedPairIdx)) {
+      setMergedIndices(prev => prev.filter(idx => idx !== selectedPairIdx));
+    }
+  };
+
   // Perform interactive merge actions (Left-to-Right or Right-to-Left)
   const applyMerge = (direction: 'to-right' | 'to-left') => {
     if (!diffResult || selectedPairIdx === null) return;
@@ -446,6 +526,14 @@ export default function DiffCheckerPage() {
     setTimeout(() => {
       isMergingRef.current = false;
     }, 200);
+
+    // Apply any unsaved inputs before merging
+    if (newPairs[targetPairIdx].left.type !== 'empty') {
+      newPairs[targetPairIdx].left.value = leftEditValue;
+    }
+    if (newPairs[targetPairIdx].right.type !== 'empty') {
+      newPairs[targetPairIdx].right.value = rightEditValue;
+    }
 
     // Deep copy the original left and right objects before any mutation
     const originalLeftCopy = { 
@@ -1093,7 +1181,6 @@ export default function DiffCheckerPage() {
               </Button>
             </div>
           </div>
-
           {selectedChangeIdx !== -1 && changePoints.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono mb-4">
               {/* Left Preview */}
@@ -1102,18 +1189,39 @@ export default function DiffCheckerPage() {
                   <span className="text-[10px] uppercase font-bold text-red-500/60">
                     Original Line {diffResult.pairs[selectedPairIdx].left.lineNum || ''}
                   </span>
-                  <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed">
-                    {diffResult.pairs[selectedPairIdx].left.value || <span className="italic text-muted-foreground/40">(Empty line)</span>}
-                  </p>
+                  {diffResult.pairs[selectedPairIdx].left.type === 'empty' ? (
+                    <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed italic text-muted-foreground/40 text-xs">
+                      (Empty line)
+                    </p>
+                  ) : (
+                    <textarea
+                      value={leftEditValue}
+                      onChange={(e) => setLeftEditValue(e.target.value)}
+                      className="mt-1.5 w-full h-[65px] p-2 text-xs font-mono bg-background border border-red-500/20 focus:border-red-500/50 rounded-lg focus:outline-none resize-none leading-relaxed text-foreground"
+                      placeholder="Edit original line..."
+                    />
+                  )}
                 </div>
-                <Button 
-                  variant="destructive" 
-                  size="sm" 
-                  onClick={() => applyMerge('to-right')} 
-                  className="mt-3 font-sans font-bold h-8 text-[11px] self-start"
-                >
-                  Merge change &gt;
-                </Button>
+                <div className="flex items-center gap-2 mt-3">
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={() => applyMerge('to-right')} 
+                    className="font-sans font-bold h-8 text-[11px]"
+                  >
+                    Merge change &gt;
+                  </Button>
+                  {diffResult.pairs[selectedPairIdx].left.type !== 'empty' && leftEditValue !== diffResult.pairs[selectedPairIdx].left.value && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleSaveLineEdit('left')}
+                      className="h-8 text-[11px] font-sans font-bold bg-blue-500/10 border-blue-500 hover:bg-blue-500 hover:text-white text-blue-700 dark:text-blue-300 dark:hover:text-white gap-1 transition-all"
+                    >
+                      <Check className="h-3.5 w-3.5" /> Save Edit
+                    </Button>
+                  )}
+                </div>
               </div>
 
               {/* Right Preview */}
@@ -1122,18 +1230,39 @@ export default function DiffCheckerPage() {
                   <span className="text-[10px] uppercase font-bold text-green-500/60">
                     Modified Line {diffResult.pairs[selectedPairIdx].right.lineNum || ''}
                   </span>
-                  <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed">
-                    {diffResult.pairs[selectedPairIdx].right.value || <span className="italic text-muted-foreground/40">(Empty line)</span>}
-                  </p>
+                  {diffResult.pairs[selectedPairIdx].right.type === 'empty' ? (
+                    <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed italic text-muted-foreground/40 text-xs">
+                      (Empty line)
+                    </p>
+                  ) : (
+                    <textarea
+                      value={rightEditValue}
+                      onChange={(e) => setRightEditValue(e.target.value)}
+                      className="mt-1.5 w-full h-[65px] p-2 text-xs font-mono bg-background border border-green-500/20 focus:border-green-500/50 rounded-lg focus:outline-none resize-none leading-relaxed text-foreground"
+                      placeholder="Edit modified line..."
+                    />
+                  )}
                 </div>
-                <Button 
-                  variant="default" 
-                  size="sm" 
-                  onClick={() => applyMerge('to-left')} 
-                  className="mt-3 font-sans font-bold h-8 text-[11px] bg-green-600 hover:bg-green-700 text-white self-start"
-                >
-                  &lt; Merge change
-                </Button>
+                <div className="flex items-center gap-2 mt-3">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    onClick={() => applyMerge('to-left')} 
+                    className="font-sans font-bold h-8 text-[11px] bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    &lt; Merge change
+                  </Button>
+                  {diffResult.pairs[selectedPairIdx].right.type !== 'empty' && rightEditValue !== diffResult.pairs[selectedPairIdx].right.value && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleSaveLineEdit('right')}
+                      className="h-8 text-[11px] font-sans font-bold bg-blue-500/10 border-blue-500 hover:bg-blue-500 hover:text-white text-blue-700 dark:text-blue-300 dark:hover:text-white gap-1 transition-all"
+                    >
+                      <Check className="h-3.5 w-3.5" /> Save Edit
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           ) : (
@@ -1146,12 +1275,30 @@ export default function DiffCheckerPage() {
                     <span className="text-[10px] uppercase font-bold text-red-500/60">
                       Original Left (Before Merge)
                     </span>
-                    <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed">
-                      {(originalMergedState[selectedPairIdx]?.left?.value) !== undefined
-                        ? originalMergedState[selectedPairIdx].left.value
-                        : (diffResult.pairs[selectedPairIdx]?.left?.value || <span className="italic text-muted-foreground/40">(Empty line)</span>)}
-                    </p>
+                    {((originalMergedState[selectedPairIdx]?.left?.type ?? diffResult.pairs[selectedPairIdx]?.left?.type) === 'empty') ? (
+                      <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed italic text-muted-foreground/40 text-xs">
+                        (Empty line)
+                      </p>
+                    ) : (
+                      <textarea
+                        value={leftEditValue}
+                        onChange={(e) => setLeftEditValue(e.target.value)}
+                        className="mt-1.5 w-full h-[65px] p-2 text-xs font-mono bg-background border border-red-500/20 focus:border-red-500/50 rounded-lg focus:outline-none resize-none leading-relaxed text-foreground"
+                        placeholder="Edit left line..."
+                      />
+                    )}
                   </div>
+                  {((originalMergedState[selectedPairIdx]?.left?.type ?? diffResult.pairs[selectedPairIdx]?.left?.type) !== 'empty') && 
+                    leftEditValue !== (originalMergedState[selectedPairIdx]?.left?.value ?? diffResult.pairs[selectedPairIdx].left.value) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSaveLineEdit('left')}
+                        className="h-8 text-[11px] font-sans font-bold bg-blue-500/10 border-blue-500 hover:bg-blue-500 hover:text-white text-blue-700 dark:text-blue-300 dark:hover:text-white gap-1 transition-all mt-3 self-start"
+                      >
+                        <Check className="h-3.5 w-3.5" /> Save Edit
+                      </Button>
+                    )}
                 </div>
 
                 {/* Right pre-merged original state */}
@@ -1160,12 +1307,30 @@ export default function DiffCheckerPage() {
                     <span className="text-[10px] uppercase font-bold text-green-500/60">
                       Original Right (Before Merge)
                     </span>
-                    <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed">
-                      {(originalMergedState[selectedPairIdx]?.right?.value) !== undefined
-                        ? originalMergedState[selectedPairIdx].right.value
-                        : (diffResult.pairs[selectedPairIdx]?.right?.value || <span className="italic text-muted-foreground/40">(Empty line)</span>)}
-                    </p>
+                    {((originalMergedState[selectedPairIdx]?.right?.type ?? diffResult.pairs[selectedPairIdx]?.right?.type) === 'empty') ? (
+                      <p className="mt-1 whitespace-pre-wrap break-all leading-relaxed italic text-muted-foreground/40 text-xs">
+                        (Empty line)
+                      </p>
+                    ) : (
+                      <textarea
+                        value={rightEditValue}
+                        onChange={(e) => setRightEditValue(e.target.value)}
+                        className="mt-1.5 w-full h-[65px] p-2 text-xs font-mono bg-background border border-green-500/20 focus:border-green-500/50 rounded-lg focus:outline-none resize-none leading-relaxed text-foreground"
+                        placeholder="Edit right line..."
+                      />
+                    )}
                   </div>
+                  {((originalMergedState[selectedPairIdx]?.right?.type ?? diffResult.pairs[selectedPairIdx]?.right?.type) !== 'empty') && 
+                    rightEditValue !== (originalMergedState[selectedPairIdx]?.right?.value ?? diffResult.pairs[selectedPairIdx].right.value) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSaveLineEdit('right')}
+                        className="h-8 text-[11px] font-sans font-bold bg-blue-500/10 border-blue-500 hover:bg-blue-500 hover:text-white text-blue-700 dark:text-blue-300 dark:hover:text-white gap-1 transition-all mt-3 self-start"
+                      >
+                        <Check className="h-3.5 w-3.5" /> Save Edit
+                      </Button>
+                    )}
                 </div>
               </div>
 
@@ -1185,8 +1350,7 @@ export default function DiffCheckerPage() {
                 )}
               </div>
             </div>
-          )}
-        </div>
+          )}        </div>
       )}
 
       {/* FAQs / Informative Section */}
