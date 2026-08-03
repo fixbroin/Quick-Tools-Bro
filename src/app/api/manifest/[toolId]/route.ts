@@ -27,22 +27,10 @@ export async function GET(
     id: `/tools/${toolId}`,
     icons: [
       {
-        "src": `/api/manifest/icon/${toolId}`,
-        "sizes": "192x192",
+        "src": `/api/icon/${toolId}`,
+        "sizes": "192x192 512x512",
         "type": "image/svg+xml",
-        "purpose": "any"
-      },
-      {
-        "src": `/api/manifest/icon/${toolId}?maskable=true`,
-        "sizes": "192x192",
-        "type": "image/svg+xml",
-        "purpose": "maskable"
-      },
-      {
-        "src": "/android-chrome-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any"
+        "purpose": "any maskable"
       }
     ]
   };
