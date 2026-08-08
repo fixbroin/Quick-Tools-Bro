@@ -431,11 +431,195 @@ export const SEO_MAP: Record<string, SeoEntry> = {
         answer: 'No. The conversion runs entirely client-side using the browser SpeechSynthesis engine. No texts are sent to any database, preserving 100% user confidentiality.'
       }
     ]
+  },
+  '/tools/diff-checker': {
+    title: 'Free Online Diff Checker - Compare Text & Code Side-by-Side',
+    description: 'Compare two text files, documents, or code blocks side-by-side. Highlight line differences, edits, additions, and deletions instantly in your browser. 100% private.',
+    guideTitle: 'How to Compare Text & Find Differences Online',
+    steps: [
+      'Paste your original text in the left panel and the modified text in the right panel.',
+      'Click Find Differences to see highlighted edits, additions, and deletions instantly.',
+      'Use the floating merge panel to merge changes or edit lines in real-time.',
+      'Copy the original or merged results to your clipboard with a single click.'
+    ],
+    faqs: [
+      {
+        question: 'Is my text secure when using this Diff Checker online?',
+        answer: 'Yes, completely. Our tool processes all differences client-side inside your web browser. No data is ever sent to our servers, ensuring absolute privacy for code, configs, and text.'
+      },
+      {
+        question: 'Can I compare programming code like HTML, CSS, or JSON?',
+        answer: 'Yes, you can paste and compare any code snippets or text formats. The diff engine parses and highlights programming files accurately.'
+      },
+      {
+        question: 'How do I merge changes between the two texts?',
+        answer: 'Click on any highlighted difference line to reveal the floating merge toolbar. You can click the left or right merge buttons to reconcile differences dynamically.'
+      }
+    ]
+  },
+  '/tools/html-preview': {
+    title: 'Live HTML Preview - Free Online HTML, CSS & JS Code Editor',
+    description: 'Write, edit, and preview HTML, CSS, and Javascript code online in real-time. Test responsive designs, load presets, and pop out live preview tabs instantly.',
+    guideTitle: 'How to Preview and Edit HTML Code Online',
+    steps: [
+      'Enter your HTML, CSS, or JS code directly in the code editor panel.',
+      'The sandboxed live preview panel renders the output in real-time as you type.',
+      'Use the preset buttons to quickly load template layouts or sample forms.',
+      'Click Pop-out Preview to open your rendering in a clean, full-screen browser tab.'
+    ],
+    faqs: [
+      {
+        question: 'Does the HTML live preview support external frameworks like Tailwind CSS?',
+        answer: 'Yes. You can import CDN links for Tailwind CSS, Bootstrap, font libraries (like Google Fonts), or icons, and they will render perfectly.'
+      },
+      {
+        question: 'Is the online code editor secure for testing scripts?',
+        answer: 'Yes. The live preview runs in a sandboxed iframe wrapper with security restrictions, preventing scripts from accessing parent page contexts.'
+      },
+      {
+        question: 'Can I download the code I write inside the HTML Preview?',
+        answer: 'Yes. Simply click the Download button in the toolbar to save your complete code as a standard .html file locally.'
+      }
+    ]
+  },
+  '/tools/quotation-maker': {
+    title: 'Free Online Quotation Maker - Generate Professional PDF Quotes',
+    description: 'Create and download professional business quotes and estimates online for free. Add company logo, client details, items, taxes, discounts, and download print-ready PDFs.',
+    guideTitle: 'How to Generate Business Quotes Online',
+    steps: [
+      'Enter your company name, address, and client contact details.',
+      'Add quote number, issue date, currency, and customized notes.',
+      'Input your products or services with unit rates, quantities, and optional tax rates.',
+      'Click Generate PDF to preview and download your quote instantly.'
+    ],
+    faqs: [
+      {
+        question: 'Can I save my business profile details to avoid typing them every time?',
+        answer: 'Yes. Click the Settings button in the Your Details section. Fill in your business details once, and they will automatically pre-fill for all quotes, invoices, and receipts.'
+      },
+      {
+        question: 'How do I add a logo to my quotations?',
+        answer: 'Simply click the Logo file selector and upload a PNG or JPEG logo. Our tool automatically compresses and fits it into your PDF.'
+      }
+    ]
+  },
+  '/tools/invoice-maker': {
+    title: 'Free Online Invoice Maker - Professional PDF Invoice Generator',
+    description: 'Create professional invoices online for free. Custom tax structures, company logo, client details, items, and automated calculation of discounts and totals. Download PDF.',
+    guideTitle: 'How to Create PDF Invoices Online',
+    steps: [
+      'Fill in your company details, GSTIN/Tax ID, and client info.',
+      'Enter invoice details, issue date, due date, and select your currency.',
+      'Add items with descriptions, HSN codes, quantity, rate, and select tax.',
+      'Review totals and click the Generate button to download a print-ready PDF.'
+    ],
+    faqs: [
+      {
+        question: 'Does this invoice maker support GST, VAT, and custom tax rates?',
+        answer: 'Yes. You can configure custom tax names (like GST, VAT) and specify custom tax rates, which will be automatically calculated on item subtotals.'
+      },
+      {
+        question: 'Are my invoices stored on your server?',
+        answer: 'No. Invoices are generated locally in your browser and saved only to your device. No financial records are ever sent to our servers.'
+      }
+    ]
+  },
+  '/tools/receipt-generator': {
+    title: 'Free Online Receipt Generator - Create PDF Cash Receipts',
+    description: 'Create sales receipts, cash receipts, and rent receipts online for free. Add company details, logo, customer details, payment methods, and download printable PDFs.',
+    guideTitle: 'How to Generate Cash Receipts Online',
+    steps: [
+      'Enter your company name, receipt number, date, and payment method.',
+      'Input customer name, details, and the items or services paid for.',
+      'Configure tax and discount details if applicable.',
+      'Click Download PDF to instantly receive your formatted printable cash receipt.'
+    ],
+    faqs: [
+      {
+        question: 'Can I generate rent receipts with this generator?',
+        answer: 'Yes. You can customize the receipt description, total amounts, and payment method to generate fully formatted rent receipts.'
+      }
+    ]
+  },
+  '/tools/gst-invoice': {
+    title: 'GST Invoice Maker: Free Online Indian Tax Invoice Generator',
+    description: 'Create GST compliant tax invoices online for free. Automatic split of CGST, SGST, and IGST tax components per item based on Indian tax rules. Download PDF.',
+    guideTitle: 'How to Generate GST Compliant Tax Invoices',
+    steps: [
+      'Enter your company name, address, and your 15-digit GSTIN.',
+      'Fill in client details and their GSTIN (optional for unregistered business).',
+      'Add items with HSN codes and select the correct GST slab (5%, 12%, 18%, 28%).',
+      'Select invoice currency and click Generate GST Invoice to download.'
+    ],
+    faqs: [
+      {
+        question: 'How does the GST invoice maker determine CGST, SGST, and IGST?',
+        answer: 'If your business state matches the client\'s state, CGST and SGST are applied (split equally). If states differ, IGST is automatically calculated.'
+      },
+      {
+        question: 'Is this invoice compliant with Indian GST rules?',
+        answer: 'Yes, it is formatted to include HSN codes, supplier GSTIN, recipient GSTIN, proper tax splitting columns, and totals.'
+      }
+    ]
+  },
+  '/tools/passport-photo-maker': {
+    title: 'Passport Photo Maker: Free Online Passport Size Photo Editor',
+    description: 'Resize, crop, and generate official passport size photos online for free. Standardized dimensions for India, USA, and UK visa and passport guidelines.',
+    guideTitle: 'How to Crop Passport Photos Online',
+    steps: [
+      'Upload a clear portrait photo from your computer or phone.',
+      'Select your country to apply official passport specifications (e.g. India 3.5x4.5cm).',
+      'Position your face within the guidelines and crop.',
+      'Download your photo as a single file or a sheet ready for printing.'
+    ],
+    faqs: [
+      {
+        question: 'What is the official size of Indian passport photos?',
+        answer: 'The official size is 35mm wide by 45mm high (3.5 x 4.5 cm) with the head centering covering 70-80% of the photo.'
+      },
+      {
+        question: 'Can I use this tool for visa applications?',
+        answer: 'Yes, select the specific country visa specifications (such as USA Visa 2x2 inches) to match requirements exactly.'
+      }
+    ]
+  },
+  '/tools/pdf-to-jpg': {
+    title: 'PDF to JPG Converter - Convert PDF Pages to Images Online',
+    description: 'Convert PDF document pages into high-quality JPG images online for free. 100% client-side rendering ensures absolute privacy for Aadhar cards and bank statements.',
+    guideTitle: 'How to Convert PDF to JPG Online',
+    steps: [
+      'Select or drop the PDF file you wish to convert.',
+      'Wait for our browser engine to render the PDF pages as image thumbnails.',
+      'Click the Convert to JPG button to download all pages inside a ZIP archive.'
+    ],
+    faqs: [
+      {
+        question: 'Is it safe to convert private documents like Aadhaar cards?',
+        answer: 'Yes, completely safe. Unlike other converters that upload your PDFs to cloud servers, UseBro renders everything locally in your browser. Your document never leaves your machine.'
+      }
+    ]
+  },
+  '/tools/jpg-to-pdf': {
+    title: 'JPG to PDF Converter - Convert Images to PDF Document',
+    description: 'Combine multiple JPG, PNG, and WebP images into a single PDF document. Drag to reorder, adjust page margins, and compile online for free.',
+    guideTitle: 'How to Convert Images to PDF Online',
+    steps: [
+      'Upload one or more JPEG, PNG, or WebP images.',
+      'Drag and drop thumbnails to reorder pages in the desired sequence.',
+      'Adjust page sizes, orientation (portrait/landscape), and margin width.',
+      'Click Convert to PDF to download your compiled PDF file.'
+    ],
+    faqs: [
+      {
+        question: 'Can I combine multiple screenshots into a single PDF document?',
+        answer: 'Yes! Simply upload all your screenshot images, arrange them in order, and compile them into one PDF.'
+      }
+    ]
   }
 };
 
-export function getSeoEntry(pathname: string, toolTitle?: string, toolDesc?: string): SeoEntry {
-  const normalizedPath = pathname.replace(/\/$/, ''); // Remove trailing slash
+export function getSeoEntry(pathname: string | null | undefined, toolTitle?: string, toolDesc?: string): SeoEntry {
+  const normalizedPath = (pathname || '').replace(/\/$/, ''); // Remove trailing slash
   if (SEO_MAP[normalizedPath]) {
     return SEO_MAP[normalizedPath];
   }
@@ -443,30 +627,541 @@ export function getSeoEntry(pathname: string, toolTitle?: string, toolDesc?: str
   // Generate automated high-quality SEO fallbacks dynamically for all other tools
   const name = toolTitle || 'Web Utility';
   const desc = toolDesc || 'Calculate, convert, format, or process data instantly in your browser.';
-  
-  return {
-    title: `Free Online ${name} - Browser-Based Utility Tools`,
-    description: `${desc} UseBro provides this free, client-side, browser-based tool. 100% secure, no downloads, and no registration required.`,
-    guideTitle: `How to Use the Free Online ${name}`,
-    steps: [
-      `Open the ${name} tool page on UseBro.`,
-      `Input your data, upload your file, or configure the parameters in the fields provided.`,
-      `The tool will process your input dynamically and display results instantly on your screen.`,
-      `Copy, save, or download the output with a single click.`
-    ],
-    faqs: [
+  const nameLower = name.toLowerCase();
+
+  // Simple deterministic hash based on pathname to vary synonyms
+  let hash = 0;
+  for (let i = 0; i < normalizedPath.length; i++) {
+    hash = normalizedPath.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const variantIdx = Math.abs(hash) % 3;
+
+  // Classify tools into 10 distinct categories
+  const isPdf = nameLower.includes('pdf') || nameLower.includes('word') || nameLower.includes('excel') || nameLower.includes('ppt') || nameLower.includes('ocr');
+  const isImage = nameLower.includes('image') || nameLower.includes('jpg') || nameLower.includes('png') || nameLower.includes('webp') || nameLower.includes('cropper') || nameLower.includes('resizer') || nameLower.includes('remover') || nameLower.includes('favicon') || nameLower.includes('graphic') || nameLower.includes('watermark') || nameLower.includes('rotate') || nameLower.includes('blur') || nameLower.includes('photo') || nameLower.includes('signature');
+  const isVideoAudio = nameLower.includes('video') || nameLower.includes('audio') || nameLower.includes('mp3') || nameLower.includes('gif') || nameLower.includes('speech') || nameLower.includes('cutter') || nameLower.includes('trim') || nameLower.includes('ringtone') || nameLower.includes('editor');
+  const isBusiness = nameLower.includes('invoice') || nameLower.includes('receipt') || nameLower.includes('quotation') || nameLower.includes('gst');
+  const isFinancial = nameLower.includes('loan') || nameLower.includes('emi') || nameLower.includes('sip') || nameLower.includes('salary') || nameLower.includes('tax') || nameLower.includes('ppf') || nameLower.includes('epf') || nameLower.includes('gratuity') || nameLower.includes('yojana') || nameLower.includes('ssy');
+  const isHealthLifestyle = nameLower.includes('bmi') || nameLower.includes('calorie') || nameLower.includes('age') || nameLower.includes('love') || nameLower.includes('nutrition');
+  const isDeveloper = nameLower.includes('diff') || nameLower.includes('preview') || nameLower.includes('json') || nameLower.includes('base64') || nameLower.includes('encode') || nameLower.includes('decode') || nameLower.includes('regex') || nameLower.includes('css') || nameLower.includes('color') || nameLower.includes('html') || nameLower.includes('code');
+  const isLegal = nameLower.includes('policy') || nameLower.includes('terms') || nameLower.includes('conditions') || nameLower.includes('refund') || nameLower.includes('return');
+  const isContent = nameLower.includes('writer') || nameLower.includes('bio') || nameLower.includes('prompt') || nameLower.includes('resume') || nameLower.includes('builder') || nameLower.includes('letter') || nameLower.includes('tag') || nameLower.includes('thumbnail') || nameLower.includes('title');
+  const isStudent = nameLower.includes('gpa') || nameLower.includes('percentage') || nameLower.includes('attendance') || nameLower.includes('study') || nameLower.includes('pomodoro');
+
+  let title = `Free Online ${name} - Browser-Based Utility Tools`;
+  let description = `${desc} UseBro provides this free, client-side, browser-based tool. 100% secure, no downloads, and no registration required.`;
+  let guideTitle = `How to Use the Free Online ${name}`;
+  let steps: string[] = [];
+  let faqs: { question: string; answer: string }[] = [];
+
+  if (isPdf) {
+    const titles = [
+      `Free Online ${name} - Manage PDF Files in Your Browser`,
+      `${name} Online - Fast & Private PDF Document Manager`,
+      `Convert & Process PDFs with ${name} - 100% Free`
+    ];
+    const descriptions = [
+      `Convert or edit PDF documents instantly with ${name}. Process pages completely client-side for maximum confidentiality. No limits, no watermarks.`,
+      `Use our free online ${name} to modify and manage documents safely. Processes files 100% locally in your web browser. No registration required.`,
+      `${desc} Manage your PDF paperwork, crop pages, and compile files in seconds. Completely secure and local processing.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Step-by-Step Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Upload your PDF or document files to the ${name} workspace.`,
+        `Select or drag your target PDF files into the browser conversion interface.`,
+        `Add your PDF documents from your computer or mobile device.`
+      ][variantIdx],
+      [
+        `Configure your document settings, page ordering, or file properties.`,
+        `Adjust layout margins, page orientations, or compression levels.`,
+        `Reorder pages or select specific page ranges for processing.`
+      ][variantIdx],
+      [
+        `Click the main processing button to initiate document adjustments.`,
+        `Press the convert or compress button to process pages client-side.`,
+        `Trigger the tool to apply formatting and construct your document.`
+      ][variantIdx],
+      [
+        `Download the finalized PDF or extracted files directly to your device.`,
+        `Click Download to save your compiled document files locally.`,
+        `Save your processed PDF sheets securely with a single click.`
+      ][variantIdx]
+    ];
+    faqs = [
       {
-        question: `Is the ${name} tool free to use?`,
-        answer: `Yes! All tools on UseBro are 100% free with no hidden charges, subscription fees, or signup requirements.`
+        question: `Is my confidential PDF data safe on UseBro?`,
+        answer: `Yes, 100% secure. All document conversions and modifications are processed locally in your browser. Your files are never uploaded to any cloud servers.`
       },
       {
-        question: `Does this ${name} tool upload my data to a server?`,
-        answer: 'No. To ensure absolute privacy, all processing is done locally inside your web browser. Your private data never leaves your device.'
-      },
-      {
-        question: `Can I use the ${name} on my mobile phone?`,
-        answer: `Yes! UseBro is fully responsive and works perfectly on Android, iPhones, iPads, laptops, and tablets.`
+        question: `Does this ${name} tool have file size limits?`,
+        answer: `Because the processing occurs entirely inside your local browser memory, it can handle standard documents smoothly. There are no artificial limits or restrictions.`
       }
-    ]
-  };
+    ];
+  } else if (isImage) {
+    const titles = [
+      `Free Online ${name} - Edit & Compress Images Instantly`,
+      `${name} Online - Crop, Resize & Process Photos for Free`,
+      `Optimize Images with ${name} - 100% Private Browser Tool`
+    ];
+    const descriptions = [
+      `Crop, compress, or resize images with our free ${name}. Fits photos to government specs (SBI, job portals) locally in the browser.`,
+      `Use our online ${name} to modify image files. Complete client-side rendering preserves your personal photos. 100% private.`,
+      `${desc} Optimize photo dimensions, compress file sizes to 20kb/50kb, and edit images instantly. No server uploads required.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Visual Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Choose your JPG, PNG, or WebP photo files from your local storage.`,
+        `Drag and drop your image file into the upload zone.`,
+        `Click to select a photo from your phone gallery or desktop.`
+      ][variantIdx],
+      [
+        `Configure crop overlays, resolution values, or quality metrics.`,
+        `Adjust size sliders, target file dimensions, or visual aspect ratios.`,
+        `Select country guidelines or set custom parameters for your image.`
+      ][variantIdx],
+      [
+        `The browser processes your changes locally using HTML5 canvas.`,
+        `Our client-side engine resizes and optimizes your photo instantly.`,
+        `The tool applies edits, updates previews, and computes file sizes.`
+      ][variantIdx],
+      [
+        `Click Download to save your formatted image file.`,
+        `Save your high-quality cropped photo to your camera roll or downloads folder.`,
+        `Download your optimized image instantly for online submissions.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Can I compress photos to a specific size like 50kb or 20kb?`,
+        answer: `Yes. You can customize target file sizes or dimensions before downloading. This is ideal for job applications and document portals.`
+      },
+      {
+        question: `Are my private photos uploaded to a database?`,
+        answer: `Never. To ensure complete privacy, all photo processing is executed locally in your browser. Your pictures remain secure on your device.`
+      }
+    ];
+  } else if (isVideoAudio) {
+    const titles = [
+      `Free Online ${name} - Convert & Trim Media Files`,
+      `${name} Online - Compress & Edit Video/Audio locally`,
+      `Process Video & Audio with ${name} - 100% Private`
+    ];
+    const descriptions = [
+      `Cut, convert, or compress audio and video files online. Process files locally in your web browser with maximum speed and security.`,
+      `Modify and convert media files with our free online ${name}. Fast browser-based conversion with no watermarks or registrations.`,
+      `${desc} Trim tracks, extract MP3 audio, and compress video file sizes inside your browser. No files are uploaded to any server.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Step-by-Step Media Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Select your audio or video file from your device libraries.`,
+        `Drag and drop your media track into the converter timeline.`,
+        `Upload your file (MP4, MP3, WAV, WebM) to the local editor.`
+      ][variantIdx],
+      [
+        `Set trim boundaries, output formats, or audio bitrate.`,
+        `Adjust compression settings, volumes, or sound frequencies.`,
+        `Choose your target formats like MP3, GIF, WAV, or MP4.`
+      ][variantIdx],
+      [
+        `The tool processes the timeline and runs conversion client-side.`,
+        `Our browser converter extracts audio or trims tracks locally.`,
+        `Click process and let the local engine compile your files.`
+      ][variantIdx],
+      [
+        `Save the compiled media file directly to your system downloads.`,
+        `Download your converted audio or edited video clip instantly.`,
+        `Click Download to receive your watermark-free file.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Is my media content uploaded during editing?`,
+        answer: `No. All conversions and trims execute locally inside your browser window. No video or audio records are ever uploaded to any database.`
+      },
+      {
+        question: `Does this media tool add watermarks?`,
+        answer: `No. All exports from UseBro tools are 100% watermark-free, high-quality, and completely free for public and private use.`
+      }
+    ];
+  } else if (isBusiness) {
+    const titles = [
+      `${name} - Free Online PDF Generator for Businesses`,
+      `Free Online ${name} - Create Business Documents Instantly`,
+      `Generate Professional invoices & quotes with ${name}`
+    ];
+    const descriptions = [
+      `Create professional GST invoices, receipts, and quotations online. Save your business profiles to autofill fields automatically. Download PDF.`,
+      `Use our free ${name} to generate printable receipts and quotes. Local storage pre-fills details to save you time. 100% secure.`,
+      `${desc} Generate invoice details, manage business tax rates, calculate discounts, and print PDF papers client-side.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Business Workflow: How to Use ${name}`;
+    steps = [
+      [
+        `Configure your default business profile inside the Settings modal.`,
+        `Click the Settings button to pre-fill GSTIN, business name, and address.`,
+        `Enter your company billing details, contact numbers, and upload logo.`
+      ][variantIdx],
+      [
+        `Input client details and specify the invoice, quote, or receipt number.`,
+        `Fill client details, document IDs, and select your currency.`,
+        `Add client billing addresses and configure document dates.`
+      ][variantIdx],
+      [
+        `Add line items with descriptions, HSN codes, quantity, and rates.`,
+        `List your services or products with quantities, rates, and tax slates.`,
+        `Enter unit prices, quantities, and adjust discount percentages.`
+      ][variantIdx],
+      [
+        `Click Generate to compile and download your formatted PDF document.`,
+        `Save your print-ready invoice or receipt PDF directly to your device.`,
+        `Download your professional quote or bill instantly for client sharing.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Can I save my company logo and GSTIN for future bills?`,
+        answer: `Yes. Click the Settings button in the Your Details section. Fill in your details once, and they will automatically populate for all documents.`
+      },
+      {
+        question: `Is my business financial data kept private?`,
+        answer: `Yes. All invoice calculations and PDF compilations are done locally in your browser. No financial data is sent to our servers.`
+      }
+    ];
+  } else if (isFinancial) {
+    const titles = [
+      `${name} - Free Online Financial & Investment Calculator`,
+      `Free Online ${name} - Calculate Loan EMIs & SIP Growth`,
+      `Compare Investments & Loans with ${name} - 100% Free`
+    ];
+    const descriptions = [
+      `Calculate EMI schedules, SIP compounding growth, salary structures, or tax liabilities online. View amortization graphs and payment tables.`,
+      `Use our free ${name} to plan loans, investments, and retirement savings. Get detailed summaries instantly in your browser.`,
+      `${desc} Compute compound interest, compare old vs new tax regimes, and plan investment values with our browser tool.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Financial Planning Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Input your financial amounts, rates, or monthly contributions.`,
+        `Enter principal amount, interest rate, and target duration.`,
+        `Type in your salary details, investments, or compounding inputs.`
+      ][variantIdx],
+      [
+        `Adjust compounding frequencies, loan tenure, or tax deductions.`,
+        `Use sliders to change tenures or adjust monthly investment rates.`,
+        `Select custom regimes or apply specific exemptions.`
+      ][variantIdx],
+      [
+        `The tool generates amortization schedules or wealth projections.`,
+        `Our local engine calculates compounding tables and graphical breakdowns.`,
+        `View monthly EMIs or projected investment yields instantly.`
+      ][variantIdx],
+      [
+        `Copy the calculation summary or print the breakdown report.`,
+        `Save details to your clipboard or print the page for future reference.`,
+        `Copy results and summaries to share with your advisor.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `How does this tool calculate compounding or EMI tables?`,
+        answer: `Our calculators use standard formulas (such as the EMI formula or the SIP compound interest formula) to compute schedules accurately.`
+      },
+      {
+        question: `Are my financial calculations saved on your servers?`,
+        answer: `No. UseBro prioritizes privacy. All calculations are executed locally inside your web browser and are never uploaded anywhere.`
+      }
+    ];
+  } else if (isHealthLifestyle) {
+    const titles = [
+      `${name} - Free Online Health & Weight Calculator`,
+      `Free Online ${name} - Track Body Mass Index & Nutrition`,
+      `Check Fitness Metrics with ${name} - 100% Private`
+    ];
+    const descriptions = [
+      `Calculate Body Mass Index (BMI), daily calorie counts, or age targets online. Get instant classification reports based on medical guidelines.`,
+      `Use our free online ${name} to track weight status, age parameters, or calorie counts. Highly secure, clean interface.`,
+      `${desc} Compute fitness indicators, check weight status, and log parameters inside your browser for local reports.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Wellness Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Enter your weight, height, age, or activity stats in the inputs.`,
+        `Select your metrics (cm/kg or lbs/ft) and fill in your details.`,
+        `Provide dates or nutritional values inside the form fields.`
+      ][variantIdx],
+      [
+        `Select the target standards or formulas (e.g. WHO classification).`,
+        `Select gender options, activity levels, or calculations guidelines.`,
+        `Confirm parameters and check calculations ranges.`
+      ][variantIdx],
+      [
+        `The calculator checks metrics and outputs classifications in real-time.`,
+        `Our local algorithm processes indexes and outputs report cards.`,
+        `View health indicators and weight status labels instantly.`
+      ][variantIdx],
+      [
+        `Review recommendations, copy logs, or save details locally.`,
+        `Copy summary metrics to save in your fitness notebook.`,
+        `Download report breakdowns or note index numbers.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Are these health metric calculations accurate?`,
+        answer: `Yes, they are based on official formulas (like the WHO BMI metrics). However, they are for planning purposes and do not replace medical advice.`
+      },
+      {
+        question: `Does the website track my age or weight details?`,
+        answer: `No. All calculations run entirely in your web browser. No logs, search histories, or metrics are saved on our servers.`
+      }
+    ];
+  } else if (isDeveloper) {
+    const titles = [
+      `Free Online ${name} - Developer Coding Utility`,
+      `Online ${name} - Format, Parse & Debug Code Snippets`,
+      `Format & Clean Scripts with ${name} - 100% secure`
+    ];
+    const descriptions = [
+      `Format JSON strings, compare text diffs, preview HTML files, or decode Base64 strings online. 100% client-side tool for developers.`,
+      `Use our free online ${name} to debug, format, and parse code blocks. Complete browser-based execution ensures total confidentiality.`,
+      `${desc} Inspect code deltas, check syntax rules, encode URLs, and preview HTML frames. Absolute privacy for your codebase.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Developer Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Paste your raw code block, text content, or files in the editor.`,
+        `Enter your string, scripts, or syntax lines inside the text fields.`,
+        `Load sample codes or paste variables into the compiler panels.`
+      ][variantIdx],
+      [
+        `Configure indentation, parse rules, or target formatting styles.`,
+        `Select configurations (minify, format, escape, or test options).`,
+        `Adjust output tabs, select comparison columns, or choose themes.`
+      ][variantIdx],
+      [
+        `The parser compiles and renders your results instantly.`,
+        `Our browser-based engine formats, decodes, or highlights code blocks.`,
+        `View colorized outputs, live iframe renders, or delta reports.`
+      ][variantIdx],
+      [
+        `Copy the formatted output, download code files, or sync configurations.`,
+        `Click Copy to capture clean syntax or save code to your desktop.`,
+        `Download raw formatted assets directly with one click.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Is my codebase safe from leakage when debugging online?`,
+        answer: `Yes. All decoding, formatting, and previews execute locally in your browser memory. No code fragments are ever uploaded online.`
+      },
+      {
+        question: `Can I format compressed programming structures?`,
+        answer: `Yes, our parser can clean minified scripts, XML blocks, or JSON configurations into highly legible tree layouts.`
+      }
+    ];
+  } else if (isLegal) {
+    const titles = [
+      `Free Online ${name} - Generate Custom Legal Docs`,
+      `Free ${name} - Create Legal Agreement Templates`,
+      `Generate Privacy Documents with ${name} - CCPA & GDPR`
+    ];
+    const descriptions = [
+      `Generate compliant privacy policies, terms, refund rules, and terms of service for your website or mobile application. Completely free.`,
+      `Use our free ${name} to create legal agreement documents. Compliant with GDPR, COPPA, CCPA, and Google Adsense guidelines.`,
+      `${desc} Build compliant terms pages, generate refund policies, and download legal files inside your browser.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Legal Setup Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Enter your business details, website URL, and contact email.`,
+        `Type in your app name, company details, and tracking policies.`,
+        `Fill in the questionnaire details about data collection and cookies.`
+      ][variantIdx],
+      [
+        `Select compliant checkboxes (GDPR, Adsense, or Refund slabs).`,
+        `Choose specific clauses about payment processing, emails, and ads.`,
+        `Select optional cookie disclosure clauses or liability limits.`
+      ][variantIdx],
+      [
+        `The legal builder compiles standard terms clauses client-side.`,
+        `Our program parses legal terms and constructs a template draft.`,
+        `Click build and let the local compiler format your documents.`
+      ][variantIdx],
+      [
+        `Copy the HTML/Markdown legal text or download the text document.`,
+        `Download the legal page directly to link to your app.`,
+        `Save your policy document files in HTML format instantly.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Are these legal agreements compliant with Google Adsense?`,
+        answer: `Yes. The generated text templates are structured to include standard cookie disclosures, third-party advertising clauses, and user privacy terms required by Adsense.`
+      },
+      {
+        question: `Are the policies generated legally binding?`,
+        answer: `They provide standard compliance templates. We recommend having a legal professional review them to fit your specific business liabilities.`
+      }
+    ];
+  } else if (isContent) {
+    const titles = [
+      `Free Online ${name} - AI Content Generator & Writer`,
+      `Free ${name} - Create Bio, Prompts & Copy Online`,
+      `AI Writing Tool: ${name} - 100% Free Browser Utility`
+    ];
+    const descriptions = [
+      `Generate optimized social bios, email messages, cover letters, and video metadata online. AI writing assistants for copywriting.`,
+      `Use our free online ${name} to write captions, prompts, and business profiles. Instant output with simple configurations.`,
+      `${desc} Create creative texts, plan prompts, write bios, and draft resumes in seconds with our browser content tool.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Creative Writing Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Enter your target keywords, job titles, or topic descriptions.`,
+        `Type in prompts details, main points, or business summaries.`,
+        `Upload or write draft contents into the editor workspace.`
+      ][variantIdx],
+      [
+        `Select writing tones, styling templates, or platform layouts.`,
+        `Choose copy lengths, adjust keywords, or set visual styles.`,
+        `Pick desired templates (Instagram bio, formal email, etc.).`
+      ][variantIdx],
+      [
+        `The AI generator builds high-converting copy in real-time.`,
+        `Our local text compiler templates paragraphs and formats structures.`,
+        `View generated tag suggestions, resume pages, or bios instantly.`
+      ][variantIdx],
+      [
+        `Copy the generated text copy or download files immediately.`,
+        `Click Copy to capture results or save text files to your desktop.`,
+        `Export your finished creative drafts with a single click.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Can I use the output of the content generator commercially?`,
+        answer: `Yes. All outputs generated are royalty-free and yours to copy, modify, and utilize across your website, videos, or social handles.`
+      },
+      {
+        question: `Do I need to sign up to write content on UseBro?`,
+        answer: `No. Unlike other writing assistants, there are no subscriptions or signups. The utility is completely free and browser-based.`
+      }
+    ];
+  } else if (isStudent) {
+    const titles = [
+      `${name} - Free Online Student Calculator & Tool`,
+      `Free Online ${name} - Compute GPA & Percentage Grades`,
+      `Track Classes and Study with ${name} - 100% Free`
+    ];
+    const descriptions = [
+      `Compute GPA scores, calculate percentages, track attendance ratios, or set study pomodoro timers. Clean, free student tools.`,
+      `Use our online ${name} to log grades and calculate study times. Get detailed reports dynamically in your browser.`,
+      `${desc} Calculate academic marks, check passing indexes, track classes, and study with our student helper tool.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Academic Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Input your grades, classes count, or study target intervals.`,
+        `Enter your current course credits, points, or target percentages.`,
+        `Fill in attendance histories or subject marks inside the rows.`
+      ][variantIdx],
+      [
+        `Select grading scales (e.g. 4.0 or 10.0 GPA standards).`,
+        `Select target thresholds, percentages criteria, or timers.`,
+        `Adjust values to test different grade scenarios.`
+      ][variantIdx],
+      [
+        `The tool processes indexes and maps results in real-time.`,
+        `Our local student engine computes grade averages instantly.`,
+        `View GPA tallies, progress indicators, or class ratios.`
+      ][variantIdx],
+      [
+        `Save your report card metrics or copy study summaries.`,
+        `Copy results to your clipboard or print the page for future reference.`,
+        `Bookmark scores and logs for tracking your semesters.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Does the GPA calculator support standard university scales?`,
+        answer: `Yes, it supports standard weighted and unweighted scales (including 4.0 scale) commonly used in schools and colleges.`
+      },
+      {
+        question: `Are my academic inputs saved?`,
+        answer: `No. UseBro is completely client-side. No grades, attendance logs, or study histories are stored on our servers.`
+      }
+    ];
+  } else {
+    // Default dynamic fallbacks
+    const titles = [
+      `Free Online ${name} - Easy Browser-Based Utility Tool`,
+      `${name} Online - Fast & Private Web Helper Utility`,
+      `Use Free ${name} Online - Secure Browser Web Tool`
+    ];
+    const descriptions = [
+      `Process data, generate structures, or check inputs with our free online ${name}. Fast, secure, and 100% browser-based utility.`,
+      `Access the free online ${name} utility. Instant processing completely locally in your browser. No files are uploaded online.`,
+      `${desc} 100% client-side execution ensures absolute privacy. Easy configuration, no downloads, and no registration.`
+    ];
+    title = titles[variantIdx];
+    description = descriptions[variantIdx];
+    guideTitle = `Step-by-Step Guide: How to Use ${name}`;
+    steps = [
+      [
+        `Open the ${name} utility page inside your web browser.`,
+        `Navigate to the ${name} tool on UseBro on any device.`,
+        `Access our free online ${name} workspace.`
+      ][variantIdx],
+      [
+        `Input your details, upload files, or choose custom settings.`,
+        `Fill in variables, paste raw text, or select options.`,
+        `Add parameters or select specifications inside the dashboard.`
+      ][variantIdx],
+      [
+        `Our client-side engine executes the tool logic in real-time.`,
+        `The tool processes parameters and displays results instantly.`,
+        `The utility computes parameters locally on your local device.`
+      ][variantIdx],
+      [
+        `Copy output details or download your generated files.`,
+        `Click Copy or print the page to export results.`,
+        `Save your finalized results with a single click.`
+      ][variantIdx]
+    ];
+    faqs = [
+      {
+        question: `Is this ${name} free to use?`,
+        answer: `Yes! All tools on UseBro are 100% free with no hidden charges, daily usage limits, or signup requirements.`
+      },
+      {
+        question: `Does the ${name} upload my data?`,
+        answer: `No. We value confidentiality. All calculation and formatting code executes locally on your device, ensuring total privacy.`
+      }
+    ];
+  }
+
+  return { title, description, guideTitle, steps, faqs };
 }

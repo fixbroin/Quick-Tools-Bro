@@ -1382,9 +1382,6 @@ export default function DiffCheckerPage() {
         </div>
       </section>
 
-      {/* SEO Category Recommendations Footer */}
-      <SeoSection />
-
       {/* Floating Side Copy Buttons */}
       {diffResult && (
         <>

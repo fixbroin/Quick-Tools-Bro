@@ -5,6 +5,7 @@ import { SeoSection } from '@/components/SeoSection';
 import { AdPlacement } from '@/components/AdPlacement';
 import { HostingPromo } from '@/components/HostingPromo';
 import { PromoBanner } from '@/components/PromoBanner';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export default function ToolsLayout({
   children,
@@ -13,6 +14,7 @@ export default function ToolsLayout({
 }) {
   return (
     <div className="container mx-auto px-4 py-4">
+      <Breadcrumbs />
       <Button asChild variant="secondary" className="hidden md:inline-flex mb-6 rounded-xl border border-primary/5 shadow-sm font-bold text-xs tracking-wide">
         <Link href="/">
           <ArrowLeft className="mr-2 h-4 w-4" />

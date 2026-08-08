@@ -237,7 +237,7 @@ export function getMetadata({
     ],
     metadataBase: new URL(SITE_CONFIG.url),
     alternates: {
-      canonical: path || '/',
+      canonical: (path || '/').replace(/\/$/, '') || '/',
     },
     verification: {
         google: SITE_CONFIG.gscId,

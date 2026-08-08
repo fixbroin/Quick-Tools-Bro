@@ -523,7 +523,6 @@ export default function HtmlPreviewPage() {
           </div>
         </div>
 
-        <SeoSection />
       </section>
 
       <ScrollToTop />

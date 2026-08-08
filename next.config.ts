@@ -87,7 +87,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  /* config options here */
+  outputFileTracingRoot: __dirname,
   images: {
     remotePatterns: [
       {

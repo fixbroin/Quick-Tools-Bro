@@ -7,10 +7,11 @@ import { HelpCircle, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 
 export function SeoSection() {
   const pathname = usePathname();
+  const normalizedPath = (pathname || '').replace(/\/$/, '');
   
   // Find matching tool in the master list to extract title/desc fallbacks
-  const currentTool = tools.find(t => t.href === pathname);
-  const seo = getSeoEntry(pathname, currentTool?.title, currentTool?.description);
+  const currentTool = tools.find(t => t.href.toLowerCase().replace(/\/$/, '') === normalizedPath.toLowerCase());
+  const seo = getSeoEntry(normalizedPath, currentTool?.title, currentTool?.description);
 
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [hasExistingFaq, setHasExistingFaq] = useState<boolean>(false);
@@ -41,6 +42,33 @@ export function SeoSection() {
         'text': faq.answer
       }
     }))
+  };
+
+  // Generate Google Search BreadcrumbList JSON-LD schema
+  const canonicalUrl = `https://usebro.in${pathname || ''}`;
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://usebro.in'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Tools',
+        'item': 'https://usebro.in'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': currentTool?.name || seo.title || 'Tool',
+        'item': canonicalUrl
+      }
+    ]
   };
 
   // Find 4 related tools dynamically for SEO interlinking based on exact category alignment
@@ -169,6 +197,10 @@ export function SeoSection() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
         {renderRelatedTools()}
       </div>
     );
@@ -180,6 +212,10 @@ export function SeoSection() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
