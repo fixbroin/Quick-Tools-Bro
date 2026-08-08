@@ -9,26 +9,27 @@ import ScrollToTop from '@/components/ScrollToTop';
 
 const toolCategories = [
   {
-    name: 'Gold Price & Daily Finance',
-    filterKey: 'finance',
-    tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
-      .map(name => tools.find(t => t.name === name))
-      .filter((t): t is typeof tools[number] => !!t),
-    color: 'bg-yellow-500/10 text-yellow-500'
-  },
-  {
-    name: 'WhatsApp Quotes & Social Tools',
-    filterKey: 'utility',
-    tools: ['WhatsApp Quotes', 'Social Caption Generator', 'Social Bio Generator', 'Hashtag Generator']
-      .map(name => tools.find(t => t.name === name))
-      .filter((t): t is typeof tools[number] => !!t),
-    color: 'bg-sky-500/10 text-sky-500'
-  },
-  {
     name: 'PDF Tools',
     filterKey: 'document',
     tools: tools.filter(t => ['JPG to PDF Converter', 'PDF to JPG Converter', 'Merge PDF', 'Split PDF', 'Compress PDF', 'PDF to Word Converter', 'Word to PDF Converter', 'Excel to PDF Converter', 'Presentation to PDF', 'OCR Text Extractor', 'eSign PDF', 'PDF Password Unlocker'].includes(t.name)),
     color: 'bg-red-500/10 text-red-500'
+  },
+  {
+    name: 'Image Tools',
+    filterKey: 'image',
+    tools: tools.filter(t => ['Image Compressor', 'Image Converter', 'Image Resizer', 'Image Background Remover', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator', 'Passport Photo Maker', 'Blur Image', 'Watermark Maker', 'Rotate Image', 'Govt Job Photo & Signature Resizer'].includes(t.name)),
+    color: 'bg-blue-500/10 text-blue-500'
+  },
+  {
+    name: 'Developer Tools',
+    filterKey: 'developer',
+    tools: (() => {
+      const order = ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'];
+      return tools
+        .filter(t => order.includes(t.name))
+        .sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    })(),
+    color: 'bg-cyan-500/10 text-cyan-500'
   },
   {
     name: 'QR Code Tools',
@@ -37,10 +38,24 @@ const toolCategories = [
     color: 'bg-green-500/10 text-green-500'
   },
   {
-    name: 'Image Tools',
-    filterKey: 'image',
-    tools: tools.filter(t => ['Image Compressor', 'Image Converter', 'Image Resizer', 'Image Background Remover', 'Image Cropper', 'Favicon Converter', 'Feature Graphic Generator', 'Passport Photo Maker', 'Blur Image', 'Watermark Maker', 'Rotate Image', 'Govt Job Photo & Signature Resizer'].includes(t.name)),
-    color: 'bg-blue-500/10 text-blue-500'
+    name: 'Business Tools',
+    filterKey: 'business',
+    tools: tools.filter(t => ['Quotation Maker', 'Invoice Maker', 'Receipt Generator', 'GST Invoice Maker'].includes(t.name)),
+    color: 'bg-orange-500/10 text-orange-500'
+  },
+  {
+    name: 'Financial Calculators',
+    filterKey: 'finance',
+    tools: tools.filter(t => ['Loan EMI Calculator', 'SIP Calculator', 'Salary Calculator', 'Income Tax Calculator', 'Sukanya Samriddhi Yojana (SSY) Calculator', 'PPF Calculator', 'EPF Calculator', 'Gratuity Calculator'].includes(t.name)),
+    color: 'bg-yellow-500/10 text-yellow-500'
+  },
+  {
+    name: 'Gold Price & Daily Finance',
+    filterKey: 'finance',
+    tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
+    color: 'bg-amber-500/10 text-amber-500'
   },
   {
     name: 'Video & Audio Tools',
@@ -51,34 +66,18 @@ const toolCategories = [
     color: 'bg-purple-500/10 text-purple-500'
   },
   {
-    name: 'Business Tools',
-    filterKey: 'business',
-    tools: tools.filter(t => ['Quotation Maker', 'Invoice Maker', 'Receipt Generator', 'GST Invoice Maker'].includes(t.name)),
-    color: 'bg-orange-500/10 text-orange-500'
+    name: 'WhatsApp Quotes & Social Tools',
+    filterKey: 'utility',
+    tools: ['WhatsApp Quotes', 'Social Caption Generator', 'Social Bio Generator', 'Hashtag Generator']
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
+    color: 'bg-sky-500/10 text-sky-500'
   },
   {
     name: 'Web & Utility Tools',
     filterKey: 'utility',
     tools: tools.filter(t => ['Short Link Maker', 'Unit Converter'].includes(t.name)),
     color: 'bg-indigo-500/10 text-indigo-500'
-  },
-  {
-    name: 'Health & Lifestyle Calculators',
-    filterKey: 'utility',
-    tools: tools.filter(t => ['BMI Calculator', 'Daily Calorie Intake Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator'].includes(t.name)),
-    color: 'bg-pink-500/10 text-pink-500'
-  },
-  {
-    name: 'Financial Calculators',
-    filterKey: 'finance',
-    tools: tools.filter(t => ['Loan EMI Calculator', 'SIP Calculator', 'Salary Calculator', 'Income Tax Calculator', 'Sukanya Samriddhi Yojana (SSY) Calculator', 'PPF Calculator', 'EPF Calculator', 'Gratuity Calculator'].includes(t.name)),
-    color: 'bg-yellow-500/10 text-yellow-500'
-  },
-  {
-    name: 'Legal Document Generators',
-    filterKey: 'business',
-    tools: tools.filter(t => ['Privacy Policy Generator', 'Terms & Conditions Generator', 'Refund Policy Generator', 'Return Policy Generator'].includes(t.name)),
-    color: 'bg-gray-500/10 text-gray-500'
   },
   {
     name: 'Daily & Productivity',
@@ -99,15 +98,16 @@ const toolCategories = [
     color: 'bg-emerald-500/10 text-emerald-500'
   },
   {
-    name: 'Developer Tools',
-    filterKey: 'developer',
-    tools: (() => {
-      const order = ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'];
-      return tools
-        .filter(t => order.includes(t.name))
-        .sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
-    })(),
-    color: 'bg-cyan-500/10 text-cyan-500'
+    name: 'Health & Lifestyle Calculators',
+    filterKey: 'utility',
+    tools: tools.filter(t => ['BMI Calculator', 'Daily Calorie Intake Calculator', 'Food Calorie & Nutrition Calculator', 'Love Calculator', 'Age Calculator'].includes(t.name)),
+    color: 'bg-pink-500/10 text-pink-500'
+  },
+  {
+    name: 'Legal Document Generators',
+    filterKey: 'business',
+    tools: tools.filter(t => ['Privacy Policy Generator', 'Terms & Conditions Generator', 'Refund Policy Generator', 'Return Policy Generator'].includes(t.name)),
+    color: 'bg-gray-500/10 text-gray-500'
   }
 ];
 

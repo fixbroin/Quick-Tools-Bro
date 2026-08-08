@@ -87,7 +87,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  outputFileTracingRoot: __dirname,
+  outputFileTracingRoot: process.cwd(),
   images: {
     remotePatterns: [
       {
