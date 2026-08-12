@@ -615,6 +615,31 @@ export const SEO_MAP: Record<string, SeoEntry> = {
         answer: 'Yes! Simply upload all your screenshot images, arrange them in order, and compile them into one PDF.'
       }
     ]
+  },
+  '/tools/website-screenshot': {
+    title: 'Website Screenshot Taker: Capture URL Screenshots Online',
+    description: 'Capture high-resolution screenshots of any website URL online. Select desktop 16:9 or mobile portrait presets. Download clean PNGs with zero CORS blocks.',
+    guideTitle: 'How to Take Website Screenshots Online',
+    steps: [
+      'Enter the complete website URL you wish to capture.',
+      'Select the device type (Desktop or Mobile) and pick a preset resolution.',
+      'Toggle options like Dark Mode or Light Mode for the screenshot layout.',
+      'Click Capture Screenshot and download your high-resolution PNG image.'
+    ],
+    faqs: [
+      {
+        question: 'Can I take screenshots of responsive mobile layouts?',
+        answer: 'Yes! By selecting a Mobile/Portrait preset, our headless engine emulates a mobile browser user-agent and touch gestures, capturing the exact responsive layout of the target website.'
+      },
+      {
+        question: 'Can I download the screenshot directly as an image?',
+        answer: 'Yes. Our backend proxy streams the screenshot as a standard PNG file, allowing you to click Download and save it directly to your phone or computer with zero CORS security blocks.'
+      },
+      {
+        question: 'Are private websites behind logins supported?',
+        answer: 'Because our screenshot renderer runs in a sandboxed, public headless browser, it cannot access pages that require authentication, user logins, or local network access.'
+      }
+    ]
   }
 };
 

@@ -24,7 +24,7 @@ const toolCategories = [
     name: 'Developer Tools',
     filterKey: 'developer',
     tools: (() => {
-      const order = ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'];
+      const order = ['Text Diff Checker', 'HTML Preview', 'Website Screenshot Taker', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter'];
       return tools
         .filter(t => order.includes(t.name))
         .sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));

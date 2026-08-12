@@ -129,7 +129,7 @@ export function SeoSection() {
       },
       {
         name: 'Developer Tools',
-        matches: ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
+        matches: ['Text Diff Checker', 'HTML Preview', 'Website Screenshot Taker', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
       }
     ];
 

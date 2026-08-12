@@ -5,7 +5,7 @@ import {
   RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine,
   Split, EyeOff, Droplet, RotateCw, Percent, Braces, Timer, StopCircle,
   FileEdit, Mail, Instagram, FileCode, Code, Palette, Calendar, GraduationCap,
-  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders, Volume2, GitCompare
+  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders, Volume2, GitCompare, Monitor
 } from 'lucide-react';
 
 export interface Tool {
@@ -707,6 +707,13 @@ export const tools: Tool[] = [
     description: 'Write, edit, and preview HTML, CSS, and Javascript code online in real-time.',
     href: '/tools/html-preview',
     Icon: Code,
+  },
+  {
+    title: 'Website Screenshot Taker',
+    name: 'Website Screenshot Taker',
+    description: 'Capture high-quality landscape and portrait screenshots of any website URL online.',
+    href: '/tools/website-screenshot',
+    Icon: Monitor,
   },
 ];
 import { Edit3, Table } from 'lucide-react';

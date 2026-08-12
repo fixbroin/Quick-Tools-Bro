@@ -74,7 +74,7 @@ const sitemapCategories = [
   },
   {
     name: 'Developer Tools',
-    tools: ['Text Diff Checker', 'HTML Preview', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
+    tools: ['Text Diff Checker', 'HTML Preview', 'Website Screenshot Taker', 'JSON Formatter', 'Base64 Converter', 'URL Encoder & Decoder', 'Regex Tester', 'Color Picker', 'CSS Generator', 'HTML Formatter']
   }
 ];
 
