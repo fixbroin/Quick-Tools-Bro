@@ -40,6 +40,7 @@ export default function WebsiteScreenshotPage() {
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
   const [isRetina, setIsRetina] = useState(false);
   const [fullPage, setFullPage] = useState(false);
+  const [captureDelay, setCaptureDelay] = useState(3);
   const [customFileName, setCustomFileName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
@@ -77,6 +78,12 @@ export default function WebsiteScreenshotPage() {
         audio: false
       });
 
+      // Start countdown loop to let the user scroll or adjust the selected page
+      for (let i = captureDelay; i > 0; i--) {
+        setLoadingStep(`Capturing in ${i} second${i > 1 ? 's' : ''}... Switch tabs and scroll now!`);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+
       setLoadingStep('Capturing active tab frame...');
 
       const video = document.createElement('video');
@@ -102,7 +109,7 @@ export default function WebsiteScreenshotPage() {
             setScreenshotUrl(dataUrl);
             setIsLoading(false);
             setLoadingStep('');
-          }, 800); // 800ms delay to let the frame settle
+          }, 300); // Small offset to draw frame
         } else {
           stream.getTracks().forEach(track => track.stop());
           throw new Error('Failed to create canvas rendering context.');
@@ -197,6 +204,7 @@ export default function WebsiteScreenshotPage() {
     setIsRetina(false);
     setFullPage(false);
     setCaptureMode('server');
+    setCaptureDelay(3);
     setCustomFileName('');
     if (device === 'desktop') {
       setWidth(DESKTOP_PRESETS[0].width);
@@ -245,11 +253,9 @@ export default function WebsiteScreenshotPage() {
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     type="button"
-                    variant={captureMode === 'server' ? 'secondary' : 'outline'}
+                    variant={captureMode === 'server' ? 'default' : 'outline'}
                     onClick={() => setCaptureMode('server')}
-                    className={`rounded-xl font-semibold text-xs py-4 gap-1.5 ${
-                      captureMode === 'server' ? 'border-primary/40 bg-primary/5 text-primary' : ''
-                    }`}
+                    className="rounded-xl font-semibold text-xs py-4 gap-1.5"
                     disabled={isLoading}
                   >
                     <Globe className="h-3.5 w-3.5" />
@@ -257,11 +263,9 @@ export default function WebsiteScreenshotPage() {
                   </Button>
                   <Button
                     type="button"
-                    variant={captureMode === 'local' ? 'secondary' : 'outline'}
+                    variant={captureMode === 'local' ? 'default' : 'outline'}
                     onClick={() => setCaptureMode('local')}
-                    className={`rounded-xl font-semibold text-xs py-4 gap-1.5 ${
-                      captureMode === 'local' ? 'border-primary/40 bg-primary/5 text-primary' : ''
-                    }`}
+                    className="rounded-xl font-semibold text-xs py-4 gap-1.5"
                     disabled={isLoading}
                   >
                     <Camera className="h-3.5 w-3.5" />
@@ -326,11 +330,9 @@ export default function WebsiteScreenshotPage() {
                           <Button
                             key={preset.name}
                             type="button"
-                            variant={isActive ? 'secondary' : 'outline'}
+                            variant={isActive ? 'default' : 'outline'}
                             onClick={() => selectPreset(preset)}
-                            className={`rounded-xl text-[10px] py-1.5 h-auto font-medium ${
-                              isActive ? 'border-primary/40 bg-primary/5 text-primary' : ''
-                            }`}
+                            className="rounded-xl text-[10px] py-1.5 h-auto font-medium"
                             disabled={isLoading}
                           >
                             {preset.name} ({preset.width > 1000 ? '16:9' : 'Portrait'})
@@ -372,22 +374,22 @@ export default function WebsiteScreenshotPage() {
                     <div className="grid grid-cols-2 gap-2">
                       <Button
                         type="button"
-                        variant={colorScheme === 'light' ? 'secondary' : 'outline'}
+                        variant={colorScheme === 'light' ? 'default' : 'outline'}
                         onClick={() => setColorScheme('light')}
                         className="rounded-xl font-semibold text-xs py-4 gap-1.5"
                         disabled={isLoading}
                       >
-                        <Sun className="h-3.5 w-3.5 text-amber-500" />
+                        <Sun className={`h-3.5 w-3.5 ${colorScheme === 'light' ? 'text-white' : 'text-amber-500'}`} />
                         Light Theme
                       </Button>
                       <Button
                         type="button"
-                        variant={colorScheme === 'dark' ? 'secondary' : 'outline'}
+                        variant={colorScheme === 'dark' ? 'default' : 'outline'}
                         onClick={() => setColorScheme('dark')}
                         className="rounded-xl font-semibold text-xs py-4 gap-1.5"
                         disabled={isLoading}
                       >
-                        <Moon className="h-3.5 w-3.5 text-indigo-500" />
+                        <Moon className={`h-3.5 w-3.5 ${colorScheme === 'dark' ? 'text-white' : 'text-indigo-500'}`} />
                         Dark Theme
                       </Button>
                     </div>
@@ -399,7 +401,7 @@ export default function WebsiteScreenshotPage() {
                     <div className="grid grid-cols-2 gap-2">
                       <Button
                         type="button"
-                        variant={!isRetina ? 'secondary' : 'outline'}
+                        variant={!isRetina ? 'default' : 'outline'}
                         onClick={() => setIsRetina(false)}
                         className="rounded-xl font-semibold text-xs py-4 gap-1"
                         disabled={isLoading}
@@ -408,12 +410,12 @@ export default function WebsiteScreenshotPage() {
                       </Button>
                       <Button
                         type="button"
-                        variant={isRetina ? 'secondary' : 'outline'}
+                        variant={isRetina ? 'default' : 'outline'}
                         onClick={() => setIsRetina(true)}
                         className="rounded-xl font-semibold text-xs py-4 gap-1"
                         disabled={isLoading}
                       >
-                        <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
+                        <Sparkles className={`h-3.5 w-3.5 ${isRetina ? 'text-white' : 'text-indigo-500'}`} />
                         Retina (2x Size)
                       </Button>
                     </div>
@@ -425,7 +427,7 @@ export default function WebsiteScreenshotPage() {
                     <div className="grid grid-cols-2 gap-2">
                       <Button
                         type="button"
-                        variant={!fullPage ? 'secondary' : 'outline'}
+                        variant={!fullPage ? 'default' : 'outline'}
                         onClick={() => setFullPage(false)}
                         className="rounded-xl font-semibold text-xs py-4"
                         disabled={isLoading}
@@ -434,7 +436,7 @@ export default function WebsiteScreenshotPage() {
                       </Button>
                       <Button
                         type="button"
-                        variant={fullPage ? 'secondary' : 'outline'}
+                        variant={fullPage ? 'default' : 'outline'}
                         onClick={() => setFullPage(true)}
                         className="rounded-xl font-semibold text-xs py-4"
                         disabled={isLoading}
@@ -445,18 +447,42 @@ export default function WebsiteScreenshotPage() {
                   </div>
                 </>
               ) : (
-                /* Local Screen share Mode Helper Instructions */
-                <div className="p-4.5 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 text-xs text-foreground/85 space-y-3 leading-relaxed">
-                  <p className="font-bold flex items-center gap-1.5 text-indigo-500">
-                    <Info className="h-4 w-4" />
-                    How to Capture Private / Logged-in Pages:
-                  </p>
-                  <ol className="list-decimal pl-4.5 space-y-2 text-muted-foreground">
-                    <li>Open your target page (like your <strong>Admin Dashboard</strong> or local server site) in another tab or window.</li>
-                    <li>Click the <strong>Start Tab Capture</strong> button below.</li>
-                    <li>In the browser popup dialog, choose the <strong>Chrome Tab</strong> or window that contains your dashboard.</li>
-                    <li>We will capture the exact logged-in state of your layout securely and privately!</li>
-                  </ol>
+                <div className="space-y-4">
+                  {/* Local Screen share Mode Helper Instructions */}
+                  <div className="p-4.5 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 text-xs text-foreground/85 space-y-3 leading-relaxed">
+                    <p className="font-bold flex items-center gap-1.5 text-indigo-500">
+                      <Info className="h-4 w-4" />
+                      How to Capture Private / Logged-in Pages:
+                    </p>
+                    <ol className="list-decimal pl-4.5 space-y-2 text-muted-foreground">
+                      <li>Open your target page (like your <strong>Admin Dashboard</strong> or local server site) in another tab or window.</li>
+                      <li>Click the <strong>Start Tab Capture</strong> button below.</li>
+                      <li>In the browser popup dialog, choose the <strong>Chrome Tab</strong> or window that contains your dashboard.</li>
+                      <li>We will capture the exact logged-in state of your layout securely and privately!</li>
+                    </ol>
+                  </div>
+
+                  {/* Delay Timer Selector */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Capture Delay (Scroll Timer)</Label>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {[1, 3, 5, 10].map((sec) => (
+                        <Button
+                          key={sec}
+                          type="button"
+                          variant={captureDelay === sec ? 'default' : 'outline'}
+                          onClick={() => setCaptureDelay(sec)}
+                          className="rounded-xl font-semibold text-xs py-3 h-auto"
+                          disabled={isLoading}
+                        >
+                          {sec}s
+                        </Button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground leading-normal">
+                      Gives you {captureDelay} seconds after choosing the tab to switch over, scroll down, or position the layout before capturing.
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -506,10 +532,22 @@ export default function WebsiteScreenshotPage() {
                 </Button>
               </div>
 
-              {error && (
-                <div className="flex items-start gap-2 p-3.5 rounded-2xl bg-destructive/10 border border-destructive/15 text-destructive text-[11px] leading-relaxed">
-                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>{error}</span>
+               {error && (
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2 p-3.5 rounded-2xl bg-destructive/10 border border-destructive/15 text-destructive text-[11px] leading-relaxed">
+                    <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                    <span>{error}</span>
+                  </div>
+                  {captureMode === 'server' && (
+                    <div className="p-3.5 rounded-2xl bg-primary/5 border border-primary/10 text-[11px] leading-relaxed text-muted-foreground">
+                      <p className="font-bold text-foreground mb-1.5 flex items-center gap-1.5">
+                        <Info className="h-4 w-4 text-primary" />
+                        Troubleshooting Suggestion:
+                      </p>
+                      Some websites (like Amazon, banks, or portals protected by Cloudflare/WAF) block automated headless screenshot bots. 
+                      Try switching to <strong>Private Tab / Login</strong> mode above to securely capture this website layout locally from your active browser tab!
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
@@ -559,11 +597,11 @@ export default function WebsiteScreenshotPage() {
                       {url}
                     </div>
                   </div>
-                  <div className="relative overflow-y-auto rounded-lg bg-card border border-slate-800/80 max-h-[320px] md:max-h-[400px]">
+                  <div className="relative overflow-hidden rounded-lg bg-card border border-slate-800/80 max-h-[320px] md:max-h-[400px]">
                     <img 
                       src={screenshotUrl} 
                       alt="Website Screenshot Landscape" 
-                      className="w-full h-auto block" 
+                      className="w-full h-auto object-contain block" 
                     />
                   </div>
                 </div>
@@ -574,11 +612,11 @@ export default function WebsiteScreenshotPage() {
                   <div className="absolute top-4 left-1/2 -translate-x-1/2 h-4 w-12 bg-slate-950 rounded-full z-20 flex items-center justify-center">
                     <div className="h-1.5 w-1.5 rounded-full bg-indigo-950/80" />
                   </div>
-                  <div className="relative overflow-y-auto rounded-[26px] bg-card border border-slate-900/80 max-h-[420px] md:max-h-[480px]">
+                  <div className="relative overflow-hidden rounded-[26px] bg-card border border-slate-900/80 max-h-[420px] md:max-h-[480px]">
                     <img 
                       src={screenshotUrl} 
                       alt="Website Screenshot Portrait" 
-                      className="w-full h-auto block" 
+                      className="w-full h-auto object-contain block" 
                     />
                   </div>
                 </div>

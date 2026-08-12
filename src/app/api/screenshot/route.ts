@@ -39,7 +39,18 @@ export async function GET(request: NextRequest) {
 
     const res = await fetch(targetApiUrl.toString());
     if (!res.ok) {
-      throw new Error(`Headless renderer returned status ${res.status}`);
+      let errorMessage = `Headless renderer returned status ${res.status}`;
+      try {
+        const errData = await res.json();
+        if (errData && errData.message) {
+          errorMessage = errData.message;
+        } else if (errData && errData.data && errData.data.message) {
+          errorMessage = errData.data.message;
+        }
+      } catch (e) {
+        // Not a JSON response
+      }
+      throw new Error(errorMessage);
     }
 
     const imageBuffer = await res.arrayBuffer();
