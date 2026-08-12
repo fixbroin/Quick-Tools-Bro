@@ -37,6 +37,8 @@ export default function WebsiteScreenshotPage() {
   const [width, setWidth] = useState(1280);
   const [height, setHeight] = useState(720);
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
+  const [isRetina, setIsRetina] = useState(false);
+  const [customFileName, setCustomFileName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export default function WebsiteScreenshotPage() {
     setLoadingStep('Capturing visual viewport image...');
 
     try {
-      const apiEndpoint = `/api/screenshot?url=${encodeURIComponent(url)}&width=${width}&height=${height}&isMobile=${device === 'mobile'}&colorScheme=${colorScheme}`;
+      const apiEndpoint = `/api/screenshot?url=${encodeURIComponent(url)}&width=${width}&height=${height}&isMobile=${device === 'mobile'}&colorScheme=${colorScheme}&scale=${isRetina ? '2' : '1'}`;
       
       const response = await fetch(apiEndpoint);
       if (!response.ok) {
@@ -101,16 +103,25 @@ export default function WebsiteScreenshotPage() {
   const downloadScreenshot = () => {
     if (!screenshotUrl) return;
 
-    // Extract domain name for the filename
-    let domain = 'website';
-    try {
-      const cleanUrl = url.startsWith('http') ? url : `https://${url}`;
-      domain = new URL(cleanUrl).hostname.replace('www.', '');
-    } catch (e) {}
+    let fileName = customFileName.trim();
+    if (!fileName) {
+      // Extract domain name for the filename fallback
+      let domain = 'website';
+      try {
+        const cleanUrl = url.startsWith('http') ? url : `https://${url}`;
+        domain = new URL(cleanUrl).hostname.replace('www.', '');
+      } catch (e) {}
+      fileName = `${domain}_screenshot_${width}x${height}`;
+    }
+
+    // Ensure filename ends with .png
+    if (!fileName.toLowerCase().endsWith('.png')) {
+      fileName = `${fileName}.png`;
+    }
 
     const link = document.createElement('a');
     link.href = screenshotUrl;
-    link.download = `${domain}_screenshot_${width}x${height}.png`;
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -120,6 +131,8 @@ export default function WebsiteScreenshotPage() {
     setUrl('');
     setScreenshotUrl(null);
     setError(null);
+    setIsRetina(false);
+    setCustomFileName('');
     if (device === 'desktop') {
       setWidth(DESKTOP_PRESETS[0].width);
       setHeight(DESKTOP_PRESETS[0].height);
@@ -255,6 +268,20 @@ export default function WebsiteScreenshotPage() {
                 </div>
               </div>
 
+              {/* Custom File Name */}
+              <div className="space-y-2">
+                <Label htmlFor="fileName" className="text-xs font-semibold">Custom File Name (Optional)</Label>
+                <Input
+                  id="fileName"
+                  type="text"
+                  placeholder="e.g. my-site-home-desktop"
+                  value={customFileName}
+                  onChange={(e) => setCustomFileName(e.target.value)}
+                  className="rounded-xl text-xs bg-slate-500/5 border-primary/5"
+                  disabled={isLoading}
+                />
+              </div>
+
               {/* Color Scheme Option */}
               <div className="space-y-2">
                 <Label className="text-xs font-semibold">Target Website Theme</Label>
@@ -278,6 +305,32 @@ export default function WebsiteScreenshotPage() {
                   >
                     <Moon className="h-3.5 w-3.5 text-indigo-500" />
                     Dark Theme
+                  </Button>
+                </div>
+              </div>
+
+              {/* Resolution Scale Option */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold">Resolution Scale (DPI)</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    type="button"
+                    variant={!isRetina ? 'secondary' : 'outline'}
+                    onClick={() => setIsRetina(false)}
+                    className="rounded-xl font-semibold text-xs py-4 gap-1"
+                    disabled={isLoading}
+                  >
+                    Standard (1x Size)
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={isRetina ? 'secondary' : 'outline'}
+                    onClick={() => setIsRetina(true)}
+                    className="rounded-xl font-semibold text-xs py-4 gap-1"
+                    disabled={isLoading}
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
+                    Retina (2x Size)
                   </Button>
                 </div>
               </div>
