@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   const colorScheme = searchParams.get('colorScheme') || 'light';
 
   const scale = searchParams.get('scale') || '1';
+  const fullPage = searchParams.get('fullPage') === 'true';
 
   if (!url) {
     return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
@@ -29,6 +30,9 @@ export async function GET(request: NextRequest) {
     targetApiUrl.searchParams.append('viewport.width', width);
     targetApiUrl.searchParams.append('viewport.height', height);
     targetApiUrl.searchParams.append('viewport.deviceScaleFactor', scale);
+    if (fullPage) {
+      targetApiUrl.searchParams.append('screenshot.fullPage', 'true');
+    }
     targetApiUrl.searchParams.append('viewport.isMobile', String(isMobile));
     targetApiUrl.searchParams.append('viewport.hasTouch', String(isMobile));
     targetApiUrl.searchParams.append('colorScheme', colorScheme);

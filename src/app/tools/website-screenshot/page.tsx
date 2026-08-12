@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
   Globe, Monitor, Smartphone, Download, RotateCcw, 
-  AlertCircle, Sparkles, Loader2, Info, Moon, Sun
+  AlertCircle, Sparkles, Loader2, Info, Moon, Sun, Camera
 } from 'lucide-react';
 import ScrollToTop from '@/components/ScrollToTop';
 
@@ -32,12 +32,14 @@ const MOBILE_PRESETS: Preset[] = [
 ];
 
 export default function WebsiteScreenshotPage() {
+  const [captureMode, setCaptureMode] = useState<'server' | 'local'>('server');
   const [url, setUrl] = useState('');
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [width, setWidth] = useState(1280);
   const [height, setHeight] = useState(720);
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
   const [isRetina, setIsRetina] = useState(false);
+  const [fullPage, setFullPage] = useState(false);
   const [customFileName, setCustomFileName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
@@ -60,7 +62,68 @@ export default function WebsiteScreenshotPage() {
     }
   };
 
+  const captureLocalScreen = async () => {
+    try {
+      setError(null);
+      setScreenshotUrl(null);
+      setIsLoading(true);
+      setLoadingStep('Waiting for tab selection permissions...');
+
+      // Request browser screen capture stream
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          displaySurface: 'browser', // Focus on browser tab sharing
+        },
+        audio: false
+      });
+
+      setLoadingStep('Capturing active tab frame...');
+
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.autoplay = true;
+      video.playsInline = true;
+
+      video.onloadedmetadata = () => {
+        // Create canvas matching stream resolution
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          setTimeout(() => {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Stop tracks to turn off the sharing indicator in the browser
+            stream.getTracks().forEach(track => track.stop());
+
+            const dataUrl = canvas.toDataURL('image/png');
+            setScreenshotUrl(dataUrl);
+            setIsLoading(false);
+            setLoadingStep('');
+          }, 800); // 800ms delay to let the frame settle
+        } else {
+          stream.getTracks().forEach(track => track.stop());
+          throw new Error('Failed to create canvas rendering context.');
+        }
+      };
+    } catch (err: any) {
+      console.error(err);
+      setIsLoading(false);
+      setLoadingStep('');
+      if (err.name !== 'NotAllowedError') {
+        setError(err.message || 'Failed to capture browser tab. Make sure permissions are granted.');
+      }
+    }
+  };
+
   const captureScreenshot = async () => {
+    if (captureMode === 'local') {
+      await captureLocalScreen();
+      return;
+    }
+
     if (!url) {
       setError('Please enter a valid website URL.');
       return;
@@ -80,7 +143,7 @@ export default function WebsiteScreenshotPage() {
     setLoadingStep('Capturing visual viewport image...');
 
     try {
-      const apiEndpoint = `/api/screenshot?url=${encodeURIComponent(url)}&width=${width}&height=${height}&isMobile=${device === 'mobile'}&colorScheme=${colorScheme}&scale=${isRetina ? '2' : '1'}`;
+      const apiEndpoint = `/api/screenshot?url=${encodeURIComponent(url)}&width=${width}&height=${height}&isMobile=${device === 'mobile'}&colorScheme=${colorScheme}&scale=${isRetina ? '2' : '1'}&fullPage=${fullPage}`;
       
       const response = await fetch(apiEndpoint);
       if (!response.ok) {
@@ -132,6 +195,8 @@ export default function WebsiteScreenshotPage() {
     setScreenshotUrl(null);
     setError(null);
     setIsRetina(false);
+    setFullPage(false);
+    setCaptureMode('server');
     setCustomFileName('');
     if (device === 'desktop') {
       setWidth(DESKTOP_PRESETS[0].width);
@@ -174,99 +239,226 @@ export default function WebsiteScreenshotPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
-              {/* URL Input */}
+              {/* Capture Mode Toggle */}
               <div className="space-y-2">
-                <Label htmlFor="url" className="text-xs font-semibold">Website URL</Label>
-                <div className="relative">
-                  <Input
-                    id="url"
-                    type="text"
-                    placeholder="e.g. google.com or github.com"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    className="pl-9 pr-4 rounded-xl text-xs bg-slate-500/5 focus:bg-background border-primary/5"
-                    disabled={isLoading}
-                  />
-                  <Globe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/60" />
-                </div>
-              </div>
-
-              {/* Device Selector Toggle */}
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold">Device Display Profile</Label>
+                <Label className="text-xs font-semibold">Capture Source Mode</Label>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     type="button"
-                    variant={device === 'desktop' ? 'default' : 'outline'}
-                    onClick={() => handleDeviceChange('desktop')}
-                    className="rounded-xl font-semibold text-xs py-5 gap-2"
+                    variant={captureMode === 'server' ? 'secondary' : 'outline'}
+                    onClick={() => setCaptureMode('server')}
+                    className={`rounded-xl font-semibold text-xs py-4 gap-1.5 ${
+                      captureMode === 'server' ? 'border-primary/40 bg-primary/5 text-primary' : ''
+                    }`}
                     disabled={isLoading}
                   >
-                    <Monitor className="h-4 w-4" />
-                    Desktop (16:9)
+                    <Globe className="h-3.5 w-3.5" />
+                    Public Website URL
                   </Button>
                   <Button
                     type="button"
-                    variant={device === 'mobile' ? 'default' : 'outline'}
-                    onClick={() => handleDeviceChange('mobile')}
-                    className="rounded-xl font-semibold text-xs py-5 gap-2"
+                    variant={captureMode === 'local' ? 'secondary' : 'outline'}
+                    onClick={() => setCaptureMode('local')}
+                    className={`rounded-xl font-semibold text-xs py-4 gap-1.5 ${
+                      captureMode === 'local' ? 'border-primary/40 bg-primary/5 text-primary' : ''
+                    }`}
                     disabled={isLoading}
                   >
-                    <Smartphone className="h-4 w-4" />
-                    Mobile (Portrait)
+                    <Camera className="h-3.5 w-3.5" />
+                    Private Tab / Login
                   </Button>
                 </div>
               </div>
 
-              {/* Resolution Presets */}
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold">Size Presets</Label>
-                <div className="flex flex-wrap gap-1.5">
-                  {(device === 'desktop' ? DESKTOP_PRESETS : MOBILE_PRESETS).map((preset) => {
-                    const isActive = width === preset.width && height === preset.height;
-                    return (
+              {captureMode === 'server' ? (
+                <>
+                  {/* URL Input */}
+                  <div className="space-y-2">
+                    <Label htmlFor="url" className="text-xs font-semibold">Website URL</Label>
+                    <div className="relative">
+                      <Input
+                        id="url"
+                        type="text"
+                        placeholder="e.g. google.com or github.com"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        className="pl-9 pr-4 rounded-xl text-xs bg-slate-500/5 focus:bg-background border-primary/5"
+                        disabled={isLoading}
+                      />
+                      <Globe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/60" />
+                    </div>
+                  </div>
+
+                  {/* Device Selector Toggle */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Device Display Profile</Label>
+                    <div className="grid grid-cols-2 gap-2">
                       <Button
-                        key={preset.name}
                         type="button"
-                        variant={isActive ? 'secondary' : 'outline'}
-                        onClick={() => selectPreset(preset)}
-                        className={`rounded-xl text-[10px] py-1.5 h-auto font-medium ${
-                          isActive ? 'border-primary/40 bg-primary/5 text-primary' : ''
-                        }`}
+                        variant={device === 'desktop' ? 'default' : 'outline'}
+                        onClick={() => handleDeviceChange('desktop')}
+                        className="rounded-xl font-semibold text-xs py-5 gap-2"
                         disabled={isLoading}
                       >
-                        {preset.name} ({preset.width > 1000 ? '16:9' : 'Portrait'})
+                        <Monitor className="h-4 w-4" />
+                        Desktop (16:9)
                       </Button>
-                    );
-                  })}
-                </div>
-              </div>
+                      <Button
+                        type="button"
+                        variant={device === 'mobile' ? 'default' : 'outline'}
+                        onClick={() => handleDeviceChange('mobile')}
+                        className="rounded-xl font-semibold text-xs py-5 gap-2"
+                        disabled={isLoading}
+                      >
+                        <Smartphone className="h-4 w-4" />
+                        Mobile (Portrait)
+                      </Button>
+                    </div>
+                  </div>
 
-              {/* Custom Viewport Size */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="width" className="text-[10px] font-semibold">Width (px)</Label>
-                  <Input
-                    id="width"
-                    type="number"
-                    value={width}
-                    onChange={(e) => setWidth(Number(e.target.value))}
-                    className="rounded-xl text-xs bg-slate-500/5 border-primary/5"
-                    disabled={isLoading}
-                  />
+                  {/* Size Presets */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Size Presets</Label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(device === 'desktop' ? DESKTOP_PRESETS : MOBILE_PRESETS).map((preset) => {
+                        const isActive = width === preset.width && height === preset.height;
+                        return (
+                          <Button
+                            key={preset.name}
+                            type="button"
+                            variant={isActive ? 'secondary' : 'outline'}
+                            onClick={() => selectPreset(preset)}
+                            className={`rounded-xl text-[10px] py-1.5 h-auto font-medium ${
+                              isActive ? 'border-primary/40 bg-primary/5 text-primary' : ''
+                            }`}
+                            disabled={isLoading}
+                          >
+                            {preset.name} ({preset.width > 1000 ? '16:9' : 'Portrait'})
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Custom Viewport Size */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="width" className="text-[10px] font-semibold">Width (px)</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={width}
+                        onChange={(e) => setWidth(Number(e.target.value))}
+                        className="rounded-xl text-xs bg-slate-500/5 border-primary/5"
+                        disabled={isLoading}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="height" className="text-[10px] font-semibold">Height (px)</Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        value={height}
+                        onChange={(e) => setHeight(Number(e.target.value))}
+                        className="rounded-xl text-xs bg-slate-500/5 border-primary/5"
+                        disabled={isLoading}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Color Scheme Option */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Target Website Theme</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        type="button"
+                        variant={colorScheme === 'light' ? 'secondary' : 'outline'}
+                        onClick={() => setColorScheme('light')}
+                        className="rounded-xl font-semibold text-xs py-4 gap-1.5"
+                        disabled={isLoading}
+                      >
+                        <Sun className="h-3.5 w-3.5 text-amber-500" />
+                        Light Theme
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={colorScheme === 'dark' ? 'secondary' : 'outline'}
+                        onClick={() => setColorScheme('dark')}
+                        className="rounded-xl font-semibold text-xs py-4 gap-1.5"
+                        disabled={isLoading}
+                      >
+                        <Moon className="h-3.5 w-3.5 text-indigo-500" />
+                        Dark Theme
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Resolution Scale Option */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Resolution Scale (DPI)</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        type="button"
+                        variant={!isRetina ? 'secondary' : 'outline'}
+                        onClick={() => setIsRetina(false)}
+                        className="rounded-xl font-semibold text-xs py-4 gap-1"
+                        disabled={isLoading}
+                      >
+                        Standard (1x Size)
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={isRetina ? 'secondary' : 'outline'}
+                        onClick={() => setIsRetina(true)}
+                        className="rounded-xl font-semibold text-xs py-4 gap-1"
+                        disabled={isLoading}
+                      >
+                        <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
+                        Retina (2x Size)
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Page Height Mode */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold">Page Height Mode</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        type="button"
+                        variant={!fullPage ? 'secondary' : 'outline'}
+                        onClick={() => setFullPage(false)}
+                        className="rounded-xl font-semibold text-xs py-4"
+                        disabled={isLoading}
+                      >
+                        Visible Screen Only
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={fullPage ? 'secondary' : 'outline'}
+                        onClick={() => setFullPage(true)}
+                        className="rounded-xl font-semibold text-xs py-4"
+                        disabled={isLoading}
+                      >
+                        Full Page (Scroll)
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* Local Screen share Mode Helper Instructions */
+                <div className="p-4.5 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 text-xs text-foreground/85 space-y-3 leading-relaxed">
+                  <p className="font-bold flex items-center gap-1.5 text-indigo-500">
+                    <Info className="h-4 w-4" />
+                    How to Capture Private / Logged-in Pages:
+                  </p>
+                  <ol className="list-decimal pl-4.5 space-y-2 text-muted-foreground">
+                    <li>Open your target page (like your <strong>Admin Dashboard</strong> or local server site) in another tab or window.</li>
+                    <li>Click the <strong>Start Tab Capture</strong> button below.</li>
+                    <li>In the browser popup dialog, choose the <strong>Chrome Tab</strong> or window that contains your dashboard.</li>
+                    <li>We will capture the exact logged-in state of your layout securely and privately!</li>
+                  </ol>
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="height" className="text-[10px] font-semibold">Height (px)</Label>
-                  <Input
-                    id="height"
-                    type="number"
-                    value={height}
-                    onChange={(e) => setHeight(Number(e.target.value))}
-                    className="rounded-xl text-xs bg-slate-500/5 border-primary/5"
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
+              )}
 
               {/* Custom File Name */}
               <div className="space-y-2">
@@ -282,59 +474,6 @@ export default function WebsiteScreenshotPage() {
                 />
               </div>
 
-              {/* Color Scheme Option */}
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold">Target Website Theme</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    type="button"
-                    variant={colorScheme === 'light' ? 'secondary' : 'outline'}
-                    onClick={() => setColorScheme('light')}
-                    className="rounded-xl font-semibold text-xs py-4 gap-1.5"
-                    disabled={isLoading}
-                  >
-                    <Sun className="h-3.5 w-3.5 text-amber-500" />
-                    Light Theme
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={colorScheme === 'dark' ? 'secondary' : 'outline'}
-                    onClick={() => setColorScheme('dark')}
-                    className="rounded-xl font-semibold text-xs py-4 gap-1.5"
-                    disabled={isLoading}
-                  >
-                    <Moon className="h-3.5 w-3.5 text-indigo-500" />
-                    Dark Theme
-                  </Button>
-                </div>
-              </div>
-
-              {/* Resolution Scale Option */}
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold">Resolution Scale (DPI)</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    type="button"
-                    variant={!isRetina ? 'secondary' : 'outline'}
-                    onClick={() => setIsRetina(false)}
-                    className="rounded-xl font-semibold text-xs py-4 gap-1"
-                    disabled={isLoading}
-                  >
-                    Standard (1x Size)
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={isRetina ? 'secondary' : 'outline'}
-                    onClick={() => setIsRetina(true)}
-                    className="rounded-xl font-semibold text-xs py-4 gap-1"
-                    disabled={isLoading}
-                  >
-                    <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
-                    Retina (2x Size)
-                  </Button>
-                </div>
-              </div>
-
               {/* Controls */}
               <div className="grid grid-cols-12 gap-2 pt-2">
                 <Button
@@ -346,6 +485,11 @@ export default function WebsiteScreenshotPage() {
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Capturing...
+                    </>
+                  ) : captureMode === 'local' ? (
+                    <>
+                      <Camera className="mr-2 h-4 w-4" />
+                      Start Tab Capture
                     </>
                   ) : (
                     'Capture Screenshot'
