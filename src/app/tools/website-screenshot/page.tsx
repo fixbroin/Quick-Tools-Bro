@@ -559,11 +559,11 @@ export default function WebsiteScreenshotPage() {
                       {url}
                     </div>
                   </div>
-                  <div className="relative overflow-hidden rounded-lg bg-card border border-slate-800/80 max-h-[320px] md:max-h-[400px]">
+                  <div className="relative overflow-y-auto rounded-lg bg-card border border-slate-800/80 max-h-[320px] md:max-h-[400px]">
                     <img 
                       src={screenshotUrl} 
                       alt="Website Screenshot Landscape" 
-                      className="w-full h-auto object-contain block" 
+                      className="w-full h-auto block" 
                     />
                   </div>
                 </div>
@@ -574,11 +574,11 @@ export default function WebsiteScreenshotPage() {
                   <div className="absolute top-4 left-1/2 -translate-x-1/2 h-4 w-12 bg-slate-950 rounded-full z-20 flex items-center justify-center">
                     <div className="h-1.5 w-1.5 rounded-full bg-indigo-950/80" />
                   </div>
-                  <div className="relative overflow-hidden rounded-[26px] bg-card border border-slate-900/80 max-h-[420px] md:max-h-[480px]">
+                  <div className="relative overflow-y-auto rounded-[26px] bg-card border border-slate-900/80 max-h-[420px] md:max-h-[480px]">
                     <img 
                       src={screenshotUrl} 
                       alt="Website Screenshot Portrait" 
-                      className="w-full h-auto object-contain block" 
+                      className="w-full h-auto block" 
                     />
                   </div>
                 </div>
