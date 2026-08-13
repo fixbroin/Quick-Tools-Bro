@@ -30,6 +30,145 @@ const fallbackRates: { [key: string]: { name: string, rate: number } } = {
   MYR: { name: 'Malaysian Ringgit', rate: 4.72 },
 };
 
+const currencyNames: { [key: string]: { units: string, singular: string, fraction: string, fracSingular: string } } = {
+  USD: { units: 'dollars', singular: 'dollar', fraction: 'cents', fracSingular: 'cent' },
+  EUR: { units: 'euros', singular: 'euro', fraction: 'cents', fracSingular: 'cent' },
+  JPY: { units: 'yen', singular: 'yen', fraction: 'sen', fracSingular: 'sen' },
+  GBP: { units: 'pounds', singular: 'pound', fraction: 'pence', fracSingular: 'penny' },
+  AUD: { units: 'dollars', singular: 'dollar', fraction: 'cents', fracSingular: 'cent' },
+  CAD: { units: 'dollars', singular: 'dollar', fraction: 'cents', fracSingular: 'cent' },
+  CHF: { units: 'francs', singular: 'franc', fraction: 'rappen', fracSingular: 'rappen' },
+  CNY: { units: 'yuan', singular: 'yuan', fraction: 'fen', fracSingular: 'fen' },
+  INR: { units: 'rupees', singular: 'rupee', fraction: 'paise', fracSingular: 'paisa' },
+  BRL: { units: 'reais', singular: 'real', fraction: 'centavos', fracSingular: 'centavo' },
+  RUB: { units: 'rubles', singular: 'ruble', fraction: 'kopecks', fracSingular: 'kopeck' },
+  ZAR: { units: 'rand', singular: 'rand', fraction: 'cents', fracSingular: 'cent' },
+  AED: { units: 'dirhams', singular: 'dirham', fraction: 'fils', fracSingular: 'fils' },
+  SGD: { units: 'dollars', singular: 'dollar', fraction: 'cents', fracSingular: 'cent' },
+  SAR: { units: 'riyals', singular: 'riyal', fraction: 'halalas', fracSingular: 'halala' },
+  NZD: { units: 'dollars', singular: 'dollar', fraction: 'cents', fracSingular: 'cent' },
+  MYR: { units: 'ringgits', singular: 'ringgit', fraction: 'sen', fracSingular: 'sen' },
+};
+
+function numberToWords(num: number): string {
+  if (num === 0) return 'zero';
+
+  const a = [
+    '', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+    'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'
+  ];
+  const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  const g = ['', 'thousand', 'million', 'billion', 'trillion'];
+
+  const convertGroup = (n: number): string => {
+    let s = '';
+    if (n >= 100) {
+      s += a[Math.floor(n / 100)] + ' hundred ';
+      n %= 100;
+    }
+    if (n >= 20) {
+      s += b[Math.floor(n / 10)] + (n % 10 !== 0 ? '-' + a[n % 10] : '');
+    } else if (n > 0) {
+      s += a[n];
+    }
+    return s.trim();
+  };
+
+  let wordList: string[] = [];
+  let gIndex = 0;
+
+  while (num > 0) {
+    const rem = num % 1000;
+    if (rem > 0) {
+      const gWord = g[gIndex];
+      const converted = convertGroup(rem);
+      wordList.unshift(converted + (gWord ? ' ' + gWord : ''));
+    }
+    num = Math.floor(num / 1000);
+    gIndex++;
+  }
+
+  return wordList.join(' ').trim();
+}
+
+function numberToWordsIndian(num: number): string {
+  if (num === 0) return 'zero';
+
+  const a = [
+    '', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+    'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'
+  ];
+  const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+  let words: string[] = [];
+
+  if (num >= 10000000) {
+    const crore = Math.floor(num / 10000000);
+    words.push(numberToWordsIndian(crore) + ' crore');
+    num %= 10000000;
+  }
+  if (num >= 100000) {
+    const lakh = Math.floor(num / 100000);
+    words.push(numberToWordsIndian(lakh) + ' lakh');
+    num %= 100000;
+  }
+  if (num >= 1000) {
+    const thousand = Math.floor(num / 1000);
+    words.push(numberToWordsIndian(thousand) + ' thousand');
+    num %= 1000;
+  }
+  if (num >= 100) {
+    const hundred = Math.floor(num / 100);
+    words.push(a[hundred] + ' hundred');
+    num %= 100;
+  }
+  if (num > 0) {
+    if (num < 20) {
+      words.push(a[num]);
+    } else {
+      const ten = Math.floor(num / 10);
+      const unit = num % 10;
+      words.push(b[ten] + (unit > 0 ? '-' + a[unit] : ''));
+    }
+  }
+
+  return words.join(' ').trim();
+}
+
+function convertAmountToWords(amount: number, currencyCode: string): string {
+  const roundedAmount = Math.round(amount * 100) / 100; // Round to 2 decimal places
+  const integerPart = Math.floor(roundedAmount);
+  const decimalPart = Math.round((roundedAmount - integerPart) * 100);
+
+  const names = currencyNames[currencyCode] || { units: currencyCode.toLowerCase(), singular: currencyCode.toLowerCase(), fraction: 'cents', fracSingular: 'cent' };
+
+  let result = '';
+
+  if (currencyCode === 'INR') {
+    if (integerPart === 0) {
+      result += 'zero rupees';
+    } else {
+      result += numberToWordsIndian(integerPart) + ' rupees';
+    }
+
+    if (decimalPart > 0) {
+      result += ' and ' + numberToWordsIndian(decimalPart) + ' paise';
+    }
+  } else {
+    if (integerPart === 0) {
+      result += 'zero ' + names.units;
+    } else {
+      result += numberToWords(integerPart) + ' ' + (integerPart === 1 ? names.singular : names.units);
+    }
+
+    if (decimalPart > 0) {
+      result += ' and ' + numberToWords(decimalPart) + ' ' + (decimalPart === 1 ? names.fracSingular : names.fraction);
+    }
+  }
+
+  return result.trim().replace(/\s+/g, ' ');
+}
+
 export default function CurrencyConverterPage() {
   const [rates, setRates] = useState(fallbackRates);
   const [isLive, setIsLive] = useState(false);
@@ -45,6 +184,29 @@ export default function CurrencyConverterPage() {
         description: rates[code].name
     })).sort((a,b) => a.code.localeCompare(b.code));
   }, [rates]);
+
+  const rateFromTo = useMemo(() => {
+    const fromRate = rates[fromCurrency]?.rate || 1;
+    const toRate = rates[toCurrency]?.rate || 1;
+    return toRate / fromRate;
+  }, [rates, fromCurrency, toCurrency]);
+
+  const rateToFrom = useMemo(() => {
+    const fromRate = rates[fromCurrency]?.rate || 1;
+    const toRate = rates[toCurrency]?.rate || 1;
+    return fromRate / toRate;
+  }, [rates, fromCurrency, toCurrency]);
+
+  const resultInWords = useMemo(() => {
+    if (result === null) return '';
+    try {
+      const words = convertAmountToWords(result, toCurrency);
+      return words ? words.charAt(0).toUpperCase() + words.slice(1) : '';
+    } catch (e) {
+      console.error('Words conversion error:', e);
+      return '';
+    }
+  }, [result, toCurrency]);
 
   const handleConversion = useCallback(() => {
     const parsedAmount = parseFloat(amount);
@@ -127,7 +289,11 @@ export default function CurrencyConverterPage() {
                     <Select value={fromCurrency} onValueChange={setFromCurrency}>
                         <SelectTrigger id="from-currency"><SelectValue/></SelectTrigger>
                         <SelectContent>
-                            {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} - {c.description}</SelectItem>)}
+                            {currencies.map(c => (
+                              <SelectItem key={c.code} value={c.code}>
+                                {c.code} - {c.description} ({rates[c.code]?.rate.toFixed(4)})
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
@@ -139,7 +305,11 @@ export default function CurrencyConverterPage() {
                      <Select value={toCurrency} onValueChange={setToCurrency}>
                         <SelectTrigger id="to-currency"><SelectValue/></SelectTrigger>
                         <SelectContent>
-                            {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} - {c.description}</SelectItem>)}
+                            {currencies.map(c => (
+                              <SelectItem key={c.code} value={c.code}>
+                                {c.code} - {c.description} ({rates[c.code]?.rate.toFixed(4)})
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
@@ -158,11 +328,25 @@ export default function CurrencyConverterPage() {
             <Alert id="download-section">
                 <AlertTitle className="text-xl font-bold font-headline">Converted Amount</AlertTitle>
                 <AlertDescription className="text-3xl text-primary font-bold mt-2">
-                    {result.toLocaleString(undefined, { maximumFractionDigits: 4, style: 'currency', currency: toCurrency, currencyDisplay: 'symbol' })}
+                    {result.toLocaleString(toCurrency === 'INR' ? 'en-IN' : undefined, { maximumFractionDigits: 4, style: 'currency', currency: toCurrency, currencyDisplay: 'symbol' })}
                 </AlertDescription>
+                {resultInWords && (
+                  <AlertDescription className="text-[11px] font-medium text-foreground/75 mt-1 leading-relaxed">
+                    In Words: <span className="font-bold">{resultInWords}</span>
+                  </AlertDescription>
+                )}
                  <AlertDescription className="text-sm text-muted-foreground mt-2">
-                    {parseFloat(amount).toLocaleString()} {fromCurrency} = {result.toLocaleString(undefined, { maximumFractionDigits: 4 })} {toCurrency}
+                    {parseFloat(amount).toLocaleString(fromCurrency === 'INR' ? 'en-IN' : undefined)} {fromCurrency} = {result.toLocaleString(toCurrency === 'INR' ? 'en-IN' : undefined, { maximumFractionDigits: 4 })} {toCurrency}
                  </AlertDescription>
+                 
+                 <div className="mt-4 pt-3 border-t border-dashed border-border/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs text-muted-foreground">
+                   <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono">
+                     <span>1 {fromCurrency} = {rateFromTo.toFixed(4)} {toCurrency}</span>
+                     <span className="border-l border-muted-foreground/30 pl-4 hidden sm:inline" />
+                     <span>1 {toCurrency} = {rateToFrom.toFixed(4)} {fromCurrency}</span>
+                   </div>
+                 </div>
+
                  <AlertDescription className="text-xs text-muted-foreground mt-4">
                     {isLive ? '*Rates are fetched live from global currency feeds and updated daily.' : '*Rates are calculated using offline fallback averages.'}
                 </AlertDescription>
