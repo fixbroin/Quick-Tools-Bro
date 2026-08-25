@@ -9,6 +9,14 @@ import ScrollToTop from '@/components/ScrollToTop';
 
 const toolCategories = [
   {
+    name: 'Gold Price & Daily Finance',
+    filterKey: 'finance',
+    tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
+    color: 'bg-amber-500/10 text-amber-500'
+  },
+  {
     name: 'PDF Tools',
     filterKey: 'document',
     tools: tools.filter(t => ['JPG to PDF Converter', 'PDF to JPG Converter', 'Merge PDF', 'Split PDF', 'Compress PDF', 'PDF to Word Converter', 'Word to PDF Converter', 'Excel to PDF Converter', 'Presentation to PDF', 'OCR Text Extractor', 'eSign PDF', 'PDF Password Unlocker'].includes(t.name)),
@@ -48,14 +56,6 @@ const toolCategories = [
     filterKey: 'finance',
     tools: tools.filter(t => ['Loan EMI Calculator', 'SIP Calculator', 'Salary Calculator', 'Income Tax Calculator', 'Sukanya Samriddhi Yojana (SSY) Calculator', 'PPF Calculator', 'EPF Calculator', 'Gratuity Calculator'].includes(t.name)),
     color: 'bg-yellow-500/10 text-yellow-500'
-  },
-  {
-    name: 'Gold Price & Daily Finance',
-    filterKey: 'finance',
-    tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
-      .map(name => tools.find(t => t.name === name))
-      .filter((t): t is typeof tools[number] => !!t),
-    color: 'bg-amber-500/10 text-amber-500'
   },
   {
     name: 'Video & Audio Tools',

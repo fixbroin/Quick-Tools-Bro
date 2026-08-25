@@ -640,6 +640,136 @@ export const SEO_MAP: Record<string, SeoEntry> = {
         answer: 'Because our screenshot renderer runs in a sandboxed, public headless browser, it cannot access pages that require authentication, user logins, or local network access.'
       }
     ]
+  },
+  '/tools/image-resizer': {
+    title: 'Free Online Image Resizer - Resize Photo in Pixels & KB',
+    description: 'Resize images online to custom dimensions (width & height) in pixels, percentage, or target file size (KB). Adjust and crop with direct touch/mouse drag panning and zoom. 100% private.',
+    guideTitle: 'How to Resize Images Online for Free',
+    steps: [
+      'Upload your image file (JPG, PNG, WebP) into the resizer.',
+      'Enter your target width and height in pixels, or scale by percentage.',
+      'Use direct drag to pan and mouse wheel or pinch gesture to zoom the image inside the crop window.',
+      'Select background color options for margins, click Resize, and download.'
+    ],
+    faqs: [
+      {
+        question: 'How do I resize an image to exactly 50KB or 20KB for SBI or job portals?',
+        answer: 'You can adjust the image parameters and compress it using our linked Image Compressor tool to target specific file sizes like 20KB or 50KB.'
+      },
+      {
+        question: 'How can I crop and resize without stretching the image?',
+        answer: 'Choose the "Crop & Position (Manual)" fit mode. This preserves the original aspect ratio and lets you manually zoom and align the image.'
+      },
+      {
+        question: 'Does the Image Resizer store my uploaded photos?',
+        answer: 'No. Like all tools on UseBro, your photos are processed entirely locally inside your browser and are never uploaded to any server.'
+      }
+    ]
+  },
+  '/tools/image-cropper': {
+    title: 'Free Online Image Cropper - Crop Photos to Custom Aspect Ratios',
+    description: 'Crop images online for free. Adjust selections using interactive corner handles. Support Free crop, 1:1, 16:9, 4:3, 9:16 aspect ratios and custom export sizes.',
+    guideTitle: 'How to Crop Images Online with Interactive Handles',
+    steps: [
+      'Select and upload your image file.',
+      'Pick an aspect ratio preset (like 1:1 Square, 16:9 widescreen) or choose Free Crop.',
+      'Drag the corner handles to resize the crop box, or drag inside the box to move it.',
+      'Click Crop Image to download the high-quality cropped area instantly.'
+    ],
+    faqs: [
+      {
+        question: 'Is there a limit on image dimensions or file size?',
+        answer: 'No. Our tool processes images locally on your CPU/GPU using HTML5 Canvas, so it can handle large camera photos directly in your browser.'
+      },
+      {
+        question: 'How does Custom Size crop work?',
+        answer: 'By selecting Custom Size, you can specify target output dimensions (e.g. 800x600). The crop box aspect ratio locks to this ratio, and the output is resized to this exact size.'
+      }
+    ]
+  },
+  '/tools/currency-converter': {
+    title: 'Live Currency Converter - Convert USD, EUR, GBP, INR Exchange Rates',
+    description: 'Convert global currencies with real-time live exchange rates. Compute conversions into Indian Rupees (INR) with Lakhs/Crores grouping and words representation.',
+    guideTitle: 'How to Convert Currencies Online',
+    steps: [
+      'Enter the currency amount you want to convert.',
+      'Select the "From" currency and the "To" currency from the dropdown selectors.',
+      'Review the converted value instantly computed based on live market spot feeds.',
+      'For Indian Rupee (INR) conversions, read the Lakhs/Crores formatting and the amount written in words.'
+    ],
+    faqs: [
+      {
+        question: 'How often are the exchange rates updated?',
+        answer: 'Our exchange rates are updated in real-time based on live global financial market feeds.'
+      },
+      {
+        question: 'What is the Lakhs and Crores formatting feature?',
+        answer: 'When converting to Indian Rupees (INR), values are formatted according to the Indian number system (e.g. ₹1,00,000 instead of ₹100,000) with words spelling out lakhs and crores.'
+      }
+    ]
+  },
+  '/tools/gold-loan-calculator': {
+    title: 'Gold Loan Calculator - Check Eligible Loan Amount & Interest Rates',
+    description: 'Calculate your eligible gold loan amount online. Enter gold weight (18K, 22K, 24K) and check monthly interest, repayment schedules, and loan-to-value (LTV) options.',
+    guideTitle: 'How to Estimate Your Gold Loan Amount',
+    steps: [
+      'Enter the total weight of your gold jewelry in grams.',
+      'Select the gold purity (18 Carat, 22 Carat, or 24 Carat).',
+      'Adjust the interest rate percentage and the loan repayment tenure in months.',
+      'Review your estimated maximum loan eligibility and monthly interest payments instantly.'
+    ],
+    faqs: [
+      {
+        question: 'What is the Loan-to-Value (LTV) ratio for gold loans?',
+        answer: 'In India, RBI guidelines allow banks and financial companies to lend up to 75% of the appraised value of the gold.'
+      },
+      {
+        question: 'Which gold purity yields the highest loan amount?',
+        answer: '24 Carat gold has the highest purity and value, thus yielding the highest loan amount per gram, followed by 22 Carat and 18 Carat.'
+      }
+    ]
+  },
+  '/tools/age-calculator': {
+    title: 'Accurate Online Age Calculator - Find Your Exact Age Today',
+    description: 'Calculate your exact age in years, months, weeks, days, hours, and minutes based on your date of birth. Find out how many days are left until your next birthday.',
+    guideTitle: 'How to Calculate Your Age Instantly',
+    steps: [
+      'Select your Date of Birth (day, month, year) using the calendar selector.',
+      'Select the target date you want to calculate your age at (defaults to today).',
+      'Click Calculate to see your age in detailed units (years, months, days, etc.).',
+      'Check the countdown card to see how many days are left until your next birthday.'
+    ],
+    faqs: [
+      {
+        question: 'How is the age calculation calculated?',
+        answer: 'The tool accurately tracks leap years, varying month lengths (28, 30, or 31 days), and timezone shifts to present your exact age.'
+      },
+      {
+        question: 'Is my date of birth private?',
+        answer: 'Yes. The calculation is done completely on your local device, and your date of birth is never sent to our servers.'
+      }
+    ]
+  },
+  '/tools/gpa-calculator': {
+    title: 'Free Online GPA Calculator - College & University CGPA Checker',
+    description: 'Calculate your semester GPA or cumulative CGPA online. Convert course grades and credit hours with support for weighted/unweighted scales and percentage mappings.',
+    guideTitle: 'How to Compute Your GPA Online',
+    steps: [
+      'Enter your courses, credit hours, and letter grades for the semester.',
+      'Click Add Course to calculate multiple grades.',
+      'Review your semester GPA calculated instantly on a standard 4.0 scale.',
+      'Switch to cumulative CGPA mode to compile grades across all semesters.'
+    ],
+    faqs: [
+      {
+        question: 'What is the difference between GPA and CGPA?',
+        answer: 'GPA (Grade Point Average) measures academic performance for a single semester, while CGPA (Cumulative Grade Point Average) is the overall average across all semesters.'
+      },
+      {
+        question: 'Does the calculator support weighted credits?',
+        answer: 'Yes. The tool multiplies course grade points by credit hours to compute a weighted grade average.'
+      }
+    ]
   }
 };
 

@@ -3,14 +3,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { QrCode, Minimize, FileImage, HeartPulse, Home, Menu, FileText, Info, Shield, Mail, User } from 'lucide-react';
+import { CloudSun, Minimize, FileImage, HeartPulse, Home, Menu, FileText, Info, Shield, Mail, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useState } from 'react';
 
 const navItems = [
   { href: '/', label: 'Home', Icon: Home },
-  { href: '/tools/qr-generator', label: 'QR Gen', Icon: QrCode },
+  { href: '/tools/gold-price-and-weather', label: 'Gold Price', Icon: CloudSun },
   { href: '/tools/passport-photo-maker', label: 'Passport', Icon: User },
   { href: '/tools/pdf-to-jpg', label: 'PDF to JPG', Icon: FileImage },
 ];

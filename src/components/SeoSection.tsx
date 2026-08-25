@@ -59,12 +59,6 @@ export function SeoSection() {
       {
         '@type': 'ListItem',
         'position': 2,
-        'name': 'Tools',
-        'item': 'https://usebro.in'
-      },
-      {
-        '@type': 'ListItem',
-        'position': 3,
         'name': currentTool?.name || seo.title || 'Tool',
         'item': canonicalUrl
       }

@@ -33,12 +33,20 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   ${pages
     .map((page) => {
       const path = page === '/' ? '' : page;
+      let priority = 0.8;
+      if (page === '/') {
+        priority = 1.0;
+      } else if (page.startsWith('/tools/')) {
+        priority = 0.9;
+      } else {
+        priority = 0.5;
+      }
       return `
     <url>
         <loc>${`${siteUrl}${path}`}</loc>
         <lastmod>${new Date().toISOString()}</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>${priority.toFixed(1)}</priority>
     </url>`;
     })
     .join('')}

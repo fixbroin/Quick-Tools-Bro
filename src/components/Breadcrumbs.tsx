@@ -27,12 +27,6 @@ export function Breadcrumbs() {
 
       <ChevronRight className="h-3 w-3 text-muted-foreground/40 shrink-0" />
 
-      <Link href="/" className="hover:text-primary transition-colors">
-        Tools
-      </Link>
-
-      <ChevronRight className="h-3 w-3 text-muted-foreground/40 shrink-0" />
-
       <span className="font-bold text-foreground truncate max-w-[150px] md:max-w-none capitalize">
         {toolName}
       </span>
