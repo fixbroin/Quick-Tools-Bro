@@ -17,6 +17,30 @@ export const metadata: Metadata = getMetadata({
 // We map category lists matching the categories on our homepage for crawl uniformity
 const sitemapCategories = [
   {
+    name: 'Most Popular Tools',
+    tools: [
+      'Gold Price and Weather',
+      'PDF to JPG Converter',
+      'JPG to PDF Converter',
+      'Image Compressor',
+      'BMI Calculator',
+      'Daily Calorie Intake Calculator',
+      'Age Calculator',
+      'Passport Photo Maker',
+      'Text Diff Checker',
+      'QR Code Generator',
+      'Quotation Maker',
+      'Invoice Maker',
+      'Loan EMI Calculator',
+      'Video Compressor',
+      'WhatsApp Quotes',
+      'Short Link Maker',
+      'Username Generator',
+      'YouTube Thumbnail Downloader'
+      
+    ]
+  },
+  {
     name: 'Gold Price & Daily Finance',
     tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
   },

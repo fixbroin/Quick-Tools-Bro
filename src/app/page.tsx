@@ -9,6 +9,34 @@ import ScrollToTop from '@/components/ScrollToTop';
 
 const toolCategories = [
   {
+    name: 'Most Popular Tools',
+    filterKey: 'popular',
+    tools: [
+      'Gold Price and Weather',
+      'PDF to JPG Converter',
+      'JPG to PDF Converter',
+      'Image Compressor',
+      'BMI Calculator',
+      'Daily Calorie Intake Calculator',
+      'Age Calculator',
+      'Passport Photo Maker',
+      'Text Diff Checker',
+      'QR Code Generator',
+      'Quotation Maker',
+      'Invoice Maker',
+      'Loan EMI Calculator',
+      'Video Compressor',
+      'WhatsApp Quotes',
+      'Short Link Maker',
+      'Username Generator',
+      'YouTube Thumbnail Downloader'
+      
+    ]
+      .map(name => tools.find(t => t.name === name))
+      .filter((t): t is typeof tools[number] => !!t),
+    color: 'bg-violet-500/10 text-violet-500'
+  },
+  {
     name: 'Gold Price & Daily Finance',
     filterKey: 'finance',
     tools: ['Gold Price and Weather', 'Currency Converter', 'Gold Loan Calculator', 'GST Calculator']
