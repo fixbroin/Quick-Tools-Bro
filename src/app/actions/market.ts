@@ -12,12 +12,16 @@ export async function fetchMarketRates() {
 
   try {
     // 1. Fetch USD to INR exchange rate
+    let allRates: Record<string, number> = { INR: 83.5, USD: 1 };
     try {
       const erRes = await fetch('https://open.er-api.com/v6/latest/USD', { next: { revalidate: 300 } });
       if (erRes.ok) {
         const erData = await erRes.json();
-        if (erData?.rates?.INR) {
-          exchangeRate = erData.rates.INR;
+        if (erData?.rates) {
+          allRates = erData.rates;
+          if (erData.rates.INR) {
+            exchangeRate = erData.rates.INR;
+          }
         }
       }
     } catch (e) {
@@ -75,7 +79,10 @@ export async function fetchMarketRates() {
       gold22kBase,
       gold22k,
       silverBase,
-      silver
+      silver,
+      allRates,
+      xauPrice: xauPrice || 2300,
+      xagPrice: xagPrice || 29
     };
   } catch (err) {
     console.error('Error in fetchMarketRates main block:', err);
@@ -86,7 +93,10 @@ export async function fetchMarketRates() {
       gold22kBase,
       gold22k,
       silverBase,
-      silver
+      silver,
+      allRates: { INR: 83.5, USD: 1 },
+      xauPrice: 2300,
+      xagPrice: 29
     };
   }
 }
