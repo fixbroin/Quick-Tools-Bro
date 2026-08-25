@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { CloudSun, Minimize, FileImage, HeartPulse, Home, Menu, FileText, Info, Shield, Mail, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { href: '/', label: 'Home', Icon: Home },
@@ -16,16 +16,66 @@ const navItems = [
 ];
 
 const legalLinks = [
-    { href: '/contact', label: 'Contact Us', Icon: Mail },
-    { href: '/privacy', label: 'Privacy Policy', Icon: Shield },
-    { href: '/terms', label: 'Terms of Use', Icon: FileText },
+  { href: '/contact', label: 'Contact Us', Icon: Mail },
+  { href: '/privacy', label: 'Privacy Policy', Icon: Shield },
+  { href: '/terms', label: 'Terms of Use', Icon: FileText },
 ]
 
 export function BottomNavBar() {
   const pathname = usePathname();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
-  if (pathname === '/tools/whatsapp-quotes') {
+  useEffect(() => {
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.getAttribute('contenteditable') === 'true')
+      ) {
+        setIsKeyboardOpen(true);
+        // Smoothly push up the input above the virtual keyboard
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+      }
+    };
+
+    const handleFocusOut = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.getAttribute('contenteditable') === 'true')
+      ) {
+        // Delay resetting to prevent quick layout changes when switching between inputs
+        setTimeout(() => {
+          if (
+            document.activeElement &&
+            (document.activeElement.tagName === 'INPUT' ||
+              document.activeElement.tagName === 'TEXTAREA' ||
+              document.activeElement.getAttribute('contenteditable') === 'true')
+          ) {
+            return;
+          }
+          setIsKeyboardOpen(false);
+        }, 50);
+      }
+    };
+
+    window.addEventListener('focusin', handleFocusIn);
+    window.addEventListener('focusout', handleFocusOut);
+
+    return () => {
+      window.removeEventListener('focusin', handleFocusIn);
+      window.removeEventListener('focusout', handleFocusOut);
+    };
+  }, []);
+
+  if (pathname === '/tools/whatsapp-quotes' || isKeyboardOpen) {
     return null;
   }
 
