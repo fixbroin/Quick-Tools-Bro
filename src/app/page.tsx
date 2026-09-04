@@ -156,7 +156,7 @@ const BANNER_LINKS = [
   'https://brobookme.com',
   'https://play.google.com/store/apps/details?id=com.fixbro.newtalent&hl=en_IN',
   'https://play.google.com/store/apps/details?id=com.fixbro.chat&hl=en_IN',
-  'https://fixbro.in/referral',
+  'https://play.google.com/store/apps/details?id=com.fixbro.newfriend&hl=en_IN',
   'https://fixbro.in'
 ];
 
