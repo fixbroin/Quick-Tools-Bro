@@ -12,15 +12,16 @@ const toolCategories = [
     name: 'Most Popular Tools',
     filterKey: 'popular',
     tools: [
-      'Gold Price and Weather',
+      'AI Video Watermark Remover',
       'PDF to JPG Converter',
+      'Text Diff Checker',
+      'Gold Price and Weather',
       'JPG to PDF Converter',
       'Image Compressor',
       'BMI Calculator',
       'Daily Calorie Intake Calculator',
       'Age Calculator',
       'Passport Photo Maker',
-      'Text Diff Checker',
       'QR Code Generator',
       'Quotation Maker',
       'Invoice Maker',
@@ -30,7 +31,6 @@ const toolCategories = [
       'Short Link Maker',
       'Username Generator',
       'YouTube Thumbnail Downloader'
-      
     ]
       .map(name => tools.find(t => t.name === name))
       .filter((t): t is typeof tools[number] => !!t),
