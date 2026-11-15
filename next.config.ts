@@ -85,19 +85,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        source: '/tools/video-watermark-remover(.*)',
-        headers: [
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'require-corp',
-          },
-        ],
-      },
     ];
   },
   outputFileTracingRoot: process.cwd(),

@@ -51,8 +51,9 @@ export default function VideoWatermarkRemoverPage() {
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const { toast } = useToast();
-  const hiddenVideoRef = useRef<HTMLVideoElement>(null);
+  const videoPlayerRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const ffmpegRef = useRef<any>(null);
 
   const formatSize = (bytes: number) => {
@@ -122,12 +123,12 @@ export default function VideoWatermarkRemoverPage() {
     };
   }, []);
 
-  // 2. Handle File Selection
+  // 2. Handle File Selection (Fully compatible with iOS Safari & Android Chrome)
   const handleFile = (file: File) => {
-    if (!file.type.startsWith('video/')) {
+    if (!file.type.startsWith('video/') && !file.name.match(/\.(mp4|mov|webm|mkv|avi|3gp|flv)$/i)) {
       toast({
         title: 'Invalid file type',
-        description: 'Please upload a video file (MP4, WebM, MOV).',
+        description: 'Please upload a video file (MP4, MOV, WebM).',
         variant: 'destructive',
       });
       return;
@@ -138,7 +139,9 @@ export default function VideoWatermarkRemoverPage() {
     if (file.size > maxLimit) {
       toast({
         title: 'File is large',
-        description: `For fast in-browser processing, videos under ${formatSize(maxLimit)} are recommended. Larger files may run slower.`,
+        description: isMobile
+          ? `On mobile browsers, videos under 100MB work best. Your file is ${formatSize(file.size)}.`
+          : `For in-browser processing, videos under ${formatSize(maxLimit)} are recommended.`,
         duration: 5000,
       });
     }
@@ -150,13 +153,21 @@ export default function VideoWatermarkRemoverPage() {
     setResultSize(null);
     setProgress(0);
 
-    const video = document.createElement('video');
-    video.preload = 'metadata';
-    video.src = url;
-    video.onloadedmetadata = () => {
-      const w = video.videoWidth || 1920;
-      const h = video.videoHeight || 1080;
-      const d = video.duration || 10;
+    // Multi-browser metadata extractor (Explicitly handles iOS Safari and Android media constraints)
+    const tempVideo = document.createElement('video');
+    tempVideo.preload = 'metadata';
+    tempVideo.muted = true;
+    tempVideo.playsInline = true;
+    tempVideo.setAttribute('playsinline', '');
+    tempVideo.setAttribute('muted', '');
+    tempVideo.src = url;
+
+    const onMetadataReady = () => {
+      const w = tempVideo.videoWidth || 1920;
+      const h = tempVideo.videoHeight || 1080;
+      let d = tempVideo.duration;
+      if (!d || !isFinite(d) || isNaN(d)) d = 10;
+
       setMeta({
         width: w,
         height: h,
@@ -164,58 +175,107 @@ export default function VideoWatermarkRemoverPage() {
         size: file.size,
         name: file.name
       });
+
       const initialPreset = h > w ? 'veo-portrait' : 'veo-landscape';
       setPreset(initialPreset);
       setBox(getPresetBox(initialPreset, w, h));
       setPreviewTime(Math.min(1.5, d / 2));
     };
+
+    tempVideo.onloadedmetadata = onMetadataReady;
+    tempVideo.onloadeddata = onMetadataReady;
+    tempVideo.load(); // Mandatory for mobile WebKit
   };
 
-  // 3. Draw Preview Frame and Watermark Box on Canvas
-  const drawCanvas = useCallback(() => {
+  // 3. Compute Video Rendered Rect & Overlay Canvas
+  const getVideoRenderRect = useCallback(() => {
+    const video = videoPlayerRef.current;
+    const container = containerRef.current;
+    if (!video || !container || !meta) return null;
+
+    const containerW = container.clientWidth;
+    const containerH = container.clientHeight;
+    if (containerW === 0 || containerH === 0) return null;
+
+    const videoAspect = meta.width / meta.height;
+    const containerAspect = containerW / containerH;
+
+    let renderedW = 0;
+    let renderedH = 0;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (videoAspect > containerAspect) {
+      renderedW = containerW;
+      renderedH = containerW / videoAspect;
+      offsetX = 0;
+      offsetY = (containerH - renderedH) / 2;
+    } else {
+      renderedH = containerH;
+      renderedW = containerH * videoAspect;
+      offsetX = (containerW - renderedW) / 2;
+      offsetY = 0;
+    }
+
+    return {
+      containerW,
+      containerH,
+      renderedW,
+      renderedH,
+      offsetX,
+      offsetY,
+      scale: renderedW / meta.width,
+    };
+  }, [meta]);
+
+  // 4. Draw Overlay Box on Top of Real Video
+  const drawOverlay = useCallback(() => {
     const canvas = canvasRef.current;
-    const video = hiddenVideoRef.current;
-    if (!canvas || !video || !meta) return;
+    if (!canvas || !meta) return;
+
+    const rect = getVideoRenderRect();
+    if (!rect) return;
+
+    // Synchronize canvas coordinate buffer with DOM container size
+    if (canvas.width !== rect.containerW || canvas.height !== rect.containerH) {
+      canvas.width = rect.containerW;
+      canvas.height = rect.containerH;
+    }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas dimensions to match video aspect ratio cleanly
-    const containerWidth = canvas.parentElement?.clientWidth || 640;
-    const scale = containerWidth / meta.width;
-    canvas.width = containerWidth;
-    canvas.height = meta.height * scale;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the video frame
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const { offsetX, offsetY, scale } = rect;
 
-    // Box coordinates on display canvas
-    const displayX = box.x * scale;
-    const displayY = box.y * scale;
-    const displayW = box.w * scale;
-    const displayH = box.h * scale;
+    // Convert video coordinates to canvas display coordinates
+    const displayX = offsetX + (box.x * scale);
+    const displayY = offsetY + (box.y * scale);
+    const displayW = Math.max(8, box.w * scale);
+    const displayH = Math.max(8, box.h * scale);
 
-    // Semi-transparent overlay mask for whole video except watermark area
+    // Dim mask over video (leaving watermark box clear)
     ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
     // Top
-    ctx.fillRect(0, 0, canvas.width, displayY);
+    ctx.fillRect(offsetX, offsetY, rect.renderedW, displayY - offsetY);
     // Bottom
-    ctx.fillRect(0, displayY + displayH, canvas.width, canvas.height - (displayY + displayH));
+    ctx.fillRect(offsetX, displayY + displayH, rect.renderedW, (offsetY + rect.renderedH) - (displayY + displayH));
     // Left
-    ctx.fillRect(0, displayY, displayX, displayH);
+    ctx.fillRect(offsetX, displayY, displayX - offsetX, displayH);
     // Right
-    ctx.fillRect(displayX + displayW, displayY, canvas.width - (displayX + displayW), displayH);
+    ctx.fillRect(displayX + displayW, displayY, (offsetX + rect.renderedW) - (displayX + displayW), displayH);
 
-    // Watermark bounding box
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.25)'; // Red tint
+    // Watermark target box tint
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.28)';
     ctx.fillRect(displayX, displayY, displayW, displayH);
 
-    // Glowing border
+    // Solid outer border
     ctx.strokeStyle = '#ef4444';
     ctx.lineWidth = 2.5;
     ctx.strokeRect(displayX, displayY, displayW, displayH);
 
-    // Inner dashed line
+    // Inner dashed indicator
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 4]);
@@ -223,67 +283,64 @@ export default function VideoWatermarkRemoverPage() {
     ctx.setLineDash([]);
 
     // Corner grab indicators
-    const cornerSize = 7;
+    const corner = 7;
     ctx.fillStyle = '#ef4444';
-    // Top-left
-    ctx.fillRect(displayX - 3, displayY - 3, cornerSize, cornerSize);
-    // Top-right
-    ctx.fillRect(displayX + displayW - 4, displayY - 3, cornerSize, cornerSize);
-    // Bottom-left
-    ctx.fillRect(displayX - 3, displayY + displayH - 4, cornerSize, cornerSize);
-    // Bottom-right
-    ctx.fillRect(displayX + displayW - 4, displayY + displayH - 4, cornerSize, cornerSize);
+    ctx.fillRect(displayX - 3, displayY - 3, corner, corner);
+    ctx.fillRect(displayX + displayW - 4, displayY - 3, corner, corner);
+    ctx.fillRect(displayX - 3, displayY + displayH - 4, corner, corner);
+    ctx.fillRect(displayX + displayW - 4, displayY + displayH - 4, corner, corner);
 
     // Label tag
-    const label = `Erase Area: ${box.w}x${box.h} px`;
+    const label = `Erase: ${box.w}x${box.h}px`;
     ctx.font = 'bold 11px sans-serif';
-    const textWidth = ctx.measureText(label).width;
+    const tagW = ctx.measureText(label).width;
     const tagY = displayY > 24 ? displayY - 6 : displayY + displayH + 16;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-    ctx.fillRect(displayX, tagY - 12, textWidth + 8, 16);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(displayX, tagY - 12, tagW + 8, 16);
     ctx.fillStyle = '#ffffff';
     ctx.fillText(label, displayX + 4, tagY);
-  }, [box, meta]);
+  }, [box, meta, getVideoRenderRect]);
 
-  // Redraw when video seeks
-  const handleVideoSeeked = () => {
-    drawCanvas();
-  };
-
-  // Seek video when previewTime changes
+  // Keep video scrubber in sync
   useEffect(() => {
-    if (hiddenVideoRef.current && meta) {
-      hiddenVideoRef.current.currentTime = previewTime;
+    if (videoPlayerRef.current && meta) {
+      videoPlayerRef.current.currentTime = previewTime;
     }
   }, [previewTime, meta]);
 
-  // Redraw when box or window resize
+  // Redraw whenever box, meta, or viewport changes
   useEffect(() => {
-    drawCanvas();
-    const handleResize = () => drawCanvas();
+    drawOverlay();
+    const handleResize = () => drawOverlay();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [drawCanvas]);
+  }, [drawOverlay]);
 
-  // 4. Mouse / Touch Interactions on Canvas
-  const getCanvasCoords = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  // 5. Unified Touch & Mouse Pointer Coordinates Converter
+  const toVideoCoords = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas || !meta) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const clickX = clientX - rect.left;
+    const clickY = clientY - rect.top;
 
-    const scale = meta.width / canvas.width;
-    const x = (clientX - rect.left) * scale;
-    const y = (clientY - rect.top) * scale;
-    return { x: Math.max(0, Math.min(meta.width, x)), y: Math.max(0, Math.min(meta.height, y)) };
+    const layout = getVideoRenderRect();
+    if (!layout) return { x: 0, y: 0 };
+
+    const { offsetX, offsetY, scale } = layout;
+    const videoX = (clickX - offsetX) / scale;
+    const videoY = (clickY - offsetY) / scale;
+
+    return {
+      x: Math.max(0, Math.min(meta.width, videoX)),
+      y: Math.max(0, Math.min(meta.height, videoY)),
+    };
   };
 
-  const handlePointerDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    const pt = getCanvasCoords(e);
+  const handlePointerStart = (clientX: number, clientY: number) => {
+    const pt = toVideoCoords(clientX, clientY);
     if (!meta) return;
 
-    // Check if clicking inside current box to drag it
     if (
       pt.x >= box.x &&
       pt.x <= box.x + box.w &&
@@ -293,7 +350,6 @@ export default function VideoWatermarkRemoverPage() {
       setIsDraggingBox(true);
       setDragOffset({ x: pt.x - box.x, y: pt.y - box.y });
     } else {
-      // Start drawing new custom box
       setIsDrawing(true);
       setPreset('custom');
       setDragStart(pt);
@@ -301,13 +357,12 @@ export default function VideoWatermarkRemoverPage() {
     }
   };
 
-  const handlePointerMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const handlePointerMove = (clientX: number, clientY: number) => {
     if (!isDrawing && !isDraggingBox) return;
-    const pt = getCanvasCoords(e);
+    const pt = toVideoCoords(clientX, clientY);
     if (!meta) return;
 
     if (isDraggingBox) {
-      // Move box while clamping to boundaries
       const newX = Math.max(1, Math.min(meta.width - box.w - 1, Math.round(pt.x - dragOffset.x)));
       const newY = Math.max(1, Math.min(meta.height - box.h - 1, Math.round(pt.y - dragOffset.y)));
       setBox((prev) => ({ ...prev, x: newX, y: newY }));
@@ -326,12 +381,12 @@ export default function VideoWatermarkRemoverPage() {
     }
   };
 
-  const handlePointerUp = () => {
+  const handlePointerEnd = () => {
     setIsDrawing(false);
     setIsDraggingBox(false);
   };
 
-  // 5. Preset Switcher
+  // 6. Preset Switcher
   const handleSelectPreset = (key: string) => {
     setPreset(key);
     if (!meta) return;
@@ -339,13 +394,12 @@ export default function VideoWatermarkRemoverPage() {
     setBox(newBox);
   };
 
-  // 6. Manual Numeric Box Adjustment
+  // 7. Manual Numeric Box Adjustment
   const updateBoxProperty = (key: keyof WatermarkBox, value: number) => {
     if (!meta) return;
     setPreset('custom');
     setBox((prev) => {
       const updated = { ...prev, [key]: value };
-      // Safety clamp
       updated.x = Math.max(1, Math.min(meta.width - updated.w - 1, updated.x));
       updated.y = Math.max(1, Math.min(meta.height - updated.h - 1, updated.y));
       updated.w = Math.max(8, Math.min(meta.width - updated.x - 1, updated.w));
@@ -354,7 +408,7 @@ export default function VideoWatermarkRemoverPage() {
     });
   };
 
-  // 7. Load In-Browser FFmpeg Engine
+  // 8. Load In-Browser FFmpeg Engine
   const loadFFmpeg = async () => {
     if (!ffmpegRef.current) {
       const { FFmpeg } = await import('@ffmpeg/ffmpeg');
@@ -373,7 +427,7 @@ export default function VideoWatermarkRemoverPage() {
     return ffmpeg;
   };
 
-  // 8. Process Watermark Removal
+  // 9. Process Watermark Removal
   const handleRemoveWatermark = async () => {
     if (!originalFile || !meta) {
       toast({ title: 'Please select a video first.', variant: 'destructive' });
@@ -395,29 +449,38 @@ export default function VideoWatermarkRemoverPage() {
 
       await ffmpeg.writeFile(inputFilename, await fetchFile(originalFile));
 
-      setStatusText('Erasing watermark at exact original resolution...');
+      setStatusText('Erasing watermark with delogo interpolation...');
 
-      // Precise integer bounding box clamped for FFmpeg delogo requirements (exact original video resolution)
+      // Precise integer bounding box clamped for FFmpeg delogo requirements
       const safeX = Math.max(1, Math.min(meta.width - 10, Math.round(box.x)));
       const safeY = Math.max(1, Math.min(meta.height - 10, Math.round(box.y)));
       const safeW = Math.max(8, Math.min(meta.width - safeX - 1, Math.round(box.w)));
       const safeH = Math.max(8, Math.min(meta.height - safeY - 1, Math.round(box.h)));
 
+      const isMobile = typeof window !== 'undefined' && (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768);
+
+      // Mobile memory safety: If mobile video is 4K (e.g. 2160x3840), clamp output resolution to 1080p to prevent mobile browser OOM tab reload
+      let filterChain = `delogo=x=${safeX}:y=${safeY}:w=${safeW}:h=${safeH}`;
+      if (isMobile && (meta.width > 1920 || meta.height > 1920)) {
+        filterChain += `,scale='min(1080,iw)':-2`;
+      }
+
       const command = [
         '-i', inputFilename,
-        '-vf', `delogo=x=${safeX}:y=${safeY}:w=${safeW}:h=${safeH}`,
+        '-vf', filterChain,
         '-c:v', 'libx264',
         '-preset', 'ultrafast',
         '-tune', 'fastdecode',
-        '-crf', '20',
+        '-crf', '22',
         '-pix_fmt', 'yuv420p',
-        '-c:a', 'copy',
+        '-c:a', 'aac',
+        '-b:a', '128k',
         outputFilename,
       ];
 
       await ffmpeg.exec(command);
 
-      setStatusText('Finalizing video file...');
+      setStatusText('Finalizing clean video file...');
       const data = await ffmpeg.readFile(outputFilename);
       const cleanBlob = new Blob([(data as Uint8Array).buffer as ArrayBuffer], { type: 'video/mp4' });
       const cleanUrl = URL.createObjectURL(cleanBlob);
@@ -426,12 +489,11 @@ export default function VideoWatermarkRemoverPage() {
       setResultSize(cleanBlob.size);
       setProgress(100);
 
-      // Clean up virtual filesystem memory
       try {
         await ffmpeg.deleteFile(inputFilename);
         await ffmpeg.deleteFile(outputFilename);
       } catch (err) {
-        // silent cleanup
+        // cleanup
       }
 
       toast({
@@ -473,18 +535,6 @@ export default function VideoWatermarkRemoverPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 px-4 py-6">
-      {/* Hidden video element used to capture preview frames */}
-      {originalVideoUrl && (
-        <video
-          ref={hiddenVideoRef}
-          src={originalVideoUrl}
-          onSeeked={handleVideoSeeked}
-          className="hidden"
-          playsInline
-          muted
-        />
-      )}
-
       {/* Hero Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
@@ -507,7 +557,7 @@ export default function VideoWatermarkRemoverPage() {
             <input
               id="video-upload"
               type="file"
-              accept="video/mp4,video/quicktime,video/webm"
+              accept="video/*"
               onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
               className="hidden"
             />
@@ -545,7 +595,7 @@ export default function VideoWatermarkRemoverPage() {
                   <Badge variant="outline" className="font-semibold">
                     {meta?.width} x {meta?.height}
                   </Badge>
-                  <Badge variant="outline">{meta?.duration.toFixed(1)}s</Badge>
+                  <Badge variant="outline">{meta?.duration ? meta.duration.toFixed(1) : 0}s</Badge>
                   <Badge variant="outline">{meta && formatSize(meta.size)}</Badge>
                 </div>
               </div>
@@ -557,33 +607,57 @@ export default function VideoWatermarkRemoverPage() {
 
           {/* Interactive Canvas & Controls */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column: Canvas Preview */}
+            {/* Left Column: Real Video + Interactive Canvas Overlay */}
             <div className="lg:col-span-7 space-y-4">
               <Card className="overflow-hidden border-primary/20 shadow-md">
                 <CardHeader className="bg-muted/40 p-4 border-b flex flex-row items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Sliders className="h-4 w-4 text-primary" /> Draw or Adjust Watermark Box
+                    <Sliders className="h-4 w-4 text-primary" /> Drag or Draw Watermark Box
                   </CardTitle>
                   <span className="text-[11px] text-muted-foreground font-mono">
                     Box: {box.x}, {box.y} ({box.w}x{box.h})
                   </span>
                 </CardHeader>
-                <CardContent className="p-3 bg-black/95 flex flex-col items-center justify-center">
-                  <div className="relative w-full overflow-hidden rounded-lg flex items-center justify-center">
+                <CardContent className="p-2 sm:p-3 bg-black/95 flex flex-col items-center justify-center">
+                  <div
+                    ref={containerRef}
+                    className="relative w-full h-[320px] sm:h-[420px] md:h-[480px] overflow-hidden rounded-lg flex items-center justify-center bg-black"
+                  >
+                    {/* Native Hardware-Decoded Video for 100% Mobile Reliability */}
+                    <video
+                      ref={videoPlayerRef}
+                      src={originalVideoUrl || undefined}
+                      playsInline
+                      muted
+                      preload="auto"
+                      controls={false}
+                      className="max-h-full max-w-full object-contain pointer-events-none select-none"
+                    />
+
+                    {/* Transparent Interactive Overlay Canvas */}
                     <canvas
                       ref={canvasRef}
-                      onMouseDown={handlePointerDown}
-                      onMouseMove={handlePointerMove}
-                      onMouseUp={handlePointerUp}
-                      onTouchStart={handlePointerDown}
-                      onTouchMove={handlePointerMove}
-                      onTouchEnd={handlePointerUp}
-                      className="max-h-[500px] w-full object-contain cursor-crosshair rounded touch-none"
+                      onMouseDown={(e) => handlePointerStart(e.clientX, e.clientY)}
+                      onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
+                      onMouseUp={handlePointerEnd}
+                      onTouchStart={(e) => {
+                        if (e.cancelable) e.preventDefault();
+                        if (e.touches[0]) handlePointerStart(e.touches[0].clientX, e.touches[0].clientY);
+                      }}
+                      onTouchMove={(e) => {
+                        if (e.cancelable) e.preventDefault();
+                        if (e.touches[0]) handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+                      }}
+                      onTouchEnd={(e) => {
+                        if (e.cancelable) e.preventDefault();
+                        handlePointerEnd();
+                      }}
+                      className="absolute inset-0 w-full h-full cursor-crosshair touch-none select-none"
                       style={{ touchAction: 'none' }}
                     />
                   </div>
                   <p className="text-[11px] text-zinc-400 mt-2 text-center">
-                    Click & drag directly on the video to select any watermark, or drag the box to reposition.
+                    Touch & drag directly over the video to draw or reposition the watermark box.
                   </p>
                 </CardContent>
               </Card>
@@ -740,21 +814,6 @@ export default function VideoWatermarkRemoverPage() {
                       />
                     </div>
                   </div>
-
-                  {/* Quality & Resolution Info */}
-                  <div className="pt-2 border-t space-y-2">
-                    <div className="flex justify-between items-center text-xs">
-                      <Label className="font-bold flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> Output Resolution:
-                      </Label>
-                      <Badge variant="secondary" className="font-mono font-bold text-primary">
-                        Exact 100% Original ({meta?.width} x {meta?.height})
-                      </Badge>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">
-                      Zero quality loss or downscaling. The cleaned video will match your original upload pixel-for-pixel.
-                    </p>
-                  </div>
                 </CardContent>
               </Card>
 
@@ -812,6 +871,7 @@ export default function VideoWatermarkRemoverPage() {
                     <video
                       src={resultUrl}
                       controls
+                      playsInline
                       className="w-full max-h-[380px] object-contain mx-auto"
                       autoPlay
                       loop
@@ -832,7 +892,7 @@ export default function VideoWatermarkRemoverPage() {
                       </div>
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Audio Track:</span>
-                        <span className="font-mono font-bold">Preserved (Original Quality)</span>
+                        <span className="font-mono font-bold">Preserved (AAC High Quality)</span>
                       </div>
                     </div>
 
@@ -879,7 +939,7 @@ export default function VideoWatermarkRemoverPage() {
             </div>
             <h3 className="font-bold text-sm">Upload Video</h3>
             <p className="text-xs text-muted-foreground">
-              Select or drop your MP4, MOV, or WebM video file. Files under 250MB process fastest.
+              Select or drop your MP4, MOV, or WebM video file. Files under 100MB process fastest on mobile.
             </p>
           </Card>
 
@@ -889,7 +949,7 @@ export default function VideoWatermarkRemoverPage() {
             </div>
             <h3 className="font-bold text-sm">Pick AI Preset or Draw</h3>
             <p className="text-xs text-muted-foreground">
-              Choose a 1-click preset (Veo, Sora) or click and drag a rectangle over any logo or timestamp.
+              Choose a 1-click preset (Veo, Sora) or touch and drag a rectangle over any logo or timestamp.
             </p>
           </Card>
 
@@ -938,10 +998,10 @@ export default function VideoWatermarkRemoverPage() {
 
             <Card className="p-4 space-y-2">
               <h4 className="font-bold text-sm flex items-center gap-1.5">
-                <HelpCircle className="h-4 w-4 text-primary" /> Does it work for Google Veo, Sora, and TikTok watermarks?
+                <HelpCircle className="h-4 w-4 text-primary" /> Does it work on mobile phones (iOS & Android)?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Yes! We have pre-calibrated buttons for Google Veo portrait (9:16) and landscape (16:9), as well as Sora corner watermarks. You can also drag the selection box over any custom timestamp, TikTok badge, or channel logo.
+                Yes! The tool is optimized with touch controls and hardware-accelerated playback for iPhone (Safari) and Android (Chrome).
               </p>
             </Card>
 
