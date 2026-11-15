@@ -411,6 +411,31 @@ export const SEO_MAP: Record<string, SeoEntry> = {
       }
     ]
   },
+  '/tools/video-watermark-remover': {
+    title: 'AI Video Watermark Remover - Remove Logos, Veo & Sora Watermarks Online',
+    description: 'Erase unwanted watermarks, AI stamps (Google Veo, Sora), channel logos, and timestamps from videos online. 100% free, private in-browser tool.',
+    guideTitle: 'How to Remove Watermarks and AI Logos from Videos Online',
+    steps: [
+      'Upload your MP4, MOV, or WebM video file.',
+      'Scrub the preview timeline or pick a timestamp where the watermark is visible.',
+      'Choose a 1-click AI preset (Veo, Sora, corner stamps) or draw a custom box over the watermark.',
+      'Click "Remove Watermark" to erase the logo and download your clean video instantly.'
+    ],
+    faqs: [
+      {
+        question: 'How does the video watermark remover erase watermarks without blurring the whole video?',
+        answer: 'Our tool uses high-precision edge-interpolation (delogo algorithm). It only modifies the exact rectangular area covered by the watermark, sampling pixels from surrounding borders to seamlessly blend the watermark away while leaving the rest of the video in full original quality.'
+      },
+      {
+        question: 'Are my videos uploaded to a server?',
+        answer: 'No! The video processing runs 100% locally in your browser using WebAssembly. Your videos never leave your phone or computer, ensuring total privacy and lightning-fast speed.'
+      },
+      {
+        question: 'Does this remove Google Veo, Sora, and TikTok watermarks?',
+        answer: 'Yes! We have pre-calibrated 1-click presets for Google Veo (9:16 portrait and 16:9 landscape) as well as Sora and corner watermarks, plus an interactive box selector for any custom logo or text stamp.'
+      }
+    ]
+  },
   '/tools/text-to-speech': {
     title: 'Text-to-Speech Converter - Free Online TTS Read Aloud',
     description: 'Convert text to spoken audio online for free. Adjust speech rate, pitch, and choose from multiple voices. 100% private browser-based tool.',

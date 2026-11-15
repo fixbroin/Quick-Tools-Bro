@@ -5,7 +5,7 @@ import {
   RefreshCw, Undo, Youtube, Receipt, Quote, Crop, Cake, Wifi, Combine,
   Split, EyeOff, Droplet, RotateCw, Percent, Braces, Timer, StopCircle,
   FileEdit, Mail, Instagram, FileCode, Code, Palette, Calendar, GraduationCap,
-  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders, Volume2, GitCompare, Monitor
+  CloudSun, UserCheck, Hash, Link, Play, Key, Unlock, Music, Scissors, Sliders, Volume2, GitCompare, Monitor, Sparkles
 } from 'lucide-react';
 
 export interface Tool {
@@ -707,6 +707,13 @@ export const tools: Tool[] = [
     description: 'Write, edit, and preview HTML, CSS, and Javascript code online in real-time.',
     href: '/tools/html-preview',
     Icon: Code,
+  },
+  {
+    title: 'AI Video Watermark Remover',
+    name: 'AI Video Watermark Remover',
+    description: 'Erase watermarks, AI stamps (Veo, Sora), logos, and timestamps from video clips with in-browser precision.',
+    href: '/tools/video-watermark-remover',
+    Icon: Sparkles,
   },
   {
     title: 'Website Screenshot Taker',
