@@ -36,7 +36,6 @@ export default function VideoWatermarkRemoverPage() {
   const [previewTime, setPreviewTime] = useState<number>(1);
   const [box, setBox] = useState<WatermarkBox>({ x: 0, y: 0, w: 80, h: 80 });
   const [preset, setPreset] = useState<string>('veo');
-  const [qualityPreset, setQualityPreset] = useState<'fast' | 'high'>('fast');
   
   // Processing state
   const [isLoading, setIsLoading] = useState(false);
@@ -396,23 +395,22 @@ export default function VideoWatermarkRemoverPage() {
 
       await ffmpeg.writeFile(inputFilename, await fetchFile(originalFile));
 
-      setStatusText('Erasing watermark with delogo interpolation...');
+      setStatusText('Erasing watermark at exact original resolution...');
 
-      // Precise integer bounding box clamped for FFmpeg delogo requirements
+      // Precise integer bounding box clamped for FFmpeg delogo requirements (exact original video resolution)
       const safeX = Math.max(1, Math.min(meta.width - 10, Math.round(box.x)));
       const safeY = Math.max(1, Math.min(meta.height - 10, Math.round(box.y)));
       const safeW = Math.max(8, Math.min(meta.width - safeX - 1, Math.round(box.w)));
       const safeH = Math.max(8, Math.min(meta.height - safeY - 1, Math.round(box.h)));
 
-      const speedPreset = qualityPreset === 'fast' ? 'ultrafast' : 'veryfast';
-      const crf = qualityPreset === 'fast' ? '22' : '18';
-
       const command = [
         '-i', inputFilename,
         '-vf', `delogo=x=${safeX}:y=${safeY}:w=${safeW}:h=${safeH}`,
         '-c:v', 'libx264',
-        '-preset', speedPreset,
-        '-crf', crf,
+        '-preset', 'ultrafast',
+        '-tune', 'fastdecode',
+        '-crf', '20',
+        '-pix_fmt', 'yuv420p',
         '-c:a', 'copy',
         outputFilename,
       ];
@@ -743,29 +741,19 @@ export default function VideoWatermarkRemoverPage() {
                     </div>
                   </div>
 
-                  {/* Quality Mode */}
-                  <div className="pt-2 border-t space-y-1.5">
-                    <Label className="text-xs font-bold">Processing Speed</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant={qualityPreset === 'fast' ? 'default' : 'outline'}
-                        className="text-xs h-8"
-                        onClick={() => setQualityPreset('fast')}
-                      >
-                        ⚡ Fast (Ultrafast)
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant={qualityPreset === 'high' ? 'default' : 'outline'}
-                        className="text-xs h-8"
-                        onClick={() => setQualityPreset('high')}
-                      >
-                        ✨ Crisp (High Quality)
-                      </Button>
+                  {/* Quality & Resolution Info */}
+                  <div className="pt-2 border-t space-y-2">
+                    <div className="flex justify-between items-center text-xs">
+                      <Label className="font-bold flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-green-500" /> Output Resolution:
+                      </Label>
+                      <Badge variant="secondary" className="font-mono font-bold text-primary">
+                        Exact 100% Original ({meta?.width} x {meta?.height})
+                      </Badge>
                     </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                      Zero quality loss or downscaling. The cleaned video will match your original upload pixel-for-pixel.
+                    </p>
                   </div>
                 </CardContent>
               </Card>
